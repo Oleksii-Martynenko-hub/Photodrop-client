@@ -35,7 +35,6 @@ const Main: FC = () => {
                   Main
                 </Typography>
               </Grid>
-              {/* <Link to={ERoutes.USER}>user</Link> */}
             </Grid>
           </motion.div>
         )}

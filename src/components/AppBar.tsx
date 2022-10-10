@@ -1,11 +1,17 @@
 import { useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { AppBar as Bar, IconButton, SxProps, Theme, Toolbar } from '@mui/material'
-import LogoutIcon from '@mui/icons-material/Logout'
+import {
+  AppBar as Bar,
+  Avatar,
+  IconButton,
+  SxProps,
+  Theme,
+  Toolbar,
+  useMediaQuery,
+} from '@mui/material'
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded'
 
-import { logoutAsync } from 'store/sign-up/actions'
 import { selectIsLoggedIn } from 'store/sign-up/selectors'
 
 import useToggle from 'components/hooks/useToggle'
@@ -14,11 +20,14 @@ import { Logo } from 'components/Logo'
 import HideOnScroll from 'components/HideOnScroll'
 import { ERoutes } from 'pages/App'
 import { clearOTP } from 'store/sign-up/reducers'
+import styled from 'styled-components'
 
 export const AppBar = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const location = useLocation()
+
+  const md = useMediaQuery('(min-width:900px)')
 
   const isLoggedIn = useSelector(selectIsLoggedIn)
   const [isShowBackButton, setIsShowBackButton] = useToggle(false)
@@ -31,10 +40,6 @@ export const AppBar = () => {
         location.pathname === ERoutes.PRIVACY,
     )
   }, [location.pathname])
-
-  const handleOnClickGoToUserPage = () => {
-    navigate(ERoutes.MAIN + ERoutes.USER)
-  }
 
   const headerStyles: SxProps<Theme> = { minHeight: { xs: '56px', md: '66px' } }
 
@@ -49,7 +54,7 @@ export const AppBar = () => {
     <>
       <HideOnScroll>
         <Bar color='default' sx={headerStyles}>
-          <Toolbar sx={headerStyles}>
+          <Toolbar sx={{ ...headerStyles, maxWidth: '1200px', width: '100%', margin: '0 auto' }}>
             {isShowBackButton && (
               <IconButton onClick={handleOnClickBack} sx={{ position: 'absolute', left: '10px' }}>
                 <ArrowBackIosNewRoundedIcon sx={{ color: '#262626' }} />
@@ -59,14 +64,13 @@ export const AppBar = () => {
             <Logo />
 
             {isLoggedIn && (
-              <Link to={`${ERoutes.MAIN}/${ERoutes.USER}`}>
-                <IconButton
-                  // onClick={handleOnClickGoToUserPage}
-                  sx={{ position: 'absolute', right: '10px' }}
-                >
-                  user
-                </IconButton>
-              </Link>
+              <LinkStyled to={`${ERoutes.MAIN}/${ERoutes.USER}`}>
+                <Avatar
+                  sx={md ? { width: 50, height: 50 } : {}}
+                  alt={'userName'}
+                  src='/static/images/avatar/1.jpg'
+                />
+              </LinkStyled>
             )}
           </Toolbar>
         </Bar>
@@ -76,3 +80,10 @@ export const AppBar = () => {
     </>
   )
 }
+
+const LinkStyled = styled(Link)`
+  display: block;
+  text-decoration: none;
+  position: absolute;
+  right: 10px;
+`
