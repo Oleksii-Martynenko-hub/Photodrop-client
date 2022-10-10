@@ -35,7 +35,7 @@ const ConfirmSignUp: FC = () => {
 
   useEffect(() => {
     if (!generatedOTP || generatedOTP.length !== 6 || !phoneNumber) {
-      // navigate(ERoutes.SIGN_UP)
+      navigate(ERoutes.SIGN_UP)
     }
   }, [generatedOTP])
 
