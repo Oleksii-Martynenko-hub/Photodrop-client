@@ -65,13 +65,13 @@ export const AppBar = () => {
             <Logo />
 
             {isLoggedIn && (
-              <LinkStyled to={`${ERoutes.MAIN}/${ERoutes.USER}`}>
-                <Avatar
-                  sx={md ? { width: 50, height: 50 } : {}}
-                  alt={'userName'}
-                  src='/static/images/avatar/1.jpg'
-                />
-              </LinkStyled>
+              // <LinkStyled to={`${ERoutes.MAIN}/${ERoutes.USER}`}>
+              <Avatar
+                sx={md ? { width: 50, height: 50 } : {}}
+                alt={'userName'}
+                src='/static/images/avatar/1.jpg'
+              />
+              // </LinkStyled>
             )}
           </Toolbar>
         </Bar>
