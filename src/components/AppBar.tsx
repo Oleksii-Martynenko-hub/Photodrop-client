@@ -11,16 +11,17 @@ import {
   useMediaQuery,
 } from '@mui/material'
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded'
+import styled from 'styled-components'
 
+import { clearOTP } from 'store/sign-up/reducers'
 import { selectIsLoggedIn } from 'store/sign-up/selectors'
 
-import useToggle from 'components/hooks/useToggle'
+import { ERoutes } from 'pages/App'
 
+import useToggle from 'components/hooks/useToggle'
 import { Logo } from 'components/Logo'
 import HideOnScroll from 'components/HideOnScroll'
-import { ERoutes } from 'pages/App'
-import { clearOTP } from 'store/sign-up/reducers'
-import styled from 'styled-components'
+
 
 export const AppBar = () => {
   const dispatch = useDispatch()
@@ -64,13 +65,13 @@ export const AppBar = () => {
             <Logo />
 
             {isLoggedIn && (
-              <LinkStyled to={`${ERoutes.MAIN}/${ERoutes.USER}`}>
-                <Avatar
-                  sx={md ? { width: 50, height: 50 } : {}}
-                  alt={'userName'}
-                  src='/static/images/avatar/1.jpg'
-                />
-              </LinkStyled>
+              // <LinkStyled to={`${ERoutes.MAIN}/${ERoutes.USER}`}>
+              <Avatar
+                sx={md ? { width: 50, height: 50 } : {}}
+                alt={'userName'}
+                src='/static/images/avatar/1.jpg'
+              />
+              // </LinkStyled>
             )}
           </Toolbar>
         </Bar>

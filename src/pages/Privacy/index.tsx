@@ -17,12 +17,6 @@ const Privacy: FC = () => {
               Privacy
             </Typography>
           </Grid>
-
-          <Grid item xs={12} md={12}>
-            <Typography variant='h6' align='center'>
-              Enter your name and password
-            </Typography>
-          </Grid>
         </Grid>
       </Grid>
     </motion.div>

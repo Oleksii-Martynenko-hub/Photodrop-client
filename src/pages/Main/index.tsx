@@ -1,12 +1,11 @@
 import { FC, useEffect } from 'react'
-import { Link, Outlet, useLocation } from 'react-router-dom'
-import { Fab, Grid, Typography } from '@mui/material'
-import AddRoundedIcon from '@mui/icons-material/AddRounded'
+import { Outlet, useLocation } from 'react-router-dom'
+import { Grid } from '@mui/material'
 import { motion } from 'framer-motion'
 
 import useToggle from 'components/hooks/useToggle'
+import Title from 'components/Title'
 
-import { ERoutes } from 'pages/App'
 
 const Main: FC = () => {
   const location = useLocation()
@@ -31,9 +30,7 @@ const Main: FC = () => {
           >
             <Grid container alignItems='start'>
               <Grid item xs>
-                <Typography variant='h3' gutterBottom>
-                  Main
-                </Typography>
+                <Title>Main</Title>
               </Grid>
             </Grid>
           </motion.div>
