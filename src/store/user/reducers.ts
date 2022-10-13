@@ -5,16 +5,14 @@ import { APIStatus } from 'api/MainApi'
 import { ErrorObject } from 'api/ErrorHandler'
 
 import Tokens from 'utils/local-storage/tokens'
-
-export type TokenDecodeData = {
-  id: number
-  phoneNumber: string
-  iat: number
-  exp: number
-}
+import { UserData } from 'api/ProtectedApi'
+import { editNameAsync } from './actions'
+import { pendingCase, rejectedCase } from 'store'
 
 export interface UsersState {
-  id: number | undefined
+  user: UserData
+  avatar: string | null
+  isOnboarding: boolean
   phoneNumber: {
     value: string
     formattedValue: string
@@ -24,7 +22,17 @@ export interface UsersState {
 }
 
 const initialState: UsersState = {
-  id: undefined,
+  user: {
+    id: 0,
+    name: null,
+    phone: '',
+    email: null,
+    emailNotification: null,
+    textMessagesNotification: null,
+    unsubscribe: null,
+  },
+  avatar: null,
+  isOnboarding: false,
   phoneNumber: null,
   status: APIStatus.IDLE,
   errors: [],
@@ -39,9 +47,10 @@ export const userSlice = createSlice({
       const tokens = Tokens.getInstance()
       const token = tokens.getToken()
       if (token) {
-        const { id, phoneNumber } = jwt<TokenDecodeData>(token)
-        state.id = id
-        state.phoneNumber = { value: phoneNumber, formattedValue: '' }
+        const data = jwt<UserData>(token)
+        console.log('🚀 ~ datauser', data)
+        state.user = data
+        state.phoneNumber = { value: data.phone, formattedValue: '' }
         state.status = APIStatus.FULFILLED
         return
       }
@@ -59,6 +68,14 @@ export const userSlice = createSlice({
       state.phoneNumber = action.payload
     },
     clearUserState: () => initialState,
+  },
+  extraReducers: (builder) => {
+    builder.addCase(editNameAsync.pending, pendingCase())
+    builder.addCase(editNameAsync.rejected, rejectedCase())
+    builder.addCase(editNameAsync.fulfilled, (state, { payload }) => {
+      state.user.name = payload.name
+      state.status = APIStatus.FULFILLED
+    })
   },
 })
 

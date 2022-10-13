@@ -1,12 +1,40 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 
-import { LoginData, TokensData } from 'api/MainApi'
+import { APIStatus, TokensData } from 'api/MainApi'
 import { getExceptionPayload } from 'api/ErrorHandler'
 
 import { ThunkExtra } from 'store'
 import { clearUserState, setUserData } from 'store/user/reducers'
-import { clearLoginState, clearOTP, clearToken } from 'store/sign-up/reducers'
+import {
+  clearOTP,
+  clearSignUpState,
+  clearToken,
+  setIsLoggedIn,
+  setSignUpStatus,
+} from 'store/sign-up/reducers'
 import Tokens from 'utils/local-storage/tokens'
+
+export const restoreAuthAsync = createAsyncThunk<void, void, ThunkExtra>(
+  'login/restoreAuthAsync',
+  async (_, { rejectWithValue, extra: { protectedApi }, dispatch }) => {
+    try {
+      const tokens = Tokens.getInstance()
+      const token = tokens.getToken()
+
+      if (!token) return
+
+      dispatch(setSignUpStatus(APIStatus.PENDING))
+
+      await protectedApi.getMe()
+      dispatch(setIsLoggedIn(true))
+
+      dispatch(setSignUpStatus(APIStatus.FULFILLED))
+    } catch (error) {
+      dispatch(setSignUpStatus(APIStatus.REJECTED))
+      return rejectWithValue(getExceptionPayload(error))
+    }
+  },
+)
 
 export const signUpAsync = createAsyncThunk<TokensData, string, ThunkExtra>(
   'signUp/signUpAsync',
@@ -46,7 +74,7 @@ export const logoutAsync = createAsyncThunk(
   async (_, { rejectWithValue, dispatch }) => {
     try {
       dispatch(clearToken())
-      dispatch(clearLoginState())
+      dispatch(clearSignUpState())
       dispatch(clearUserState())
 
       return new Promise(() => ({}))

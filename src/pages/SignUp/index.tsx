@@ -1,9 +1,9 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   AppBar,
-  Autocomplete,
+  Input,
   Box,
   Dialog,
   Divider,
@@ -37,15 +37,16 @@ import { APIStatus } from 'api/MainApi'
 import useToggle from 'components/hooks/useToggle'
 
 import { generateOtpAsync } from 'store/sign-up/actions'
-import { checkToken } from 'store/sign-up/reducers'
 import { setPhoneNumber as setPhoneNumberToStore } from 'store/user/reducers'
 import { selectGeneratedOTP, selectIsLoggedIn, selectStatus } from 'store/sign-up/selectors'
 
 import { ERoutes } from 'pages/App'
 import { Link } from 'react-router-dom'
-import Title from 'components/Title'
-import Subtitle from 'components/Subtitle'
-import LoadingButton from 'components/LoadingButton'
+import Title from 'components/common/Title'
+import Subtitle from 'components/common/Subtitle'
+import LoadingButton from 'components/common/LoadingButton'
+import styled from 'styled-components'
+import { useDidMountEffect } from 'components/hooks/useDidMountEffect'
 
 const SignUp: FC = () => {
   const dispatch = useDispatch()
@@ -55,16 +56,17 @@ const SignUp: FC = () => {
   const isLoggedIn = useSelector(selectIsLoggedIn)
   const generatedOTP = useSelector(selectGeneratedOTP)
 
+  const phoneInputRef = useRef<HTMLInputElement>(null)
+
   const [phoneNumber, setPhoneNumber] = useState<NumberFormatValues | null>(null)
   const [countryCode, setCountryCode] = useState<Country>('US')
+
+  const [countryFilter, setCountryFilter] = useState('')
 
   const [phoneValidation, setPhoneValidation] = useState({ isValid: true, message: '' })
 
   const [isCountryDialogOpen, setCountryDialogOpen] = useToggle(false)
 
-  useEffect(() => {
-    dispatch(checkToken())
-  }, [])
   /* masks for :
       YT XK TA SJ PR PM MF JE IM GP GG GB EH CX CC BQ BL AX
   */
@@ -75,6 +77,12 @@ const SignUp: FC = () => {
         setPhoneValidation({ isValid: true, message: '' })
     }
   }, [phoneNumber])
+
+  useDidMountEffect(() => {
+    if (countryCode && !isCountryDialogOpen) {
+      if (phoneInputRef?.current) phoneInputRef.current.focus()
+    }
+  }, [isCountryDialogOpen])
 
   useEffect(() => {
     if (phoneNumber && generatedOTP && generatedOTP.length === 6) {
@@ -132,45 +140,65 @@ const SignUp: FC = () => {
               </Grid>
 
               <Grid item xs={12} container spacing={2} sx={{ mb: '20px' }}>
+                {/* <input ref={countryInputRef} type='hidden' name='country' value={countryCode} /> */}
                 <Dialog
                   fullScreen
                   open={isCountryDialogOpen}
                   onClose={() => setCountryDialogOpen(false)}
                 >
                   <AppBar sx={{ position: 'relative' }}>
-                    <Toolbar>
+                    <Toolbar
+                      sx={{
+                        maxWidth: '800px',
+                        width: '100%',
+                        margin: '0 auto',
+                        pr: '0 !important',
+                      }}
+                    >
                       <IconButton
                         edge='start'
                         color='inherit'
                         onClick={() => setCountryDialogOpen(false)}
                         aria-label='close'
+                        sx={{ '&:hover': { backgroundColor: '#4d23c8' } }}
                       >
                         <CloseIcon />
                       </IconButton>
+
+                      <InputStyled
+                        autoFocus
+                        fullWidth
+                        value={countryFilter}
+                        onChange={({ target }) => setCountryFilter(target.value)}
+                        placeholder='Search'
+                      />
                     </Toolbar>
                   </AppBar>
 
-                  <List>
-                    {getCountries().map((country) => (
-                      <>
-                        <ListItem key={country} button onClick={handleOnClickCountryItem(country)}>
-                          <ListItemAvatar>
-                            <img
-                              width={28}
-                              height={22}
-                              src={`https://purecatamphetamine.github.io/country-flag-icons/3x2/${country}.svg`}
-                              alt={countryNames[country]}
+                  <List sx={{ maxWidth: '800px', width: '100%', margin: '0 auto' }}>
+                    {getCountries()
+                      .filter((c) =>
+                        countryNames[c].toLowerCase().includes(countryFilter.toLowerCase()),
+                      )
+                      .map((country) => (
+                        <li key={country}>
+                          <ListItem button onClick={handleOnClickCountryItem(country)}>
+                            <ListItemAvatar>
+                              <img
+                                width={28}
+                                height={22}
+                                src={`https://purecatamphetamine.github.io/country-flag-icons/3x2/${country}.svg`}
+                                alt={countryNames[country]}
+                              />
+                            </ListItemAvatar>
+                            <ListItemText
+                              primary={countryNames[country]}
+                              secondary={'+ ' + getCountryCallingCode(country)}
                             />
-                          </ListItemAvatar>
-                          <ListItemText
-                            primary={countryNames[country]}
-                            secondary={'+ ' + getCountryCallingCode(country)}
-                          />
-                        </ListItem>
-
-                        <Divider />
-                      </>
-                    ))}
+                          </ListItem>
+                          <Divider />
+                        </li>
+                      ))}
                   </List>
                 </Dialog>
 
@@ -205,6 +233,7 @@ const SignUp: FC = () => {
 
                 <Grid item xs>
                   <PatternFormat
+                    inputRef={phoneInputRef}
                     customInput={TextField}
                     margin='normal'
                     size='small'
@@ -269,3 +298,20 @@ const SignUp: FC = () => {
 }
 
 export default SignUp
+
+const InputStyled = styled(Input)`
+  color: #fff;
+  margin-left: 20px;
+
+  &::before {
+    border-color: #5936c3;
+  }
+
+  &:hover:not(.Mui-disabled)::before {
+    border-color: #6342c4;
+  }
+
+  &::after {
+    border-color: #9a7feb;
+  }
+`

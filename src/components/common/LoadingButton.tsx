@@ -39,6 +39,11 @@ const LoadingButtonStyled = styled(LoadingButtonMui)<Props>`
   height: 50px;
   padding-left: ${({ loading }) => (loading ? '17px' : '45px')};
   padding-right: ${({ loading }) => (loading ? '17px' : '45px')};
+
+  &.Mui-disabled {
+    background: #bcabee;
+    color: #fff;
+  }
 `
 
 export default LoadingButton

@@ -8,14 +8,14 @@ import { generateOtpAsync, signUpAsync } from 'store/sign-up/actions'
 
 import Tokens from 'utils/local-storage/tokens'
 
-export interface LoginState {
+export interface SignUpState {
   isLoggedIn: boolean
   generatedOTP: string | null
   status: APIStatus
   errors: ErrorObject[]
 }
 
-const initialState: LoginState = {
+const initialState: SignUpState = {
   isLoggedIn: false,
   generatedOTP: null,
   status: APIStatus.IDLE,
@@ -35,8 +35,8 @@ export const errorToast = (msg: string) =>
     },
   ] as const
 
-export const loginSlice = createSlice({
-  name: 'login',
+export const signUpSlice = createSlice({
+  name: 'sign-up',
   initialState,
   reducers: {
     clearToken: () => {
@@ -46,14 +46,12 @@ export const loginSlice = createSlice({
     clearOTP: (state) => {
       state.generatedOTP = null
     },
-    clearLoginState: () => initialState,
-    checkToken: (state) => {
-      const tokens = Tokens.getInstance()
-
-      if (tokens.getToken()) {
-        state.isLoggedIn = true
-        state.status = APIStatus.FULFILLED
-      }
+    clearSignUpState: () => initialState,
+    setSignUpStatus: (state, action: { payload: APIStatus }) => {
+      state.status = action.payload
+    },
+    setIsLoggedIn: (state, action: { payload: boolean }) => {
+      state.isLoggedIn = action.payload
     },
   },
   extraReducers: (builder) => {
@@ -77,6 +75,7 @@ export const loginSlice = createSlice({
   },
 })
 
-export const { clearToken, clearLoginState, checkToken, clearOTP } = loginSlice.actions
+export const { clearToken, clearSignUpState, clearOTP, setSignUpStatus, setIsLoggedIn } =
+  signUpSlice.actions
 
-export default loginSlice.reducer
+export default signUpSlice.reducer

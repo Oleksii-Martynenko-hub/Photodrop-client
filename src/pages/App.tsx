@@ -7,6 +7,7 @@ import { theme } from 'themes/palette'
 import { GlobalStyles } from 'themes/global'
 
 import { store, history } from 'store'
+import { restoreAuthAsync } from 'store/sign-up/actions'
 
 import { AppBar } from 'components/AppBar'
 import AnimatedRoutes from 'containers/AnimatedRoutes'
@@ -22,8 +23,8 @@ export enum ERoutes {
   USER_SELFIE = 'selfie',
   USER_EDIT_NAME = 'edit-name',
   USER_SETTINGS = 'settings',
-  USER_SETTINGS_PHONE = 'phone',
-  USER_SETTINGS_EMAIL = 'email',
+  USER_SETTINGS_PHONE = 'edit-phone',
+  USER_SETTINGS_EMAIL = 'edit-email',
   USER_NOTIFICATIONS = 'notifications',
   MAIN = '/main',
   ALBUMS_ID = 'album-:id',
@@ -42,6 +43,8 @@ const containerStyles: SxProps<Theme> = {
   alignItems: 'start',
   position: 'relative',
 }
+
+store.dispatch(restoreAuthAsync())
 
 const App = () => {
   return (

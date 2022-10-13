@@ -4,7 +4,7 @@ import { Grid } from '@mui/material'
 import { motion } from 'framer-motion'
 
 import useToggle from 'components/hooks/useToggle'
-import Title from 'components/Title'
+import Title from 'components/common/Title'
 
 
 const Main: FC = () => {

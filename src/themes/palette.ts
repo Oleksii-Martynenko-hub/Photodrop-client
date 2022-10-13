@@ -1,15 +1,15 @@
-import { createTheme } from '@mui/material'
+import { createTheme, PaletteColor } from '@mui/material'
 
 declare module '@mui/material/styles' {
   interface Palette {
     white: string
   }
   interface PaletteOptions {
-    white: string
+    white: PaletteColor
   }
 }
 
-
+const defaultTheme = createTheme()
 export const theme = createTheme({
   palette: {
     primary: {
@@ -22,6 +22,9 @@ export const theme = createTheme({
       light: '#4e4e4e',
       dark: '#000000',
     },
-    white: '#ffffff',
+    white: defaultTheme.palette.augmentColor({
+      color: { main: '#ffffff' },
+      name: 'white',
+    }),
   },
 })

@@ -14,7 +14,6 @@ const Settings: FC = () => {
   const [isShowOutlet, setIsShowOutlet] = useToggle(false)
 
   useEffect(() => {
-    console.log('🚀 ~ location.pathname', location.pathname)
     setIsShowOutlet(location.pathname.split('/').filter((p) => !!p).length > 3)
   }, [location.pathname])
 

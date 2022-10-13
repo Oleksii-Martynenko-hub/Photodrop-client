@@ -11,12 +11,12 @@ import { selectGeneratedOTP, selectIsLoggedIn, selectStatus } from 'store/sign-u
 import { ERoutes } from 'pages/App'
 import { generateOtpAsync, signUpAsync } from 'store/sign-up/actions'
 import { selectPhoneNumber } from 'store/user/selectors'
-import { InputVerificationCode } from 'components/InputVerificationCode'
+import { InputVerificationCode } from 'components/common/InputVerificationCode'
 import { useDidMountEffect } from 'components/hooks/useDidMountEffect'
-import Title from 'components/Title'
-import Subtitle from 'components/Subtitle'
-import LoadingButton from 'components/LoadingButton'
-import Button from 'components/Button'
+import Title from 'components/common/Title'
+import Subtitle from 'components/common/Subtitle'
+import LoadingButton from 'components/common/LoadingButton'
+import Button from 'components/common/Button'
 import styled from 'styled-components'
 
 const ConfirmSignUp: FC = () => {

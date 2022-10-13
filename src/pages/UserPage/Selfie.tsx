@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import styled from 'styled-components'
 
 import useObserver from 'components/hooks/useObserver'
-import { Image } from 'components/Image'
+import { Image } from 'components/common/Image'
 import { useDidMountEffect } from 'components/hooks/useDidMountEffect'
 
 const Selfie: FC = () => {
@@ -41,21 +41,6 @@ const Selfie: FC = () => {
           <Name>Selfie</Name>
         </Grid>
       </Grid>
-
-      <Dialog
-        scroll='body'
-        open={isDialogOpen}
-        onClose={onClosePhoto}
-        PaperProps={{ sx: { background: 'transparent', boxShadow: 'none' } }}
-      >
-        <Image {...currentPhoto} />
-      </Dialog>
-
-      <ImageList cols={lg ? 5 : md ? 4 : sm ? 3 : 2} gap={0}>
-        <ImageListItem key={id}>
-          <Image onClick={onClosePhoto} height={200} iconSize={36} src={'photoLink'} clickable />
-        </ImageListItem>
-      </ImageList>
     </motion.div>
   )
 }

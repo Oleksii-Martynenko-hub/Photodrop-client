@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import styled from 'styled-components'
 
 import useObserver from 'components/hooks/useObserver'
-import { Image } from 'components/Image'
+import { Image } from 'components/common/Image'
 import { useDidMountEffect } from 'components/hooks/useDidMountEffect'
 
 const CurrentAlbum: FC = () => {

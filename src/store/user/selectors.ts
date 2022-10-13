@@ -1,12 +1,44 @@
+import { APIStatus } from 'api/MainApi'
+import { UserData } from 'api/ProtectedApi'
 import { createSelector, Selector } from 'reselect'
 
 import { RootState } from 'store'
 
 const selectUserReducer = (state: RootState) => state.userReducer
 
-export const selectUserId: Selector<RootState, number | undefined> = createSelector(
+export const selectUser: Selector<RootState, UserData> = createSelector(
   selectUserReducer,
-  ({ id }) => id,
+  ({ user }) => user,
+)
+
+export const selectUserId: Selector<RootState, number | null> = createSelector(
+  selectUserReducer,
+  ({ user }) => user.id || null,
+)
+
+export const selectUserName: Selector<RootState, string | null> = createSelector(
+  selectUserReducer,
+  ({ user }) => user.name,
+)
+
+export const selectUserEmail: Selector<RootState, string | null> = createSelector(
+  selectUserReducer,
+  ({ user }) => user.email,
+)
+
+export const selectUserAvatar: Selector<RootState, string | null> = createSelector(
+  selectUserReducer,
+  ({ avatar }) => avatar,
+)
+
+export const selectUserStatus: Selector<RootState, APIStatus> = createSelector(
+  selectUserReducer,
+  ({ status }) => status,
+)
+
+export const selectUserIsOnboarding: Selector<RootState, boolean> = createSelector(
+  selectUserReducer,
+  ({ isOnboarding }) => isOnboarding,
 )
 
 export const selectPhoneNumber: Selector<

@@ -20,7 +20,7 @@ import { ERoutes } from 'pages/App'
 
 import useToggle from 'components/hooks/useToggle'
 import { Logo } from 'components/Logo'
-import HideOnScroll from 'components/HideOnScroll'
+import HideOnScroll from 'components/common/HideOnScroll'
 
 
 export const AppBar = () => {
@@ -65,13 +65,13 @@ export const AppBar = () => {
             <Logo />
 
             {isLoggedIn && (
-              // <LinkStyled to={`${ERoutes.MAIN}/${ERoutes.USER}`}>
-              <Avatar
-                sx={md ? { width: 50, height: 50 } : {}}
-                alt={'userName'}
-                src='/static/images/avatar/1.jpg'
-              />
-              // </LinkStyled>
+              <LinkStyled to={`${ERoutes.MAIN}/${ERoutes.USER}`}>
+                <Avatar
+                  sx={md ? { width: 50, height: 50 } : {}}
+                  alt={'userName'}
+                  src='/static/images/avatar/1.jpg'
+                />
+              </LinkStyled>
             )}
           </Toolbar>
         </Bar>

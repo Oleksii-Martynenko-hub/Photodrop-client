@@ -3,6 +3,21 @@ import HttpClientProtected from 'api/HttpClientProtected'
 
 export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api'
 
+export type UserData = {
+  id: number
+  name: string | null
+  phone: string
+  email: string | null
+  textMessagesNotification: boolean | null
+  emailNotification: boolean | null
+  unsubscribe: boolean | null
+}
+
+export type UserEditNameBody = {
+  id: number
+  name: string
+}
+
 export type AlbumData = {
   id: number
   name: string
@@ -82,8 +97,12 @@ class ProtectedApi extends HttpClientProtected {
     return this.classInstance
   }
 
-  public postCreateAlbum = (newAlbum: CreateAlbumData) =>
-    this.instance.post<AlbumData>('/create-album', newAlbum)
+  public getMe = () => {
+    return this.instance.get<[]>('/get-me')
+  }
+
+  public putEditName = (userBody: UserEditNameBody) =>
+    this.instance.put<UserData>('/edit-name', userBody)
 
   public getAlbums = (photographerId: number) => {
     return this.instance.get<AlbumData[]>('/get-albums-from-db', { params: { photographerId } })

@@ -1,184 +1,101 @@
 import { FC, useEffect, useState } from 'react'
-import { Navigate } from 'react-router'
+import { Navigate, useNavigate } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  CircularProgress,
-  FormControl,
-  FormHelperText,
-  Grid,
-  IconButton,
-  InputAdornment,
-  OutlinedInput,
-  TextField,
-  Typography,
-} from '@mui/material'
-import { LoadingButton } from '@mui/lab'
-import { Visibility, VisibilityOff } from '@mui/icons-material'
+import { FormHelperText, Grid } from '@mui/material'
 import { motion } from 'framer-motion'
 
 import { APIStatus } from 'api/MainApi'
 
-import useToggle from 'components/hooks/useToggle'
-import { useInput } from 'components/hooks/useInput'
-import { useDidMountEffect } from 'components/hooks/useDidMountEffect'
-
-import { checkToken } from 'store/sign-up/reducers'
-import { selectErrors, selectIsLoggedIn, selectStatus } from 'store/sign-up/selectors'
-
 import { ERoutes } from 'pages/App'
+import { generateOtpAsync, signUpAsync } from 'store/sign-up/actions'
+import { selectUserStatus, selectUserIsOnboarding, selectUserName } from 'store/user/selectors'
+import { InputVerificationCode } from 'components/common/InputVerificationCode'
+import { useDidMountEffect } from 'components/hooks/useDidMountEffect'
+import Title from 'components/common/Title'
+import Subtitle from 'components/common/Subtitle'
+import LoadingButton from 'components/common/LoadingButton'
+import Button from 'components/common/Button'
+import styled from 'styled-components'
+import { useInput } from 'components/hooks/useInput'
+import TextField from 'components/common/TextField'
+import { editNameAsync } from 'store/user/actions'
 
 const EditName: FC = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-  const status = useSelector(selectStatus)
-  const isLoggedIn = useSelector(selectIsLoggedIn)
-  const errors = useSelector(selectErrors)
+  const status = useSelector(selectUserStatus)
+  const userName = useSelector(selectUserName)
+  const isOnboarding = useSelector(selectUserIsOnboarding)
 
-  const [login, setLogin] = useInput('')
-  const [password, setPassword] = useInput('')
+  const [newUserName, setNewUserName] = useInput(userName || '')
+  const [nameValidation, setNameValidation] = useState({ isValid: true, message: '' })
 
-  const [loginValidation, setLoginValidation] = useState({ isValid: true, message: '' })
-  const [passwordValidation, setPasswordValidation] = useState({ isValid: true, message: '' })
+  useDidMountEffect(() => {
+    if (newUserName) {
+      setNameValidation({ isValid: true, message: '' })
+    }
+  }, [newUserName])
 
-  const [isShowPassword, setShowPassword] = useToggle(false)
-
-  useEffect(() => {
-    dispatch(checkToken())
-  }, [])
-
-  useEffect(() => {
-    if (status === APIStatus.REJECTED) {
-      if (errors.length) {
-        errors.forEach((error) => {
-          if (error.msg === 'User not found') {
-            setLoginValidation({
-              isValid: false,
-              message: 'User with this login not exist.',
-            })
-          }
-
-          if (error.msg === 'Wrong password') {
-            setPasswordValidation({ isValid: false, message: 'Password is not correct.' })
-          }
-        })
-
-        return
-      }
-
-      setLoginValidation({ isValid: false, message: '' })
-      setPasswordValidation({
+  const handleOnClickLogin = (data?: string) => {
+    if (newUserName === userName) {
+      setNameValidation({
         isValid: false,
-        message: 'Something went wrong.',
+        message: 'You don`t need to update, if name hasn`t changed.',
       })
-    }
-  }, [status, errors])
-
-  useDidMountEffect(() => {
-    handleValidation('login')
-  }, [login])
-
-  useDidMountEffect(() => {
-    handleValidation('password')
-  }, [password])
-
-  const handleOnClickLogin = () => {
-    if (!handleValidation()) return
-
-    clearValidation()
-  }
-
-  // to services
-  const clearValidation = () => {
-    setLoginValidation({ isValid: true, message: '' })
-    setPasswordValidation({ isValid: true, message: '' })
-  }
-
-  // to services
-  const handleValidation = (input?: 'login' | 'password') => {
-    const loginMsg = 'Please enter a valid login.'
-    const passMsg = 'Please enter a valid password.'
-
-    if (input === 'login') {
-      if (!login) setLoginValidation({ isValid: false, message: loginMsg })
-      if (login) setLoginValidation({ isValid: true, message: '' })
       return
     }
 
-    if (input === 'password') {
-      if (!password) setPasswordValidation({ isValid: false, message: passMsg })
-      if (password) setPasswordValidation({ isValid: true, message: '' })
+    if (!newUserName.length) {
+      setNameValidation({
+        isValid: false,
+        message: 'Please enter your name.',
+      })
       return
     }
 
-    if (!login || !password) {
-      if (!login) {
-        setLoginValidation({ isValid: false, message: loginMsg })
-      }
-
-      if (!password) {
-        setPasswordValidation({ isValid: false, message: passMsg })
-      }
-      return false
-    }
-    return true
+    dispatch(editNameAsync(newUserName))
   }
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <Grid container justifyContent='center' sx={{ paddingTop: { xs: 6, md: 9 } }}>
-        <Grid
-          container
-          spacing={{ xs: 2, md: 3 }}
-          justifyContent='center'
-          sx={{ flex: { xs: '0 1 400px', md: '0 0 600px' } }}
-        >
-          <Grid item xs={12} md={12}>
-            <Typography variant='h2' align='center' gutterBottom>
-              EditName
-            </Typography>
+        <Grid container justifyContent='center' sx={{ flex: { xs: '0 0 345px' } }}>
+          <Grid item xs={12}>
+            <Title marginBottom={16}>
+              {isOnboarding || !userName ? 'Let’s get to know you' : 'Your name'}
+            </Title>
           </Grid>
 
-          <Grid item xs={12} md={12}>
-            <Typography variant='h6' align='center'>
-              Enter your name and password
-            </Typography>
-          </Grid>
-
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} sx={{ mb: '21px' }}>
             <TextField
-              placeholder='Login'
+              placeholder={isOnboarding || !userName ? 'What’s your name?' : 'Enter your new name'}
               required
-              error={!loginValidation.isValid}
+              error={!nameValidation.isValid}
               fullWidth
-              value={login}
-              onChange={setLogin.onChange}
-              InputProps={{
-                sx: {
-                  backgroundColor: '#F4F4F4',
-                  borderRadius: '10px',
-                  height: '40px',
-                },
-              }}
+              value={newUserName}
+              onChange={setNewUserName.onChange}
             />
           </Grid>
 
-          <Grid item xs={10} md={8}>
+          <Grid item xs={12} sx={{ mb: '20px' }}>
             <LoadingButton
               loading={status === APIStatus.PENDING}
-              loadingIndicator={
-                <CircularProgress
-                  size={18}
-                  sx={{ color: 'inherit', position: 'absolute', top: '-9px', left: '2px' }}
-                />
-              }
-              loadingPosition='end'
-              variant='contained'
+              disabled={!newUserName.length}
               fullWidth
-              sx={{ borderRadius: '50px', height: '50px', marginBottom: '10px' }}
-              onClick={handleOnClickLogin}
+              onClick={() => handleOnClickLogin()}
             >
-              EditName
+              Save
             </LoadingButton>
+
+            {!nameValidation.isValid && nameValidation.message && (
+              <FormHelperText
+                error={!nameValidation.isValid}
+                sx={{ textAlign: 'center', marginTop: '12px' }}
+              >
+                {nameValidation.message}
+              </FormHelperText>
+            )}
           </Grid>
         </Grid>
       </Grid>

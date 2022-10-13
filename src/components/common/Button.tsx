@@ -44,6 +44,11 @@ const ButtonStyled = styled(ButtonMui)<Props>`
     return typeof borderRadius === 'string' ? borderRadius : `${borderRadius}px`
   }};
   text-transform: none;
+
+  &.Mui-disabled {
+    background: #bcabee;
+    color: #fff;
+  }
 `
 
 export default Button

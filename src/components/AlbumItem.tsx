@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import styled from 'styled-components'
 
 import { AlbumData } from 'api/ProtectedApi'
-import { Image } from 'components/Image'
+import { Image } from 'components/common/Image'
 import { useMediaQuery } from 'components/hooks/useMediaQuery'
 
 interface Props {

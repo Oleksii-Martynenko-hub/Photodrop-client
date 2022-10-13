@@ -7,7 +7,7 @@ import MainApi, { APIStatus } from 'api/MainApi'
 import ProtectedApi from 'api/ProtectedApi'
 import { ErrorObject } from 'api/ErrorHandler'
 
-import loginReducer, { LoginState } from 'store/sign-up/reducers'
+import signUpReducer, { SignUpState } from 'store/sign-up/reducers'
 import userReducer, { UsersState } from 'store/user/reducers'
 import StorageApi from 'api/StorageApi'
 
@@ -53,7 +53,7 @@ export const rejectedCase =
 export const store = configureStore({
   reducer: {
     router: routerReducer,
-    loginReducer,
+    signUpReducer,
     userReducer,
   },
   middleware: (gDM) =>
@@ -67,6 +67,6 @@ export const store = configureStore({
 
 export const history = createReduxHistory(store)
 
-export type CommonState = LoginState | UsersState
+export type CommonState = SignUpState | UsersState
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch

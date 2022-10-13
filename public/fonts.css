@@ -1,0 +1,20 @@
+@font-face {
+  font-family: "Mukta";
+  font-weight: bold;
+  src: local("Mukta"),
+  url("fonts/Mukta/Mukta-Bold.ttf") format("truetype") /* Safari, Android, iOS */
+}
+
+@font-face {
+  font-family: "NewsCycle";
+  font-weight: normal;
+  src: local("NewsCycle"),
+  url("fonts/News_Cycle/NewsCycle-Regular.ttf") format("truetype") /* Safari, Android, iOS */
+}
+
+@font-face {
+  font-family: "NewsCycle";
+  font-weight: bold;
+  src: local("NewsCycle"),
+  url("fonts/News_Cycle/NewsCycle-Bold.ttf") format("truetype") /* Safari, Android, iOS */
+}

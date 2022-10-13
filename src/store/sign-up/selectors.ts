@@ -5,24 +5,24 @@ import { APIStatus } from 'api/MainApi'
 import { RootState } from 'store'
 import { ErrorObject } from 'api/ErrorHandler'
 
-const selectLoginReducer = (state: RootState) => state.loginReducer
+const selectSignUpReducer = (state: RootState) => state.signUpReducer
 
 export const selectIsLoggedIn: Selector<RootState, boolean> = createSelector(
-  selectLoginReducer,
+  selectSignUpReducer,
   ({ isLoggedIn }) => isLoggedIn,
 )
 
 export const selectGeneratedOTP: Selector<RootState, string | null> = createSelector(
-  selectLoginReducer,
+  selectSignUpReducer,
   ({ generatedOTP }) => generatedOTP,
 )
 
 export const selectStatus: Selector<RootState, APIStatus> = createSelector(
-  selectLoginReducer,
+  selectSignUpReducer,
   ({ status }) => status,
 )
 
 export const selectErrors: Selector<RootState, ErrorObject[]> = createSelector(
-  selectLoginReducer,
+  selectSignUpReducer,
   ({ errors }) => errors,
 )

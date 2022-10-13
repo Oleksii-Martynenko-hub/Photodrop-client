@@ -5,16 +5,14 @@ import { Typography, TypographyProps } from '@mui/material'
 interface Props extends TypographyProps {
   fontSize?: number | string
   marginBottom?: number | string
-  isBold?: boolean
 }
 
-const Subtitle: FC<Props> = ({
-  variant = 'subtitle1',
-  align = 'left',
-  gutterBottom = false,
-  fontSize = '20px',
+const Title: FC<Props> = ({
+  variant = 'h2',
+  align = 'center',
+  gutterBottom = true,
+  fontSize = '36px',
   marginBottom,
-  isBold = false,
   children,
   ...props
 }) => {
@@ -25,7 +23,6 @@ const Subtitle: FC<Props> = ({
       align={align}
       gutterBottom={gutterBottom}
       marginBottom={marginBottom}
-      isBold={isBold}
       {...props}
     >
       {children}
@@ -34,8 +31,9 @@ const Subtitle: FC<Props> = ({
 }
 
 const TitleStyled = styled(Typography)<Props>`
-  font-family: NewsCycle;
-  font-weight: ${({ isBold }) => (isBold ? 'bold' : 'normal')};
+  font-family: Mukta;
+  font-weight: bold;
+  color: #262626;
   font-size: ${({ fontSize }) => {
     return typeof fontSize === 'string' ? fontSize : `${fontSize}px`
   }};
@@ -46,4 +44,4 @@ const TitleStyled = styled(Typography)<Props>`
       margin-bottom: ${typeof marginBottom === 'string' ? marginBottom : `${marginBottom}px`};
     `};
 `
-export default Subtitle
+export default Title
