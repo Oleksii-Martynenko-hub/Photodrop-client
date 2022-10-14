@@ -39,6 +39,8 @@ const LoadingButtonStyled = styled.button<Props>`
   box-shadow: none;
   border: none;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent !important;
+  outline: none !important;
 
   ${({ disabled, loading }) =>
     (disabled || loading) &&

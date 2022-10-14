@@ -9,19 +9,19 @@ enum themes {
 }
 
 interface Props extends HTMLAttributes<HTMLButtonElement> {
-  theme?: themes
+  btnTheme?: themes
   disabled?: boolean
   fullWidth?: boolean
 }
 
-const Button = ({ theme = themes.primary, disabled, fullWidth, children, ...props }: Props) => {
+const Button = ({ btnTheme = themes.primary, disabled, fullWidth, children, ...props }: Props) => {
   const buttons = {
     [themes.primary]: PrimaryButton,
     [themes.outlined]: OutlinedButton,
     [themes.white]: WhiteButton,
     [themes.text]: TextButton,
   }
-  const ThemedButton = buttons[theme]
+  const ThemedButton = buttons[btnTheme]
 
   return (
     <ThemedButton disabled={disabled} fullWidth={fullWidth} {...props}>
@@ -46,6 +46,8 @@ const ButtonStyled = styled.button<Props>`
   box-shadow: none;
   border: none;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent !important;
+  outline: none !important;
 
   ${({ disabled }) =>
     disabled &&

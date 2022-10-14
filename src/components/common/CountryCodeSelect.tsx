@@ -137,15 +137,10 @@ const CountryCodeWrapperStyled = styled.div`
   margin-right: 10px;
   cursor: pointer;
   position: relative;
+  padding: 7px 9px 6px 7px;
 `
 
-const CountryCodeStyled = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
+const CountryCodeStyled = styled.div``
 
 const CountryCodeSelectStyled = styled.select`
   position: absolute;
@@ -155,29 +150,17 @@ const CountryCodeSelectStyled = styled.select`
 `
 
 const FlagIconStyled = styled(ReactCountryFlag)`
-  font-size: 30px;
-  line-height: 30px;
-  margin-right: 7px;
+  width: 30px !important;
+  font-size: 30px !important;
+  line-height: 25px !important;
+  margin-right: 8px;
 `
 
 const ArrowIconStyled = styled.img`
-  width: 15px;
-  height: 8px;
+  width: 14px;
+  height: 7px;
 `
 
 const InputStyled = styled(Input)`
-  /* color: #fff; */
   margin-left: 20px;
-
-  /* &::before {
-    border-color: #5936c3;
-  }
-
-  &:hover:not(.Mui-disabled)::before {
-    border-color: #6342c4;
-  }
-
-  &::after {
-    border-color: #9a7feb;
-  } */
 `

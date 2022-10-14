@@ -1,23 +1,23 @@
 import { FC, useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
-import { FormHelperText, Grid } from '@mui/material'
+import styled from 'styled-components'
 import { motion } from 'framer-motion'
 
 import { APIStatus } from 'api/MainApi'
 
+import { generateOtpAsync, signUpAsync } from 'store/sign-up/actions'
 import { selectGeneratedOTP, selectIsLoggedIn, selectStatus } from 'store/sign-up/selectors'
+import { selectPhoneNumber } from 'store/user/selectors'
 
 import { ERoutes } from 'pages/App'
-import { generateOtpAsync, signUpAsync } from 'store/sign-up/actions'
-import { selectPhoneNumber } from 'store/user/selectors'
-import { InputVerificationCode } from 'components/common/InputVerificationCode'
+
 import { useDidMountEffect } from 'components/hooks/useDidMountEffect'
-import Title from 'components/common/Title'
-import LoadingButton from 'components/common/LoadingButton'
-import Button from 'components/common/Button'
-import styled from 'styled-components'
 import Text from 'components/common/Text'
+import Title from 'components/common/Title'
+import Button from 'components/common/Button'
+import LoadingButton from 'components/common/LoadingButton'
+import { InputVerificationCode } from 'components/common/InputVerificationCode'
 
 const ConfirmSignUp: FC = () => {
   const dispatch = useDispatch()
@@ -35,7 +35,7 @@ const ConfirmSignUp: FC = () => {
 
   useEffect(() => {
     if (!generatedOTP || generatedOTP.length !== 6 || !phoneNumber) {
-      // navigate(ERoutes.SIGN_UP)
+      navigate(ERoutes.SIGN_UP)
     }
   }, [generatedOTP])
 
@@ -97,13 +97,12 @@ const ConfirmSignUp: FC = () => {
               value={otpCode}
               onChange={handleOnChangeOTP}
               onCompleted={handleOnClickLogin}
-              isValid={codeValidation.isValid}
             />
           </InputCodeWrapper>
 
           <ResendButtonWrapper>
             <Button
-              theme={Button.themes.text}
+              btnTheme={Button.themes.text}
               disabled={hasCodeResent}
               onClick={handleOnClickResendOTP}
             >
@@ -119,15 +118,6 @@ const ConfirmSignUp: FC = () => {
           >
             Next
           </LoadingButton>
-
-          {!codeValidation.isValid && codeValidation.message && (
-            <FormHelperText
-              error={!codeValidation.isValid}
-              sx={{ textAlign: 'center', marginTop: '12px' }}
-            >
-              {codeValidation.message}
-            </FormHelperText>
-          )}
         </MotionContainerStyled>
       )}
     </>
@@ -144,8 +134,8 @@ const PhoneNumberStyled = styled.span`
 
 const MotionContainerStyled = styled(motion.div)`
   width: 100%;
-  max-width: 345px;
-  padding: 106px 0 0 0;
+  max-width: 450px;
+  padding: 106px 15px 15px;
   display: flex;
   flex-direction: column;
 
@@ -154,13 +144,10 @@ const MotionContainerStyled = styled(motion.div)`
   }
 `
 
-const InputCodeWrapper = styled.div`
-  /* margin-bottom: 20px; */
-`
+const InputCodeWrapper = styled.div``
 
 const TitleStyled = styled(Title)`
   line-height: 17px;
-  letter-spacing: 0.6px;
 `
 
 const SubtitleStyled = styled(Text)`
@@ -171,5 +158,9 @@ const SubtitleStyled = styled(Text)`
 
 const ResendButtonWrapper = styled.div`
   margin: 20px 0 19px 0;
-  line-height: 13px;
+
+  & > button {
+    line-height: 13px;
+    letter-spacing: 0px;
+  }
 `

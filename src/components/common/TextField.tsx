@@ -31,8 +31,9 @@ const TextFieldStyled = styled(TextFieldMui)<Props>`
 
     & .MuiOutlinedInput-input {
       color: #262626;
+      height: 100%;
+      padding: 14px 12px 13px;
       box-sizing: border-box;
-      padding: 0 16px;
       font-family: ${({ theme }) => theme.fonts.futuraPT};
       font-size: 16px;
       line-height: 21px;
