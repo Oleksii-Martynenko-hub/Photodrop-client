@@ -35,7 +35,7 @@ const ConfirmSignUp: FC = () => {
 
   useEffect(() => {
     if (!generatedOTP || generatedOTP.length !== 6 || !phoneNumber) {
-      navigate(ERoutes.SIGN_UP)
+      // navigate(ERoutes.SIGN_UP)
     }
   }, [generatedOTP])
 
@@ -73,66 +73,62 @@ const ConfirmSignUp: FC = () => {
       {isLoggedIn ? (
         <Navigate to={ERoutes.MAIN} replace />
       ) : (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-          <Grid container justifyContent='center' sx={{ paddingTop: { xs: 6, md: 9 } }}>
-            <Grid container justifyContent='center' sx={{ flex: { xs: '0 0 345px' } }}>
-              <Grid item xs={12}>
-                <Title>What’s the code?</Title>
-              </Grid>
+        <MotionContainerStyled
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <TitleStyled>What’s the code?</TitleStyled>
 
-              <Grid item xs={12}>
-                <Text>
-                  Enter the code sent to
-                  <PhoneNumberStyled>
-                    {phoneNumber?.formattedValue.replace('(', ' (').replace(')', ') ')}
-                  </PhoneNumberStyled>
-                </Text>
-              </Grid>
+          <SubtitleStyled>
+            Enter the code sent to
+            <Text weight={Text.weight.medium}>
+              <PhoneNumberStyled>
+                {phoneNumber?.formattedValue.replace('(', ' (').replace(')', ') ')}
+              </PhoneNumberStyled>
+            </Text>
+          </SubtitleStyled>
 
-              <Grid item xs={12} sx={{ mb: '7px' }}>
-                <InputVerificationCode
-                  autoFocus
-                  length={6}
-                  placeholder=''
-                  value={otpCode}
-                  onChange={handleOnChangeOTP}
-                  onCompleted={handleOnClickLogin}
-                  isValid={codeValidation.isValid}
-                />
-              </Grid>
+          <InputCodeWrapper>
+            <InputVerificationCode
+              autoFocus
+              length={6}
+              placeholder=''
+              value={otpCode}
+              onChange={handleOnChangeOTP}
+              onCompleted={handleOnClickLogin}
+              isValid={codeValidation.isValid}
+            />
+          </InputCodeWrapper>
 
-              <Grid item xs={12} sx={{ mb: '10px' }}>
-                <Button
-                  theme={Button.themes.text}
-                  disabled={hasCodeResent}
-                  onClick={handleOnClickResendOTP}
-                >
-                  Resend code
-                </Button>
-              </Grid>
+          <ResendButtonWrapper>
+            <Button
+              theme={Button.themes.text}
+              disabled={hasCodeResent}
+              onClick={handleOnClickResendOTP}
+            >
+              Resend code
+            </Button>
+          </ResendButtonWrapper>
 
-              <Grid item xs={12} sx={{ mb: '20px' }}>
-                <LoadingButton
-                  loading={status === APIStatus.PENDING}
-                  disabled={otpCode.length !== 6}
-                  fullWidth
-                  onClick={() => handleOnClickLogin()}
-                >
-                  Next
-                </LoadingButton>
+          <LoadingButton
+            loading={status === APIStatus.PENDING}
+            disabled={otpCode.length !== 6}
+            fullWidth
+            onClick={() => handleOnClickLogin()}
+          >
+            Next
+          </LoadingButton>
 
-                {!codeValidation.isValid && codeValidation.message && (
-                  <FormHelperText
-                    error={!codeValidation.isValid}
-                    sx={{ textAlign: 'center', marginTop: '12px' }}
-                  >
-                    {codeValidation.message}
-                  </FormHelperText>
-                )}
-              </Grid>
-            </Grid>
-          </Grid>
-        </motion.div>
+          {!codeValidation.isValid && codeValidation.message && (
+            <FormHelperText
+              error={!codeValidation.isValid}
+              sx={{ textAlign: 'center', marginTop: '12px' }}
+            >
+              {codeValidation.message}
+            </FormHelperText>
+          )}
+        </MotionContainerStyled>
       )}
     </>
   )
@@ -144,4 +140,36 @@ const PhoneNumberStyled = styled.span`
   display: inline-block;
   font-weight: bold;
   margin-left: 5px;
+`
+
+const MotionContainerStyled = styled(motion.div)`
+  width: 100%;
+  max-width: 345px;
+  padding: 106px 0 0 0;
+  display: flex;
+  flex-direction: column;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    max-width: 420px;
+  }
+`
+
+const InputCodeWrapper = styled.div`
+  /* margin-bottom: 20px; */
+`
+
+const TitleStyled = styled(Title)`
+  line-height: 17px;
+  letter-spacing: 0.6px;
+`
+
+const SubtitleStyled = styled(Text)`
+  margin: 14px 0 19px 0;
+  line-height: 13px;
+  letter-spacing: 0;
+`
+
+const ResendButtonWrapper = styled.div`
+  margin: 20px 0 19px 0;
+  line-height: 13px;
 `
