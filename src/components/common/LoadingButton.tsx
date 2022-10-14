@@ -1,49 +1,61 @@
-import { FC } from 'react'
+import { FC, HTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 import { CircularProgress } from '@mui/material'
-import { LoadingButton as LoadingButtonMui, LoadingButtonProps } from '@mui/lab'
 
-interface Props extends LoadingButtonProps {
-  fontSize?: number | string
-  isBold?: boolean
+interface Props extends HTMLAttributes<HTMLButtonElement> {
+  loading?: boolean
+  disabled?: boolean
+  fullWidth?: boolean
 }
 
-const LoadingButton: FC<Props> = ({ fontSize = '18px', isBold, children, loading, ...props }) => {
+const LoadingButton: FC<Props> = ({ loading = false, disabled, fullWidth, children, ...props }) => {
   return (
     <LoadingButtonStyled
-      fontSize={fontSize}
-      loading={loading}
-      loadingIndicator={<div />}
-      loadingPosition='end'
-      variant='contained'
-      isBold={isBold}
+      loading={loading || false}
+      disabled={disabled}
+      fullWidth={fullWidth}
       {...props}
     >
-      {loading && (
-        <CircularProgress size={18} sx={{ color: 'inherit', marginRight: '10px', opacity: 0 }} />
-      )}
       {children}
-      {loading && <CircularProgress size={18} sx={{ color: 'inherit', marginLeft: '10px' }} />}
+      {loading && <CircularLoader size={18} />}
     </LoadingButtonStyled>
   )
 }
 
-const LoadingButtonStyled = styled(LoadingButtonMui)<Props>`
-  font-family: NewsCycle;
-  font-weight: ${({ isBold }) => (isBold ? 'bold' : 'normal')};
-  font-size: ${({ fontSize }) => {
-    return typeof fontSize === 'string' ? fontSize : `${fontSize}px`
-  }};
-  text-transform: none;
-  border-radius: 50px;
-  height: 50px;
-  padding-left: ${({ loading }) => (loading ? '17px' : '45px')};
+const LoadingButtonStyled = styled.button<Props>`
+  font-family: ${({ theme }) => theme.fonts.futuraPT};
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  padding-left: 45px;
   padding-right: ${({ loading }) => (loading ? '17px' : '45px')};
+  background: ${({ theme, loading, disabled }) =>
+    loading || disabled ? theme.styledPalette.primaryDisabled : theme.styledPalette.primary};
+  color: #fff;
+  width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
+  height: 50px;
+  border-radius: 25px;
+  text-transform: none;
+  box-shadow: none;
+  border: none;
+  cursor: pointer;
 
-  &.Mui-disabled {
-    background: #bcabee;
-    color: #fff;
+  ${({ disabled, loading }) =>
+    (disabled || loading) &&
+    css`
+      cursor: auto;
+    `}
+
+  @media ${({ theme }) => theme.media.desktop} {
+    font-size: 22px;
   }
+`
+
+const CircularLoader = styled(CircularProgress)`
+  color: inherit;
+  margin-left: 10px;
+  position: relative;
+  top: 2px;
 `
 
 export default LoadingButton

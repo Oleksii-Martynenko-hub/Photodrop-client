@@ -1,54 +1,92 @@
-import { FC } from 'react'
-import styled from 'styled-components'
-import { Button as ButtonMui, ButtonProps } from '@mui/material'
+import { HTMLAttributes } from 'react'
+import styled, { css } from 'styled-components'
 
-interface Props extends ButtonProps {
-  fontSize?: number | string
-  height?: number | string
-  borderRadius?: number | string
-  isBold?: boolean
+enum themes {
+  primary,
+  outlined,
+  white,
+  text,
 }
 
-const Button: FC<Props> = ({
-  fontSize = '20px',
-  height = '50px',
-  borderRadius = '50px',
-  isBold,
-  children,
-  ...props
-}) => {
+interface Props extends HTMLAttributes<HTMLButtonElement> {
+  theme?: themes
+  disabled?: boolean
+  fullWidth?: boolean
+}
+
+const Button = ({ theme = themes.primary, disabled, fullWidth, children, ...props }: Props) => {
+  const buttons = {
+    [themes.primary]: PrimaryButton,
+    [themes.outlined]: OutlinedButton,
+    [themes.white]: WhiteButton,
+    [themes.text]: TextButton,
+  }
+  const ThemedButton = buttons[theme]
+
   return (
-    <ButtonStyled
-      fontSize={fontSize}
-      height={height}
-      borderRadius={borderRadius}
-      variant='contained'
-      isBold={isBold}
-      {...props}
-    >
+    <ThemedButton disabled={disabled} fullWidth={fullWidth} {...props}>
       {children}
-    </ButtonStyled>
+    </ThemedButton>
   )
 }
 
-const ButtonStyled = styled(ButtonMui)<Props>`
-  font-family: NewsCycle;
-  font-weight: ${({ isBold }) => (isBold ? 'bold' : 'normal')};
-  font-size: ${({ fontSize }) => {
-    return typeof fontSize === 'string' ? fontSize : `${fontSize}px`
-  }};
-  height: ${({ height }) => {
-    return typeof height === 'string' ? height : `${height}px`
-  }};
-  border-radius: ${({ borderRadius }) => {
-    return typeof borderRadius === 'string' ? borderRadius : `${borderRadius}px`
-  }};
-  text-transform: none;
+Button.themes = themes
 
-  &.Mui-disabled {
-    background: #bcabee;
-    color: #fff;
+const ButtonStyled = styled.button<Props>`
+  font-family: ${({ theme }) => theme.fonts.futuraPT};
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  padding: 6px 20px;
+  color: #fff;
+  width: ${({ fullWidth }) => (fullWidth ? '100%' : 'max-content')};
+  height: 50px;
+  border-radius: 25px;
+  text-transform: none;
+  box-shadow: none;
+  border: none;
+  cursor: pointer;
+
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      cursor: auto;
+    `}
+
+  @media ${({ theme }) => theme.media.desktop} {
+    font-size: 22px;
   }
+`
+
+const PrimaryButton = styled(ButtonStyled)`
+  background: ${({ theme, disabled }) =>
+    disabled ? theme.styledPalette.primaryDisabled : theme.styledPalette.primary};
+`
+
+const OutlinedButton = styled(ButtonStyled)`
+  border: 1px solid #fff;
+  background: transparent;
+`
+
+const WhiteButton = styled(ButtonStyled)`
+  color: ${({ theme }) => theme.styledPalette.mainText};
+  background: #fff;
+`
+
+const TextButton = styled(ButtonStyled)`
+  font-size: 16px;
+  font-weight: normal;
+  height: unset;
+  line-height: 21px;
+  padding: 0;
+  color: ${({ theme }) => theme.styledPalette.primary};
+  background: transparent;
+
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      color: ${({ theme }) => theme.styledPalette.secondaryText};
+    `}
 `
 
 export default Button

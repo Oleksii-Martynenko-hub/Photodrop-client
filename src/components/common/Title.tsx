@@ -1,47 +1,40 @@
-import { FC } from 'react'
-import styled, { css } from 'styled-components'
-import { Typography, TypographyProps } from '@mui/material'
+import { HTMLAttributes } from 'react'
+import styled from 'styled-components'
 
-interface Props extends TypographyProps {
-  fontSize?: number | string
-  marginBottom?: number | string
+enum sizes {
+  big = '30px',
+  normal = '22px',
+  small = '18px',
 }
 
-const Title: FC<Props> = ({
-  variant = 'h2',
-  align = 'center',
-  gutterBottom = true,
-  fontSize = '36px',
-  marginBottom,
-  children,
-  ...props
-}) => {
+interface Props extends HTMLAttributes<HTMLHeadingElement> {
+  size?: sizes
+}
+
+const Title = ({ size = sizes.normal, children, ...props }: Props) => {
   return (
-    <TitleStyled
-      fontSize={fontSize}
-      variant={variant}
-      align={align}
-      gutterBottom={gutterBottom}
-      marginBottom={marginBottom}
-      {...props}
-    >
+    <TitleStyled size={size} {...props}>
       {children}
     </TitleStyled>
   )
 }
 
-const TitleStyled = styled(Typography)<Props>`
-  font-family: Mukta;
-  font-weight: bold;
-  color: #262626;
-  font-size: ${({ fontSize }) => {
-    return typeof fontSize === 'string' ? fontSize : `${fontSize}px`
-  }};
+Title.size = sizes
 
-  ${({ marginBottom }) =>
-    marginBottom &&
-    css`
-      margin-bottom: ${typeof marginBottom === 'string' ? marginBottom : `${marginBottom}px`};
-    `};
+const TitleStyled = styled.h2<Props>`
+  font-family: ${({ theme }) => theme.fonts.termina};
+  color: ${({ theme }) => theme.styledPalette.mainText};
+  text-align: center;
+  font-weight: 700;
+
+  font-size: ${({ size }) => (size === sizes.small ? '18px' : '22px')};
+  line-height: ${({ size }) => (size === sizes.small ? '22px' : '26px')};
+
+  @media ${({ theme }) => theme.media.desktop} {
+    font-size: ${({ size }) => (size === sizes.small ? '22px' : '30px')};
+    line-height: ${({ size }) => (size === sizes.small ? '26px' : '36px')};
+  }
+
+  margin: 0;
 `
 export default Title

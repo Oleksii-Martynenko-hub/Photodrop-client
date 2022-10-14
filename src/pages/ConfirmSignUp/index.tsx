@@ -14,10 +14,10 @@ import { selectPhoneNumber } from 'store/user/selectors'
 import { InputVerificationCode } from 'components/common/InputVerificationCode'
 import { useDidMountEffect } from 'components/hooks/useDidMountEffect'
 import Title from 'components/common/Title'
-import Subtitle from 'components/common/Subtitle'
 import LoadingButton from 'components/common/LoadingButton'
 import Button from 'components/common/Button'
 import styled from 'styled-components'
+import Text from 'components/common/Text'
 
 const ConfirmSignUp: FC = () => {
   const dispatch = useDispatch()
@@ -77,16 +77,16 @@ const ConfirmSignUp: FC = () => {
           <Grid container justifyContent='center' sx={{ paddingTop: { xs: 6, md: 9 } }}>
             <Grid container justifyContent='center' sx={{ flex: { xs: '0 0 345px' } }}>
               <Grid item xs={12}>
-                <Title marginBottom={5}>What’s the code?</Title>
+                <Title>What’s the code?</Title>
               </Grid>
 
               <Grid item xs={12}>
-                <Subtitle marginBottom={16}>
+                <Text>
                   Enter the code sent to
                   <PhoneNumberStyled>
                     {phoneNumber?.formattedValue.replace('(', ' (').replace(')', ') ')}
                   </PhoneNumberStyled>
-                </Subtitle>
+                </Text>
               </Grid>
 
               <Grid item xs={12} sx={{ mb: '7px' }}>
@@ -103,11 +103,8 @@ const ConfirmSignUp: FC = () => {
 
               <Grid item xs={12} sx={{ mb: '10px' }}>
                 <Button
+                  theme={Button.themes.text}
                   disabled={hasCodeResent}
-                  size='small'
-                  variant='text'
-                  fontSize={16}
-                  height={38}
                   onClick={handleOnClickResendOTP}
                 >
                   Resend code

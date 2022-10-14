@@ -12,7 +12,6 @@ import { selectUserStatus, selectUserIsOnboarding, selectUserName } from 'store/
 import { InputVerificationCode } from 'components/common/InputVerificationCode'
 import { useDidMountEffect } from 'components/hooks/useDidMountEffect'
 import Title from 'components/common/Title'
-import Subtitle from 'components/common/Subtitle'
 import LoadingButton from 'components/common/LoadingButton'
 import Button from 'components/common/Button'
 import styled from 'styled-components'
@@ -62,7 +61,7 @@ const EditName: FC = () => {
       <Grid container justifyContent='center' sx={{ paddingTop: { xs: 6, md: 9 } }}>
         <Grid container justifyContent='center' sx={{ flex: { xs: '0 0 345px' } }}>
           <Grid item xs={12}>
-            <Title marginBottom={16}>
+            <Title size={Title.size.small}>
               {isOnboarding || !userName ? 'Let’s get to know you' : 'Your name'}
             </Title>
           </Grid>
