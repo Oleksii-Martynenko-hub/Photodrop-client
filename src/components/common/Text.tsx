@@ -45,6 +45,7 @@ Text.weight = weights
 Text.color = colors
 
 const TextStyled = styled.p<Props>`
+  display: inline-block;
   font-family: ${({ theme }) => theme.fonts.futuraPT};
   color: ${({ theme, color }) =>
     color === colors.dark ? theme.styledPalette.mainText : theme.styledPalette.secondaryText};
@@ -52,7 +53,7 @@ const TextStyled = styled.p<Props>`
   font-weight: ${({ weight }) => weight};
 
   font-size: ${({ size }) => size};
-  line-height: ${({ size }) =>
+  /* line-height: ${({ size }) =>
     size === sizes.xs
       ? '15px'
       : size === sizes.sm
@@ -61,7 +62,8 @@ const TextStyled = styled.p<Props>`
       ? '21px'
       : size === sizes.lg
       ? '23px'
-      : '28px'};
+      : '28px'}; */
+  line-height: inherit;
 
   /* @media ${({ theme }) => theme.media.desktop} {
     font-size: ${({ size }) => (size === sizes.xs ? '22px' : '30px')};

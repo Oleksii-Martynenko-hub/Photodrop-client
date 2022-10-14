@@ -77,7 +77,7 @@ const TextButton = styled(ButtonStyled)`
   font-size: 16px;
   font-weight: normal;
   height: unset;
-  line-height: 21px;
+  line-height: inherit;
   padding: 0;
   color: ${({ theme }) => theme.styledPalette.primary};
   background: transparent;

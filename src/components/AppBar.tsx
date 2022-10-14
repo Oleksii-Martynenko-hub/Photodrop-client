@@ -42,7 +42,7 @@ export const AppBar = () => {
     )
   }, [location.pathname])
 
-  const headerStyles: SxProps<Theme> = { minHeight: { xs: '56px', md: '66px' } }
+  const headerStyles: SxProps<Theme> = { minHeight: { xs: '55px', md: '60px' } }
 
   const handleOnClickBack = () => {
     if (location.pathname === ERoutes.CONFIRM) {
@@ -67,7 +67,7 @@ export const AppBar = () => {
             {isLoggedIn && (
               <LinkStyled to={`${ERoutes.MAIN}/${ERoutes.USER}`}>
                 <Avatar
-                  sx={md ? { width: 50, height: 50 } : {}}
+                  sx={{ width: 36, height: 36 }}
                   alt={'userName'}
                   src='/static/images/avatar/1.jpg'
                 />

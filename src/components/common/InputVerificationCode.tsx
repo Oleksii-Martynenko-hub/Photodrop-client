@@ -24,11 +24,15 @@ const VerificationCodeStyled = styled.div<{ isValid: boolean }>`
   & .ReactInputVerificationCode__item {
     position: relative;
     color: #262626;
-    font-weight: 500;
-    border: 1px solid rgba(0, 0, 0, 0.27);
+    font-weight: normal;
+    border: 1px solid ${({ theme }) => theme.styledPalette.border};
     border-radius: 10px;
+    background-color: #f4f4f4;
     box-shadow: none;
     cursor: text;
+    font-family: ${({ theme }) => theme.fonts.futuraPT};
+    font-size: 16px;
+    line-height: 21px;
 
     &:hover {
       border: 1px solid rgba(0, 0, 0, 0.87);
@@ -36,7 +40,7 @@ const VerificationCodeStyled = styled.div<{ isValid: boolean }>`
 
     &.is-active {
       box-shadow: none;
-      border: 1px solid #3300cc;
+      border: 1px solid ${({ theme }) => theme.styledPalette.border};
     }
   }
 
