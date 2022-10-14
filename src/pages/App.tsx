@@ -1,15 +1,15 @@
 import { Provider } from 'react-redux'
 import { HistoryRouter } from 'redux-first-history/rr6'
-import { Container, CssBaseline, SxProps, Theme, ThemeProvider } from '@mui/material'
+import { Container, CssBaseline, SxProps, Theme } from '@mui/material'
 import { Slide, ToastContainer } from 'react-toastify'
 
-import { theme } from 'themes/palette'
 import { GlobalStyles } from 'themes/global'
 
 import { store, history } from 'store'
 import { restoreAuthAsync } from 'store/sign-up/actions'
 
 import { AppBar } from 'components/AppBar'
+import ThemeProvider from 'containers/ThemeProvider'
 import AnimatedRoutes from 'containers/AnimatedRoutes'
 
 import 'react-toastify/dist/ReactToastify.css'
@@ -51,7 +51,7 @@ const App = () => {
     <>
       <Provider store={store}>
         <HistoryRouter history={history}>
-          <ThemeProvider theme={theme}>
+          <ThemeProvider>
             <CssBaseline />
             <GlobalStyles />
 

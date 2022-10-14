@@ -13,6 +13,7 @@ export const GlobalStyles = createGlobalStyle`
   body,
   #root {
     min-height: 100vh;
+    font-family: ${({ theme }) => theme.fonts.futuraPT};
   }
 
   #root {
