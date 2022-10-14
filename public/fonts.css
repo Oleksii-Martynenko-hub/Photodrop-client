@@ -1,20 +1,39 @@
 @font-face {
-  font-family: "Mukta";
+  font-family: "Termina";
   font-weight: bold;
-  src: local("Mukta"),
-  url("fonts/Mukta/Mukta-Bold.ttf") format("truetype") /* Safari, Android, iOS */
+  src: local("Termina"),
+  url("fonts/Termina/Termina-bold.otf") format("truetype") /* Safari, Android, iOS */
 }
 
 @font-face {
-  font-family: "NewsCycle";
+  font-family: 'Futura PT';
+  src: url('fonts/FuturaPT/FuturaPT-Bold.eot');
+  src: local('Futura PT Bold'), local('FuturaPT-Bold'),
+      url('fonts/FuturaPT/FuturaPT-Bold.eot?#iefix') format('embedded-opentype'),
+      url('fonts/FuturaPT/FuturaPT-Bold.woff') format('woff'),
+      url('fonts/FuturaPT/FuturaPT-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Futura PT';
+  src: url('fonts/FuturaPT/FuturaPT-Medium.eot');
+  src: local('Futura PT Medium'), local('FuturaPT-Medium'),
+      url('fonts/FuturaPT/FuturaPT-Medium.eot?#iefix') format('embedded-opentype'),
+      url('fonts/FuturaPT/FuturaPT-Medium.woff') format('woff'),
+      url('fonts/FuturaPT/FuturaPT-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Futura PT';
+  src: url('fonts/FuturaPT/FuturaPT-Book.eot');
+  src: local('Futura PT Book'), local('FuturaPT-Book'),
+      url('fonts/FuturaPT/FuturaPT-Book.eot?#iefix') format('embedded-opentype'),
+      url('fonts/FuturaPT/FuturaPT-Book.woff') format('woff'),
+      url('fonts/FuturaPT/FuturaPT-Book.ttf') format('truetype');
   font-weight: normal;
-  src: local("NewsCycle"),
-  url("fonts/News_Cycle/NewsCycle-Regular.ttf") format("truetype") /* Safari, Android, iOS */
-}
-
-@font-face {
-  font-family: "NewsCycle";
-  font-weight: bold;
-  src: local("NewsCycle"),
-  url("fonts/News_Cycle/NewsCycle-Bold.ttf") format("truetype") /* Safari, Android, iOS */
+  font-style: normal;
 }
