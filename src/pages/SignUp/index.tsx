@@ -200,17 +200,3 @@ const DescriptionStyled = styled(Text)`
     line-height: 21px;
   }
 `
-
-const TermsPrivacyWrapperStyled = styled(Text)`
-  letter-spacing: 0px;
-  letter-spacing: -0.32px;
-  padding-left: 1px;
-`
-
-const TermsPrivacyLinkStyled = styled(Link)`
-  display: inline-block;
-  color: inherit;
-  line-height: 12px;
-  border-bottom: 1px solid ${({ theme }) => theme.styledPalette.primaryDisabled};
-  text-decoration: none;
-`
