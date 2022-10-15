@@ -45,7 +45,7 @@ export const AppBar = () => {
           <ToolbarStyled>
             {isShowBackButton && (
               <BackButtonStyled btnTheme={Button.themes.text} onClick={handleOnClickBack}>
-                <ArrowIconStyled src='back_arrow.svg' alt='back arrow' />
+                <ArrowIconStyled src='/back_arrow.svg' alt='back arrow' />
               </BackButtonStyled>
             )}
 
@@ -54,7 +54,7 @@ export const AppBar = () => {
             {isLoggedIn && (
               <LinkStyled to={`${ERoutes.MAIN}/${ERoutes.USER}`}>
                 <Avatar
-                  sx={{ width: 36, height: 36 }}
+                  sx={{ width: 35, height: 35 }}
                   alt={'userName'}
                   src='/static/images/avatar/1.jpg'
                 />
@@ -73,7 +73,8 @@ const LinkStyled = styled(Link)`
   display: block;
   text-decoration: none;
   position: absolute;
-  right: 10px;
+  top: 10px;
+  right: 15px;
 `
 
 const AppBarStyled = styled(Bar)`
