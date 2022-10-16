@@ -20,7 +20,7 @@ export enum ERoutes {
   SIGN_UP = '/sign-up',
   CONFIRM = '/confirm',
   USER = 'user',
-  USER_SELFIE = 'selfie',
+  ADD_SELFIE = '/add-selfie',
   USER_EDIT_NAME = 'edit-name',
   USER_SETTINGS = 'settings',
   USER_SETTINGS_PHONE = 'edit-phone',

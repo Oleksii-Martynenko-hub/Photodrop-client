@@ -39,7 +39,6 @@ const UserPage: FC = () => {
                 </Typography>
               </Grid>
 
-              <Link to={ERoutes.USER_SELFIE}>- USER_SELFIE -</Link>
               <Link to={ERoutes.USER_EDIT_NAME}>- USER_EDIT_NAME -</Link>
               <Link to={ERoutes.USER_SETTINGS}>- USER_SETTINGS -</Link>
               <Link to={ERoutes.USER_NOTIFICATIONS}>- USER_NOTIFICATIONS -</Link>

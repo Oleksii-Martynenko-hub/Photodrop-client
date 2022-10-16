@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { AppBar as Bar, Avatar, Toolbar } from '@mui/material'
 import styled from 'styled-components'
 
+import { logoutAsync } from 'store/sign-up/actions'
 import { clearOTP } from 'store/sign-up/reducers'
-import { selectIsLoggedIn } from 'store/sign-up/selectors'
 
 import { ERoutes } from 'pages/App'
 import useToggle from 'components/hooks/useToggle'
@@ -18,8 +18,6 @@ export const AppBar = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const isLoggedIn = useSelector(selectIsLoggedIn)
-
   const [isShowBackButton, setIsShowBackButton] = useToggle(false)
 
   useEffect(() => {
@@ -27,11 +25,16 @@ export const AppBar = () => {
       location.pathname.split('/').filter((p) => !!p).length > 1 ||
         location.pathname === ERoutes.CONFIRM ||
         location.pathname === ERoutes.TERMS ||
-        location.pathname === ERoutes.PRIVACY,
+        location.pathname === ERoutes.PRIVACY ||
+        location.pathname === ERoutes.ADD_SELFIE,
     )
   }, [location.pathname])
 
   const handleOnClickBack = () => {
+    if (location.pathname === ERoutes.ADD_SELFIE) {
+      dispatch(logoutAsync())
+      return
+    }
     if (location.pathname === ERoutes.CONFIRM) {
       dispatch(clearOTP())
     }
