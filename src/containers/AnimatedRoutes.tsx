@@ -11,7 +11,7 @@ import ConfirmSignUp from 'pages/ConfirmSignUp'
 import Terms from 'pages/Terms'
 import Privacy from 'pages/Privacy'
 import UserPage from 'pages/UserPage'
-import AddSelfie from 'pages/UserPage/AddSelfie'
+import AddSelfiePage from 'pages/AddSelfiePage'
 import EditName from 'pages/UserPage/EditName'
 import Settings from 'pages/Settings'
 import EditPhone from 'pages/Settings/EditPhone'
@@ -32,7 +32,7 @@ const AnimatedRoutes: FC = () => {
 
         <Route path={ERoutes.PRIVACY} element={<Privacy />} />
 
-        <Route path={ERoutes.ADD_SELFIE} element={<ProtectedRoute element={AddSelfie} />} />
+        <Route path={ERoutes.ADD_SELFIE} element={<ProtectedRoute element={AddSelfiePage} />} />
 
         <Route path={ERoutes.MAIN} element={<ProtectedRoute element={Main} />}>
           <Route path={ERoutes.ALBUMS_ID} element={<CurrentAlbum />} />

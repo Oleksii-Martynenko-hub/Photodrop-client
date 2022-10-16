@@ -25,6 +25,7 @@ const initialState: UsersState = {
   user: {
     id: 0,
     name: null,
+    activeSelfieKey: null,
     phone: '',
     email: null,
     emailNotification: null,
@@ -47,10 +48,27 @@ export const userSlice = createSlice({
       const tokens = Tokens.getInstance()
       const token = tokens.getToken()
       if (token) {
-        const data = jwt<UserData>(token)
-        console.log('🚀 ~ datauser', data)
-        state.user = data
-        state.phoneNumber = { value: data.phone, formattedValue: '' }
+        const {
+          id,
+          phone,
+          activeSelfieKey,
+          name,
+          email,
+          textMessagesNotification,
+          emailNotification,
+          unsubscribe,
+        } = jwt<UserData>(token)
+        state.user = {
+          id,
+          phone,
+          activeSelfieKey,
+          name,
+          email,
+          textMessagesNotification,
+          emailNotification,
+          unsubscribe,
+        }
+        if (!activeSelfieKey) state.isOnboarding = true
         state.status = APIStatus.FULFILLED
         return
       }

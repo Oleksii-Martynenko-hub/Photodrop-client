@@ -4,9 +4,9 @@ import styled from 'styled-components'
 
 import Title from 'components/common/Title'
 import Text from 'components/common/Text'
-// import { EditSelfie } from 'components/AddSelfie'
+import { AddSelfie } from 'components/AddSelfie'
 
-const AddSelfie: FC = () => {
+const AddSelfiePage: FC = () => {
   return (
     <MotionContainerStyled initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <TitleStyled>Add a selfie</TitleStyled>
@@ -15,12 +15,12 @@ const AddSelfie: FC = () => {
         A selfie allows your photos to be synced with your account.
       </SubtitleStyled>
 
-      {/* <EditSelfie /> */}
+      <AddSelfie />
     </MotionContainerStyled>
   )
 }
 
-export default AddSelfie
+export default AddSelfiePage
 
 const MotionContainerStyled = styled(motion.div)`
   width: 100%;

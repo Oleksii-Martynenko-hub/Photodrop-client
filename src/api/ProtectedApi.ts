@@ -5,6 +5,7 @@ export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/a
 
 export type UserData = {
   id: number
+  activeSelfieKey: string | null
   name: string | null
   phone: string
   email: string | null

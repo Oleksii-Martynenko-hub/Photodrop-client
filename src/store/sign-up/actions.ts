@@ -26,6 +26,7 @@ export const restoreAuthAsync = createAsyncThunk<void, void, ThunkExtra>(
       dispatch(setSignUpStatus(APIStatus.PENDING))
 
       await protectedApi.getMe()
+      await dispatch(setUserData())
       dispatch(setIsLoggedIn(true))
 
       dispatch(setSignUpStatus(APIStatus.FULFILLED))
