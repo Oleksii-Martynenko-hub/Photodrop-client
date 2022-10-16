@@ -14,6 +14,10 @@ export type UserData = {
   unsubscribe: boolean | null
 }
 
+export type GetSelfieBody = {
+  selfieKey: number
+}
+
 export type UserEditNameBody = {
   id: number
   name: string
@@ -100,6 +104,10 @@ class ProtectedApi extends HttpClientProtected {
 
   public getMe = () => {
     return this.instance.get<[]>('/get-me')
+  }
+
+  public postGetSelfie = (body: GetSelfieBody) => {
+    return this.instance.post<string>('/get-signed-selfie', body)
   }
 
   public putEditName = (userBody: UserEditNameBody) =>
