@@ -45,8 +45,8 @@ export const theme = {
     secondaryText: '#6d6d6d',
   },
   fonts: {
-    futuraPT: '"Futura PT", Helvetica, sans-serif', // 400, 500, 700
-    termina: 'Termina, Helvetica, sans-serif',
+    futuraPT: '"futura-pt", Helvetica, sans-serif',
+    termina: '"termina", Helvetica, sans-serif',
   },
   media: devices,
 } as const
