@@ -45,13 +45,13 @@ export const AppBar = () => {
           <ToolbarStyled>
             {isShowBackButton && (
               <BackButtonStyled btnTheme={Button.themes.text} onClick={handleOnClickBack}>
-                <ArrowIconStyled src='/back_arrow.svg' alt='back arrow' />
+                <ArrowIconStyled src='/images/back-arrow.svg' alt='back arrow' />
               </BackButtonStyled>
             )}
 
             <Logo />
 
-            {isLoggedIn && (
+            {location.pathname === ERoutes.MAIN && (
               <LinkStyled to={`${ERoutes.MAIN}/${ERoutes.USER}`}>
                 <Avatar
                   sx={{ width: 35, height: 35 }}

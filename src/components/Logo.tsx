@@ -6,7 +6,7 @@ import { ERoutes } from 'pages/App'
 export const Logo = () => {
   return (
     <LinkStyled to={ERoutes.ROOT}>
-      <LogoImage src={'/logo.svg'} alt='logo' />
+      <LogoImage src={'/images/logo.svg'} alt='logo' />
     </LinkStyled>
   )
 }

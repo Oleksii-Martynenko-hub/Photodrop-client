@@ -121,7 +121,7 @@ export const CountryCodeSelect = ({
       <CountryCodeStyled onClick={handleOnClickSelect}>
         <FlagIconStyled countryCode={countryCode} alt={countryNames[countryCode]} />
 
-        <ArrowIconStyled src='bottom-arrow.svg' alt='bottom-arrow' />
+        <ArrowIconStyled src='/images/bottom-arrow.svg' alt='bottom-arrow' />
       </CountryCodeStyled>
     </CountryCodeWrapperStyled>
   )
