@@ -68,7 +68,7 @@ const UserPage: FC = () => {
                 <LinkDescription size={Text.size.sm}>{description}</LinkDescription>
               </LinkTextWrapper>
 
-              <ArrowIconStyled src='/images/back-arrow.svg' alt='back arrow' />
+              <ArrowIconStyled src='/images/back-arrow.svg' alt='right arrow' />
             </LinkStyled>
           ))}
         </MotionContainerStyled>
