@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 
@@ -12,7 +13,6 @@ import { selectPhoneNumber } from 'store/user/selectors'
 
 import { ERoutes } from 'pages/App'
 
-import { useDidMountEffect } from 'components/hooks/useDidMountEffect'
 import Text from 'components/common/Text'
 import Title from 'components/common/Title'
 import Button from 'components/common/Button'
@@ -29,7 +29,6 @@ const ConfirmSignUp: FC = () => {
   const phoneNumber = useSelector(selectPhoneNumber)
 
   const [otpCode, setOtpCode] = useState('')
-  const [codeValidation, setCodeValidation] = useState({ isValid: true, message: '' })
 
   const [hasCodeResent, setHasCodeResent] = useState(false)
 
@@ -39,22 +38,12 @@ const ConfirmSignUp: FC = () => {
     }
   }, [generatedOTP])
 
-  useDidMountEffect(() => {
-    if (otpCode) {
-      setCodeValidation({ isValid: true, message: '' })
-    }
-  }, [otpCode])
-
   const handleOnClickLogin = (data?: string) => {
     if ((otpCode === generatedOTP || data === generatedOTP) && phoneNumber?.value) {
       dispatch(signUpAsync(phoneNumber.value))
       return
     }
-
-    setCodeValidation({
-      isValid: false,
-      message: 'Incorrect verification code, please check again.',
-    })
+    toast.error('Incorrect verification code, please check again.')
   }
 
   const handleOnChangeOTP = (value: string) => {

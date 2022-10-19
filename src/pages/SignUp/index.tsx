@@ -2,6 +2,7 @@ import { FC, useEffect, useRef, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import { NumberFormatValues, OnValueChange, PatternFormat } from 'react-number-format'
@@ -36,20 +37,11 @@ const SignUp: FC = () => {
   const [phoneNumber, setPhoneNumber] = useState<NumberFormatValues | null>(null)
   const [countryCode, setCountryCode] = useState<Country>('US')
 
-  const [phoneValidation, setPhoneValidation] = useState({ isValid: true, message: '' })
-
   const [isCountryDialogOpen, setCountryDialogOpen] = useState(false)
 
   /* masks for :
       YT XK TA SJ PR PM MF JE IM GP GG GB EH CX CC BQ BL AX
   */
-
-  useEffect(() => {
-    if (phoneNumber && !phoneValidation.isValid) {
-      if (isValidPhoneNumber(phoneNumber.value, countryCode))
-        setPhoneValidation({ isValid: true, message: '' })
-    }
-  }, [phoneNumber])
 
   useDidMountEffect(() => {
     if (countryCode && !isCountryDialogOpen) {
@@ -81,7 +73,7 @@ const SignUp: FC = () => {
   const handleOnClickSignUp = () => {
     if (phoneNumber) {
       if (!isValidPhoneNumber(phoneNumber.value, countryCode)) {
-        setPhoneValidation({ isValid: false, message: 'Invalid phone number.' })
+        toast.error('Invalid phone number.')
         return
       }
 
