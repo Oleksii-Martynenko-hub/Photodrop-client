@@ -3,7 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import { getExceptionPayload } from 'api/ErrorHandler'
 
 import { ThunkExtra } from 'store'
-import { setAvatar } from 'store/user/reducers'
+import { setAvatar, UserNotifications } from 'store/user/reducers'
 
 import { UserData } from 'api/ProtectedApi'
 
@@ -29,7 +29,7 @@ export const getSelfieAsync = createAsyncThunk<void, void, ThunkExtra>(
 
 export const editNameAsync = createAsyncThunk<UserData, string, ThunkExtra>(
   'user/editNameAsync',
-  async (name, { rejectWithValue, extra: { protectedApi }, dispatch, getState }) => {
+  async (name, { rejectWithValue, extra: { protectedApi }, getState }) => {
     try {
       const {
         user: { id },
@@ -39,7 +39,43 @@ export const editNameAsync = createAsyncThunk<UserData, string, ThunkExtra>(
 
       const response = await protectedApi.putEditName({ id, name })
 
-      // await dispatch(setUserData())
+      return response
+    } catch (error) {
+      return rejectWithValue(getExceptionPayload(error))
+    }
+  },
+)
+
+export const editEmailAsync = createAsyncThunk<UserData, string, ThunkExtra>(
+  'user/editEmailAsync',
+  async (email, { rejectWithValue, extra: { protectedApi }, getState }) => {
+    try {
+      const {
+        user: { id },
+      } = getState().userReducer
+
+      if (!id) throw new Error('User id is missing')
+
+      const response = await protectedApi.putEditEmail({ id, email })
+
+      return response
+    } catch (error) {
+      return rejectWithValue(getExceptionPayload(error))
+    }
+  },
+)
+
+export const editNotificationAsync = createAsyncThunk<UserData, UserNotifications, ThunkExtra>(
+  'user/editNotificationAsync',
+  async (notifications, { rejectWithValue, extra: { protectedApi }, getState }) => {
+    try {
+      const {
+        user: { id },
+      } = getState().userReducer
+
+      if (!id) throw new Error('User id is missing')
+
+      const response = await protectedApi.putEditNotification({ id, ...notifications })
 
       return response
     } catch (error) {

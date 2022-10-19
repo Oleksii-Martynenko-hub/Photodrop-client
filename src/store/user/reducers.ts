@@ -4,10 +4,16 @@ import { APIStatus } from 'api/MainApi'
 import { ErrorObject } from 'api/ErrorHandler'
 
 import { UserData } from 'api/ProtectedApi'
-import { editNameAsync } from './actions'
+import { editEmailAsync, editNameAsync, editNotificationAsync } from './actions'
 import { pendingCase, rejectedCase } from 'store'
 
-type PhoneNumber = {
+export type UserNotifications = {
+  textMessagesNotification: boolean | null
+  emailNotification: boolean | null
+  unsubscribe: boolean | null
+}
+
+export type PhoneNumber = {
   value: string
   formattedValue: string
 }
@@ -44,6 +50,7 @@ export const userSlice = createSlice({
   reducers: {
     setUserData: (state, { payload }: PayloadAction<UserData>) => {
       state.user = payload
+      state.isOnboarding = !payload.name || !payload.email
     },
     setPhoneNumber: (state, { payload }: PayloadAction<PhoneNumber>) => {
       state.phoneNumber = payload
@@ -58,6 +65,25 @@ export const userSlice = createSlice({
     builder.addCase(editNameAsync.rejected, rejectedCase())
     builder.addCase(editNameAsync.fulfilled, (state, { payload }) => {
       state.user.name = payload.name
+      state.isOnboarding = !payload.name || !payload.email
+      state.status = APIStatus.FULFILLED
+    })
+
+    builder.addCase(editEmailAsync.pending, pendingCase())
+    builder.addCase(editEmailAsync.rejected, rejectedCase())
+    builder.addCase(editEmailAsync.fulfilled, (state, { payload }) => {
+      state.user.name = payload.email
+      state.isOnboarding = !payload.name || !payload.email
+      state.status = APIStatus.FULFILLED
+    })
+
+    builder.addCase(editNotificationAsync.pending, pendingCase())
+    builder.addCase(editNotificationAsync.rejected, rejectedCase())
+    builder.addCase(editNotificationAsync.fulfilled, (state, { payload }) => {
+      state.user.textMessagesNotification = payload.textMessagesNotification
+      state.user.emailNotification = payload.emailNotification
+      state.user.unsubscribe = payload.unsubscribe
+
       state.status = APIStatus.FULFILLED
     })
   },

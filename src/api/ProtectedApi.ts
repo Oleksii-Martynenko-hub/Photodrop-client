@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import HttpClientProtected from 'api/HttpClientProtected'
+import { UserNotifications } from 'store/user/reducers'
 
 export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api'
 
@@ -22,9 +23,24 @@ export type PresignedSelfieBody = {
   name: string
   userId: number
 }
+
 export type UserEditNameBody = {
   id: number
   name: string
+}
+
+export type UserEditEmailBody = {
+  id: number
+  email: string
+}
+
+export type UserEditPhoneBody = {
+  id: number
+  phone: string
+}
+
+export interface UserEditNotificationBody extends UserNotifications {
+  id: number
 }
 
 export type AlbumData = {
@@ -121,6 +137,17 @@ class ProtectedApi extends HttpClientProtected {
 
   public putEditName = (userBody: UserEditNameBody) =>
     this.instance.put<UserData>('/edit-name', userBody)
+
+  public putEditEmail = (userBody: UserEditEmailBody) =>
+    this.instance.put<UserData>('/edit-email', userBody)
+
+  public putEditPhone = (userBody: UserEditPhoneBody) =>
+    this.instance.put<UserData>('/edit-phone', userBody)
+
+  public putEditNotification = (userBody: UserEditNotificationBody) =>
+    this.instance.put<UserData>('/edit-notification-settings', userBody)
+
+  // older
 
   public getAlbums = (photographerId: number) => {
     return this.instance.get<AlbumData[]>('/get-albums-from-db', { params: { photographerId } })

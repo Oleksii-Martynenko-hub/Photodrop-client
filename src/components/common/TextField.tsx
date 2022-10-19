@@ -39,7 +39,7 @@ const TextFieldStyled = styled(TextFieldMui)<Props>`
       line-height: 21px;
 
       &::placeholder {
-        color: ${({ theme }) => theme.styledPalette.secondaryText + 'ff'};
+        color: ${({ theme }) => theme.styledPalette.secondaryText};
         opacity: 1;
       }
     }
