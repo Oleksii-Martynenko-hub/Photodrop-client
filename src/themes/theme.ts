@@ -43,6 +43,7 @@ export const theme = {
     background: '#F4F4F4',
     mainText: '#262626',
     secondaryText: '#6d6d6d',
+    checkboxDisabled: '#E3E0D8',
   },
   fonts: {
     futuraPT: '"futura-pt", Helvetica, sans-serif',
