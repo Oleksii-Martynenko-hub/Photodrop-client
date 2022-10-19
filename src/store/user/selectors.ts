@@ -3,6 +3,7 @@ import { UserData } from 'api/ProtectedApi'
 import { createSelector, Selector } from 'reselect'
 
 import { RootState } from 'store'
+import { UserNotifications } from './reducers'
 
 const selectUserReducer = (state: RootState) => state.userReducer
 
@@ -29,6 +30,15 @@ export const selectUserEmail: Selector<RootState, string | null> = createSelecto
 export const selectUserAvatar: Selector<RootState, string | null> = createSelector(
   selectUserReducer,
   ({ avatar }) => avatar,
+)
+
+export const selectUserNotifications: Selector<RootState, UserNotifications> = createSelector(
+  selectUser,
+  ({ textMessagesNotification, emailNotification, unsubscribe }) => ({
+    textMessagesNotification,
+    emailNotification,
+    unsubscribe,
+  }),
 )
 
 export const selectUserStatus: Selector<RootState, APIStatus> = createSelector(
