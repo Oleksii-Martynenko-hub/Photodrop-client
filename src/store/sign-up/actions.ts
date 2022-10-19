@@ -1,56 +1,64 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
+import jwt from 'jwt-decode'
 
-import { APIStatus, TokensData } from 'api/MainApi'
 import { getExceptionPayload } from 'api/ErrorHandler'
 
 import { ThunkExtra } from 'store'
-import { clearUserState, setUserData } from 'store/user/reducers'
+import { clearUserState, setAvatar, setUserData } from 'store/user/reducers'
 import {
   clearOTP,
   clearSignUpState,
   clearToken,
+  setIsFullPageLoading,
   setIsLoggedIn,
-  setSignUpStatus,
 } from 'store/sign-up/reducers'
 import Tokens from 'utils/local-storage/tokens'
+import { UserData } from 'api/ProtectedApi'
+import { getSelfieAsync } from 'store/user/actions'
 
 export const restoreAuthAsync = createAsyncThunk<void, void, ThunkExtra>(
   'login/restoreAuthAsync',
-  async (_, { rejectWithValue, extra: { protectedApi }, dispatch }) => {
+  async (_, { rejectWithValue, extra: { protectedApi }, dispatch, getState }) => {
     try {
+      dispatch(setIsFullPageLoading(true))
+
       const tokens = Tokens.getInstance()
       const token = tokens.getToken()
 
       if (!token) return
 
-      dispatch(setSignUpStatus(APIStatus.PENDING))
-
-      await protectedApi.getMe()
-      await dispatch(setUserData())
       dispatch(setIsLoggedIn(true))
+      dispatch(setAvatar('avatar'))
 
-      dispatch(setSignUpStatus(APIStatus.FULFILLED))
+      const { id } = jwt<UserData>(token)
+
+      const { userObject } = await protectedApi.getMe({ userId: id })
+
+      await dispatch(setUserData(userObject))
+
+      await dispatch(getSelfieAsync())
     } catch (error) {
-      dispatch(setSignUpStatus(APIStatus.REJECTED))
+      dispatch(logoutAsync())
       return rejectWithValue(getExceptionPayload(error))
+    } finally {
+      dispatch(setIsFullPageLoading(false))
     }
   },
 )
 
-export const signUpAsync = createAsyncThunk<TokensData, string, ThunkExtra>(
+export const signUpAsync = createAsyncThunk<void, string, ThunkExtra>(
   'signUp/signUpAsync',
   async (phone, { rejectWithValue, extra: { mainApi }, dispatch }) => {
     try {
-      const response = await mainApi.postSignUp(phone)
+      const { token } = await mainApi.postSignUp(phone)
 
       const tokens = Tokens.getInstance()
 
-      tokens.setToken(response.token)
+      tokens.setToken(token)
 
-      await dispatch(setUserData())
+      await dispatch(restoreAuthAsync())
+
       await dispatch(clearOTP())
-
-      return response
     } catch (error) {
       return rejectWithValue(getExceptionPayload(error))
     }

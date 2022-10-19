@@ -1,6 +1,9 @@
 import { FC } from 'react'
 import { Navigate, Route, Routes } from 'react-router'
+import { useSelector } from 'react-redux'
 import { AnimatePresence } from 'framer-motion'
+
+import { selectIsFullPageLoading } from 'store/sign-up/selectors'
 
 import ProtectedRoute from 'containers/ProtectedRoute'
 import { ERoutes } from 'pages/App'
@@ -17,10 +20,14 @@ import Settings from 'pages/Settings'
 import EditPhone from 'pages/Settings/EditPhone'
 import EditEmail from 'pages/Settings/EditEmail'
 import Notifications from 'pages/UserPage/Notifications'
+import { FullPageLoader } from 'components/common/FullPageLoader'
 
 const AnimatedRoutes: FC = () => {
+  const isFullPageLoading = useSelector(selectIsFullPageLoading)
   return (
     <AnimatePresence>
+      {isFullPageLoading && <FullPageLoader />}
+
       <Routes>
         <Route path={ERoutes.ROOT} element={<Navigate to={ERoutes.SIGN_UP} replace />} />
 

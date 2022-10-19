@@ -5,7 +5,7 @@ export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/a
 
 export type UserData = {
   id: number
-  activeSelfieKey: string | null
+  selfieKey: string | null
   name: string | null
   phone: string
   email: string | null
@@ -15,9 +15,13 @@ export type UserData = {
 }
 
 export type GetSelfieBody = {
-  selfieKey: number
+  selfieKey: string
 }
 
+export type PresignedSelfieBody = {
+  name: string
+  userId: number
+}
 export type UserEditNameBody = {
   id: number
   name: string
@@ -50,7 +54,8 @@ export interface PresignedPhotosPostResponse {
   fields: {
     key: string
     'Content-Type': string
-    'x-amz-meta-people': string
+    'x-amz-meta-userId': string
+    originalSelfieKey: string
     bucket: string
     'X-Amz-Algorithm': string
     'X-Amz-Credential': string
@@ -102,8 +107,12 @@ class ProtectedApi extends HttpClientProtected {
     return this.classInstance
   }
 
-  public getMe = () => {
-    return this.instance.get<[]>('/get-me')
+  public getMe = (params: { userId: number }) => {
+    return this.instance.get<{ userObject: UserData }>('/get-me', { params })
+  }
+
+  public postGetPresignedPostSelfie = (body: PresignedSelfieBody) => {
+    return this.instance.post<PresignedPhotosPostResponse>('/presigned-post', body)
   }
 
   public postGetSelfie = (body: GetSelfieBody) => {

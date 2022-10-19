@@ -1,22 +1,21 @@
-import { createSlice } from '@reduxjs/toolkit'
-import jwt from 'jwt-decode'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { APIStatus } from 'api/MainApi'
 import { ErrorObject } from 'api/ErrorHandler'
 
-import Tokens from 'utils/local-storage/tokens'
 import { UserData } from 'api/ProtectedApi'
 import { editNameAsync } from './actions'
 import { pendingCase, rejectedCase } from 'store'
 
+type PhoneNumber = {
+  value: string
+  formattedValue: string
+}
 export interface UsersState {
   user: UserData
   avatar: string | null
   isOnboarding: boolean
-  phoneNumber: {
-    value: string
-    formattedValue: string
-  } | null
+  phoneNumber: PhoneNumber | null
   status: APIStatus
   errors: ErrorObject[]
 }
@@ -25,7 +24,7 @@ const initialState: UsersState = {
   user: {
     id: 0,
     name: null,
-    activeSelfieKey: null,
+    selfieKey: null,
     phone: '',
     email: null,
     emailNotification: null,
@@ -43,47 +42,14 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUserData: (state) => {
-      state.status = APIStatus.PENDING
-      const tokens = Tokens.getInstance()
-      const token = tokens.getToken()
-      if (token) {
-        const {
-          id,
-          phone,
-          activeSelfieKey,
-          name,
-          email,
-          textMessagesNotification,
-          emailNotification,
-          unsubscribe,
-        } = jwt<UserData>(token)
-        state.user = {
-          id,
-          phone,
-          activeSelfieKey,
-          name,
-          email,
-          textMessagesNotification,
-          emailNotification,
-          unsubscribe,
-        }
-        if (!activeSelfieKey) state.isOnboarding = true
-        state.status = APIStatus.FULFILLED
-        return
-      }
-      state.status = APIStatus.REJECTED
+    setUserData: (state, { payload }: PayloadAction<UserData>) => {
+      state.user = payload
     },
-    setPhoneNumber: (
-      state,
-      action: {
-        payload: {
-          value: string
-          formattedValue: string
-        }
-      },
-    ) => {
-      state.phoneNumber = action.payload
+    setPhoneNumber: (state, { payload }: PayloadAction<PhoneNumber>) => {
+      state.phoneNumber = payload
+    },
+    setAvatar: (state, { payload }: PayloadAction<string | null>) => {
+      state.avatar = payload
     },
     clearUserState: () => initialState,
   },
@@ -97,6 +63,6 @@ export const userSlice = createSlice({
   },
 })
 
-export const { setUserData, clearUserState, setPhoneNumber } = userSlice.actions
+export const { setUserData, clearUserState, setPhoneNumber, setAvatar } = userSlice.actions
 
 export default userSlice.reducer

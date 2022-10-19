@@ -1,19 +1,31 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 
-import { APIStatus, TokensData } from 'api/MainApi'
 import { getExceptionPayload } from 'api/ErrorHandler'
 
 import { ThunkExtra } from 'store'
-import { clearUserState, setUserData } from 'store/user/reducers'
-import {
-  clearOTP,
-  clearSignUpState,
-  clearToken,
-  setIsLoggedIn,
-  setSignUpStatus,
-} from 'store/sign-up/reducers'
-import Tokens from 'utils/local-storage/tokens'
+import { setAvatar } from 'store/user/reducers'
+
 import { UserData } from 'api/ProtectedApi'
+
+export const getSelfieAsync = createAsyncThunk<void, void, ThunkExtra>(
+  'login/getSelfieAsync',
+  async (_, { rejectWithValue, extra: { protectedApi }, dispatch, getState }) => {
+    try {
+      const {
+        user: { selfieKey },
+      } = getState().userReducer
+
+      if (selfieKey) {
+        const avatar = await protectedApi.postGetSelfie({ selfieKey })
+
+        dispatch(setAvatar(avatar))
+      }
+    } catch (error) {
+      dispatch(setAvatar(null))
+      return rejectWithValue(getExceptionPayload(error))
+    }
+  },
+)
 
 export const editNameAsync = createAsyncThunk<UserData, string, ThunkExtra>(
   'user/editNameAsync',

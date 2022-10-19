@@ -4,13 +4,14 @@ import { ErrorObject } from 'api/ErrorHandler'
 import { APIStatus } from 'api/MainApi'
 
 import { pendingCase, rejectedCase } from 'store'
-import { generateOtpAsync, signUpAsync } from 'store/sign-up/actions'
+import { generateOtpAsync, restoreAuthAsync, signUpAsync } from 'store/sign-up/actions'
 
 import Tokens from 'utils/local-storage/tokens'
 
 export interface SignUpState {
   isLoggedIn: boolean
   generatedOTP: string | null
+  isFullPageLoading: boolean
   status: APIStatus
   errors: ErrorObject[]
 }
@@ -18,6 +19,7 @@ export interface SignUpState {
 const initialState: SignUpState = {
   isLoggedIn: false,
   generatedOTP: null,
+  isFullPageLoading: false,
   status: APIStatus.IDLE,
   errors: [],
 }
@@ -53,6 +55,9 @@ export const signUpSlice = createSlice({
     setIsLoggedIn: (state, action: { payload: boolean }) => {
       state.isLoggedIn = action.payload
     },
+    setIsFullPageLoading: (state, action: { payload: boolean }) => {
+      state.isFullPageLoading = action.payload
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(generateOtpAsync.pending, pendingCase())
@@ -65,17 +70,24 @@ export const signUpSlice = createSlice({
     builder.addCase(signUpAsync.pending, pendingCase())
     builder.addCase(signUpAsync.rejected, rejectedCase())
     builder.addCase(signUpAsync.fulfilled, (state) => {
-      const tokens = Tokens.getInstance()
+      state.status = APIStatus.FULFILLED
+    })
 
-      if (tokens.getToken()) {
-        state.isLoggedIn = true
-        state.status = APIStatus.FULFILLED
-      }
+    builder.addCase(restoreAuthAsync.pending, pendingCase())
+    builder.addCase(restoreAuthAsync.rejected, rejectedCase())
+    builder.addCase(restoreAuthAsync.fulfilled, (state) => {
+      state.status = APIStatus.FULFILLED
     })
   },
 })
 
-export const { clearToken, clearSignUpState, clearOTP, setSignUpStatus, setIsLoggedIn } =
-  signUpSlice.actions
+export const {
+  clearToken,
+  clearSignUpState,
+  clearOTP,
+  setSignUpStatus,
+  setIsLoggedIn,
+  setIsFullPageLoading,
+} = signUpSlice.actions
 
 export default signUpSlice.reducer

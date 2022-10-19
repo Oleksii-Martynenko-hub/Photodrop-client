@@ -12,6 +12,11 @@ export const selectIsLoggedIn: Selector<RootState, boolean> = createSelector(
   ({ isLoggedIn }) => isLoggedIn,
 )
 
+export const selectIsFullPageLoading: Selector<RootState, boolean> = createSelector(
+  selectSignUpReducer,
+  ({ isFullPageLoading }) => isFullPageLoading,
+)
+
 export const selectGeneratedOTP: Selector<RootState, string | null> = createSelector(
   selectSignUpReducer,
   ({ generatedOTP }) => generatedOTP,
