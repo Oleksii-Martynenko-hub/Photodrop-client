@@ -171,10 +171,6 @@ const MotionContainerStyled = styled(motion.div)`
   padding: 136px 15px 15px;
   display: flex;
   flex-direction: column;
-
-  @media ${({ theme }) => theme.media.desktop} {
-    max-width: 420px;
-  }
 `
 
 const InputNumberWrapperStyled = styled.div`
