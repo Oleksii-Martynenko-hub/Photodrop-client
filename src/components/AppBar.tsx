@@ -42,6 +42,10 @@ export const AppBar = () => {
     if (location.pathname === ERoutes.CONFIRM) {
       dispatch(clearOTP())
     }
+    if (location.pathname === `${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_EDIT_NAME}`) {
+      navigate(`${ERoutes.MAIN}/${ERoutes.USER}`)
+      return
+    }
     navigate(-1)
   }
 
