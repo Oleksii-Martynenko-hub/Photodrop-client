@@ -205,7 +205,6 @@ const DescriptionStyled = styled(Text)`
 `
 
 const TermsPrivacyWrapperStyled = styled(Text)`
-  letter-spacing: 0px;
   letter-spacing: -0.32px;
   padding-left: 1px;
   line-height: 18px;
