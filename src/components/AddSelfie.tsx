@@ -1,55 +1,95 @@
-import { HTMLAttributes, useEffect, useRef, useState } from 'react'
-import styled from 'styled-components'
-import { Dialog, Input } from '@mui/material'
+import { HTMLAttributes, useEffect, useState } from 'react'
+import styled, { css } from 'styled-components'
+import { Dialog } from '@mui/material'
 import Uppy from '@uppy/core'
-import { Dashboard, useUppy } from '@uppy/react'
-import { CropImage } from './CropImage'
-import '@uppy/core/dist/style.css'
-import '@uppy/dashboard/dist/style.css'
-import Button from './common/Button'
+import AwsS3 from '@uppy/aws-s3'
+
+import useUppy from 'components/hooks/useUppy'
+import Button from 'components/common/Button'
+import { CropImage } from 'components/CropImage'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectUserAvatar, selectUserId } from 'store/user/selectors'
+import ProtectedApi from 'api/ProtectedApi'
+import { setAvatar } from 'store/user/reducers'
+import { toast } from 'react-toastify'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface Props extends HTMLAttributes<HTMLDivElement> {}
-
-function readFile(file: File | Blob) {
-  return new Promise<string | ArrayBuffer | null>((resolve) => {
-    const reader = new FileReader()
-    reader.addEventListener('load', () => resolve(reader.result), false)
-    reader.readAsDataURL(file)
-  })
+interface Props extends HTMLAttributes<HTMLDivElement> {
+  isUserPage?: boolean
 }
 
-export const AddSelfie = ({ ...props }: Props) => {
+export const AddSelfie = ({ isUserPage = false, ...props }: Props) => {
+  const dispatch = useDispatch()
+  const userId = useSelector(selectUserId)
+  const avatar = useSelector(selectUserAvatar)
+
   const [originalImage, setOriginalImage] = useState<File | null>(null)
   const [image, setImage] = useState<File | null>(null)
-  const [imageSrc, setImageSrc] = useState<string | ArrayBuffer | null>(null)
+  const [imageSrc, setImageSrc] = useState<string | ArrayBuffer | null>(isUserPage ? avatar : null)
   const [isDialogOpen, setDialogOpen] = useState(false)
+  const [isSelfieUploading, setSelfieUploading] = useState(false)
 
   const addAvatar = useUppy(() => {
     return new Uppy({
       id: 'addAvatar',
+      autoProceed: true,
+    }).use(AwsS3, {
+      limit: 1,
+      getUploadParameters: async (file) => {
+        const api = ProtectedApi.getInstance()
+
+        const data = await api.postGetPresignedPostSelfie({
+          name: file.name,
+          userId: userId || 0,
+        })
+
+        return Promise.resolve({
+          method: 'POST',
+          url: data.url,
+          fields: { ...data.fields },
+        })
+      },
     })
   })
 
+  addAvatar.on('complete', (result) => {
+    console.log('successful files:', result.successful)
+    if (imageSrc && !result.failed.length) {
+      dispatch(setAvatar(imageSrc.toString()))
+      setSelfieUploading(false)
+      setDialogOpen(false)
+      setOriginalImage(null)
+    }
+  })
+
+  addAvatar.on('error', (error) => {
+    setSelfieUploading(false)
+    toast.error(error.stack)
+  })
+
   useEffect(() => {
-    if (image) {
+    if (image && originalImage) {
+      const updatedImage = new File([image.slice(0, image.size, image.type)], originalImage.name, {
+        lastModified: originalImage.lastModified,
+        type: originalImage.type,
+      })
+
       addAvatar.addFile({
-        name: image.name,
-        type: image.type,
-        data: image,
+        name: updatedImage.name,
+        type: updatedImage.type,
+        data: updatedImage,
         meta: {
-          relativePath: image.webkitRelativePath,
+          relativePath: originalImage.webkitRelativePath,
         },
       })
 
-      const getImageUrl = async (image: File) => {
-        const imageDataUrl = await readFile(image)
-
-        if (imageDataUrl) setImageSrc(imageDataUrl)
-      }
-      getImageUrl(image)
+      setSelfieUploading(true)
     }
   }, [image])
+
+  const handleOnClickAddBtn = () => {
+    if (isUserPage) setDialogOpen(true)
+  }
 
   const handleOnChangeFile = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
     if (target.files && target.files.length) {
@@ -59,25 +99,34 @@ export const AddSelfie = ({ ...props }: Props) => {
   }
 
   return (
-    <div>
-      <SelfieWrapperStyled {...props}>
-        <Dialog fullScreen open={isDialogOpen} onClose={() => setDialogOpen(false)}>
-          {originalImage && (
-            <CropImage
-              originalImage={originalImage}
-              setOriginalImage={setOriginalImage}
-              setImage={setImage}
-              setDialogOpen={setDialogOpen}
-            />
-          )}
-        </Dialog>
+    <SelfieWrapperStyled isUserPage={isUserPage} {...props}>
+      <Dialog fullScreen open={isDialogOpen} onClose={() => setDialogOpen(false)}>
+        {(originalImage || (isUserPage && avatar)) && (
+          <CropImage
+            originalImage={originalImage}
+            setOriginalImage={setOriginalImage}
+            imageSrc={imageSrc}
+            setImageSrc={setImageSrc}
+            setImage={setImage}
+            setDialogOpen={setDialogOpen}
+            isSelfieUploading={isSelfieUploading}
+          />
+        )}
+      </Dialog>
 
-        <SelfieImgStyled
-          src={imageSrc ? imageSrc.toString() : '/images/default-selfie.png'}
-          alt='selfie'
-        />
+      <SelfieImgStyled
+        src={isUserPage && avatar ? avatar : '/images/default-selfie.png'}
+        alt='selfie'
+      />
 
-        <ButtonIconStyled forwardedAs='label' htmlFor='input-add-avatar'>
+      <ButtonIconStyled
+        onClick={handleOnClickAddBtn}
+        forwardedAs='label'
+        htmlFor='input-add-avatar'
+      >
+        {isUserPage ? (
+          <EditIconStyled src='/images/edit-icon.svg' alt='edit icon' />
+        ) : (
           <input
             id='input-add-avatar'
             name='add-avatar'
@@ -85,28 +134,16 @@ export const AddSelfie = ({ ...props }: Props) => {
             type='file'
             onChange={handleOnChangeFile}
           />
-        </ButtonIconStyled>
-      </SelfieWrapperStyled>
-    </div>
+        )}
+      </ButtonIconStyled>
+    </SelfieWrapperStyled>
   )
 }
 
-const SelfieWrapperStyled = styled.div`
-  width: 181px;
-  height: 181px;
-  flex: 0 0 181px;
-  border-radius: 50%;
-  position: relative;
-  margin: 0 auto;
-`
-
-const CountryCodeStyled = styled.div``
-
 const ButtonIconStyled = styled(Button)`
-  width: 42px;
-  height: 42px;
   border-radius: 50%;
   position: absolute;
+  padding: 0;
   bottom: 0;
   right: 0;
 
@@ -133,11 +170,42 @@ const ButtonIconStyled = styled(Button)`
 `
 
 const SelfieImgStyled = styled.img`
-  width: 181px;
-  height: 181px;
   border-radius: 50%;
 `
 
-const InputStyled = styled(Input)`
-  margin-left: 20px;
+const EditIconStyled = styled.img`
+  width: 18px;
+  height: 23px;
+`
+
+const SelfieWrapperStyled = styled.div<{ isUserPage: boolean }>`
+  width: ${({ isUserPage }) => (isUserPage ? '100px' : '181px')};
+  height: ${({ isUserPage }) => (isUserPage ? '100px' : '181px')};
+  flex: 0 0 ${({ isUserPage }) => (isUserPage ? '100px' : '181px')};
+  border-radius: 50%;
+  position: relative;
+  margin: 0 auto;
+
+  ${SelfieImgStyled} {
+    width: ${({ isUserPage }) => (isUserPage ? '100px' : '181px')};
+    height: ${({ isUserPage }) => (isUserPage ? '100px' : '181px')};
+  }
+
+  ${ButtonIconStyled} {
+    width: ${({ isUserPage }) => (isUserPage ? '37px' : '42px')};
+    height: ${({ isUserPage }) => (isUserPage ? '37px' : '42px')};
+
+    ${({ isUserPage }) =>
+      isUserPage &&
+      css`
+        border: 2px solid #ffffff;
+        transform: translateX(50%);
+        padding: 5px 8px 5px 8px;
+
+        &::before,
+        &::after {
+          display: none;
+        }
+      `}
+  }
 `

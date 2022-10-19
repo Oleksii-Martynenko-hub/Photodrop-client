@@ -1,25 +1,36 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import Cropper, { Area } from 'react-easy-crop'
 import styled from 'styled-components'
-import { convertFileToDataURL } from 'utils/convert-file-to-data-url'
+import Cropper, { Area } from 'react-easy-crop'
+
 import { getCroppedImage } from 'utils/get-cropped-image'
-import Button from './common/Button'
-import Text from './common/Text'
+import { convertFileToDataURL } from 'utils/convert-file-to-data-url'
+
+import Text from 'components/common/Text'
+import Button from 'components/common/Button'
 
 interface Props {
-  originalImage: File
+  originalImage: File | null
   setOriginalImage: React.Dispatch<React.SetStateAction<File | null>>
+  imageSrc: string | ArrayBuffer | null
+  setImageSrc: React.Dispatch<React.SetStateAction<string | ArrayBuffer | null>>
   setImage: React.Dispatch<React.SetStateAction<File | null>>
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
+  isSelfieUploading: boolean
 }
 
-export const CropImage = ({ originalImage, setOriginalImage, setImage, setDialogOpen }: Props) => {
-  const [imageSrc, setImageSrc] = React.useState<string | ArrayBuffer | null>(null)
+export const CropImage = ({
+  originalImage,
+  setOriginalImage,
+  imageSrc,
+  setImageSrc,
+  setImage,
+  setDialogOpen,
+  isSelfieUploading,
+}: Props) => {
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [rotation, setRotation] = useState(0)
   const [zoom, setZoom] = useState(1)
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null)
-  const [croppedImage, setCroppedImage] = useState<string | null>(null)
 
   const onCropComplete = useCallback((_: Area, croppedAreaPixels: Area) => {
     setCroppedAreaPixels(croppedAreaPixels)
@@ -37,13 +48,20 @@ export const CropImage = ({ originalImage, setOriginalImage, setImage, setDialog
   }, [originalImage])
 
   const handleOnClickSave = async () => {
+    if (!originalImage) {
+      setDialogOpen(false)
+      return
+    }
+
     if (imageSrc && croppedAreaPixels) {
       const croppedImg = await getCroppedImage(imageSrc.toString(), croppedAreaPixels, rotation)
       if (croppedImg) {
-        setCroppedImage(croppedImg)
+        setImageSrc(croppedImg)
+        setCrop({ x: 0, y: 0 })
+        setRotation(0)
+        setZoom(1)
         const blob = await fetch(croppedImg).then((res) => res.blob())
         setImage(blob as File)
-        setDialogOpen(false)
       }
     }
   }
@@ -56,6 +74,7 @@ export const CropImage = ({ originalImage, setOriginalImage, setImage, setDialog
 
   const handleOnClickCross = () => {
     setDialogOpen(false)
+    setOriginalImage(null)
   }
 
   return (
@@ -77,39 +96,27 @@ export const CropImage = ({ originalImage, setOriginalImage, setImage, setDialog
           rotation={rotation}
           zoom={zoom}
           aspect={1}
-          // minZoom={1.2}
-          transform={`translate(${crop.x + 3}px, ${
-            crop.y
-          }px) rotate(${rotation}deg) scale(${zoom})`}
           maxZoom={8}
           cropShape='round'
           showGrid={false}
           objectFit='auto-cover'
           onCropChange={setCrop}
-          onRotationChange={setRotation}
-          onCropComplete={onCropComplete}
-          onZoomChange={setZoom}
+          onRotationChange={!originalImage ? undefined : setRotation}
+          onCropComplete={!originalImage ? undefined : onCropComplete}
+          onZoomChange={!originalImage ? undefined : setZoom}
         />
       </CropperWrapper>
-      {/* 
-      <input
-        type='number'
-        name=''
-        id=''
-        value={rotation}
-        onChange={({ target }) => setRotation(+target.value)}
-      /> */}
 
       <ButtonsWrapper>
         <RetakeButtonStyled
           fullWidth
           btnTheme={Button.themes.outlined}
           forwardedAs='label'
-          htmlFor='input-add-avatar'
+          htmlFor='input-retake-avatar'
         >
           <input
-            id='input-add-avatar'
-            name='add-avatar'
+            id='input-retake-avatar'
+            name='retake-avatar'
             style={{ display: 'none' }}
             type='file'
             onChange={handleOnChangeFile}
@@ -118,30 +125,11 @@ export const CropImage = ({ originalImage, setOriginalImage, setImage, setDialog
         </RetakeButtonStyled>
 
         <SaveButtonStyled fullWidth btnTheme={Button.themes.white} onClick={handleOnClickSave}>
-          Save
+          {isSelfieUploading ? 'Uploading...' : 'Save'}
         </SaveButtonStyled>
       </ButtonsWrapper>
     </CropContainerStyled>
   )
-}
-
-function dataURItoBlob(dataURI: string | ArrayBuffer) {
-  // convert base64 to raw binary data held in a string
-  // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
-  const stringData = dataURI.toString()
-  const byteString = atob(stringData.split(',')[1])
-
-  // separate out the mime component
-  const mimeString = stringData.split(',')[0].split(':')[1].split(';')[0]
-
-  // write the bytes of the string to an ArrayBuffer
-  const ab = new ArrayBuffer(byteString.length)
-  const ia = new Uint8Array(ab)
-  for (let i = 0; i < byteString.length; i++) {
-    ia[i] = byteString.charCodeAt(i)
-  }
-
-  return new Blob([ab], { type: mimeString })
 }
 
 const CropContainerStyled = styled.div`
