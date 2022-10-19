@@ -184,7 +184,7 @@ const SelfieWrapperStyled = styled.div<{ isUserPage: boolean }>`
   flex: 0 0 ${({ isUserPage }) => (isUserPage ? '100px' : '181px')};
   border-radius: 50%;
   position: relative;
-  margin: 0 auto;
+  margin: ${({ isUserPage }) => (isUserPage ? '0' : '0 auto')};
 
   ${SelfieImgStyled} {
     width: ${({ isUserPage }) => (isUserPage ? '100px' : '181px')};
