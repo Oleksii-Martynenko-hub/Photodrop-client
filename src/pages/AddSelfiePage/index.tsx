@@ -1,12 +1,21 @@
 import { FC } from 'react'
+import { Navigate } from 'react-router'
+import { useSelector } from 'react-redux'
 import { motion } from 'framer-motion'
 import styled from 'styled-components'
 
+import { selectUserAvatar } from 'store/user/selectors'
+
+import { ERoutes } from 'pages/App'
 import Title from 'components/common/Title'
 import Text from 'components/common/Text'
 import { AddSelfie } from 'components/AddSelfie'
 
 const AddSelfiePage: FC = () => {
+  const avatar = useSelector(selectUserAvatar)
+
+  if (avatar) return <Navigate to={ERoutes.MAIN} replace />
+
   return (
     <MotionContainerStyled initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <TitleStyled>Add a selfie</TitleStyled>

@@ -13,17 +13,11 @@ export const InputVerificationCode: FC<ReactInputVerificationCodeProps> = (props
 }
 
 const VerificationCodeStyled = styled.div`
+  --ReactInputVerificationCode-itemWidth: 45px;
+  --ReactInputVerificationCode-itemHeight: 40px;
+  --ReactInputVerificationCode-itemSpacing: 15px;
   & .ReactInputVerificationCode__container {
     width: auto;
-  }
-
-  & .ReactInputVerificationCode__input {
-    width: auto;
-    height: 40px;
-    visibility: hidden;
-    top: 0;
-    left: 0;
-    width: 100%;
   }
 
   & .ReactInputVerificationCode__item {

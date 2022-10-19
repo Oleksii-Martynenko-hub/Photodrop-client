@@ -10,7 +10,7 @@ export const FullPageLoader = () => {
       hideBackdrop
     >
       <FullPageLoaderStyled>
-        <LoaderIcon src='/images/loader-icon.svg' alt='loader-icon' />
+        <LoaderIcon src='/images/gif-loader.gif' alt='loader-icon' />
         <LoaderText>Almost there...</LoaderText>
       </FullPageLoaderStyled>
     </Dialog>

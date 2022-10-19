@@ -118,12 +118,23 @@ const SignUp: FC = () => {
               customInput={TextField}
               margin='normal'
               size='small'
-              allowEmptyFormatting
               fullWidth
+              placeholder={`${masks[countryCode]}`.replace(/#/g, '5')}
               format={`${masks[countryCode]}`}
               mask='_'
               value={phoneNumber ? phoneNumber.formattedValue : ''}
               onValueChange={onChangePhoneNumberHandler}
+              onFocus={() => {
+                if (!phoneNumber?.value)
+                  setPhoneNumber({
+                    value: '',
+                    formattedValue: `${masks[countryCode]}`.replace(/#/g, '_'),
+                    floatValue: undefined,
+                  })
+              }}
+              onBlur={() => {
+                if (!phoneNumber?.value) setPhoneNumber(null)
+              }}
               sx={{ margin: 0 }}
               InputProps={{
                 sx: {

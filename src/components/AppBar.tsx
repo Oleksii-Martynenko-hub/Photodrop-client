@@ -1,11 +1,12 @@
 import { useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { AppBar as Bar, Avatar, Toolbar } from '@mui/material'
 import styled from 'styled-components'
 
 import { logoutAsync } from 'store/sign-up/actions'
 import { clearOTP } from 'store/sign-up/reducers'
+import { selectUserAvatar, selectUserName } from 'store/user/selectors'
 
 import { ERoutes } from 'pages/App'
 import useToggle from 'components/hooks/useToggle'
@@ -17,6 +18,9 @@ export const AppBar = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const location = useLocation()
+
+  const userName = useSelector(selectUserName)
+  const avatar = useSelector(selectUserAvatar)
 
   const [isShowBackButton, setIsShowBackButton] = useToggle(false)
 
@@ -58,8 +62,8 @@ export const AppBar = () => {
               <LinkStyled to={`${ERoutes.MAIN}/${ERoutes.USER}`}>
                 <Avatar
                   sx={{ width: 35, height: 35 }}
-                  alt={'userName'}
-                  src='/static/images/avatar/1.jpg'
+                  alt={userName || 'User name'}
+                  src={avatar || 'Avatar'}
                 />
               </LinkStyled>
             )}

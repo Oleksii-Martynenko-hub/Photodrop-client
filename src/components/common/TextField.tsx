@@ -16,7 +16,7 @@ const TextFieldStyled = styled(TextFieldMui)<Props>`
       return typeof height === 'string' ? height : `${height}px`
     }};
     border-radius: 10px;
-    background-color: #f4f4f4;
+    background-color: ${({ theme }) => theme.styledPalette.background};
 
     & .MuiOutlinedInput-notchedOutline {
       border-color: ${({ theme }) => theme.styledPalette.border};
@@ -30,7 +30,7 @@ const TextFieldStyled = styled(TextFieldMui)<Props>`
     }
 
     & .MuiOutlinedInput-input {
-      color: #262626;
+      color: ${({ theme }) => theme.styledPalette.mainText};
       height: 100%;
       padding: 14px 12px 13px;
       box-sizing: border-box;
@@ -38,8 +38,9 @@ const TextFieldStyled = styled(TextFieldMui)<Props>`
       font-size: 16px;
       line-height: 21px;
 
-      &:placeholder-shown {
-        color: #6d6d6d;
+      &::placeholder {
+        color: ${({ theme }) => theme.styledPalette.secondaryText + 'ff'};
+        opacity: 1;
       }
     }
   }
