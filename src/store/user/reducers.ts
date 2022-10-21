@@ -1,10 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { Country, getCountryCallingCode } from 'react-phone-number-input'
+import { patterFormatter } from 'react-number-format'
+import masks from 'pages/../../country-phone-masks.json'
 
 import { APIStatus } from 'api/MainApi'
 import { ErrorObject } from 'api/ErrorHandler'
 
 import { UserData } from 'api/ProtectedApi'
-import { editEmailAsync, editNameAsync, editNotificationAsync } from './actions'
+import { editEmailAsync, editNameAsync, editNotificationAsync, editPhoneAsync } from './actions'
 import { pendingCase, rejectedCase } from 'store'
 
 export type UserNotifications = {
@@ -16,6 +19,7 @@ export type UserNotifications = {
 export type PhoneNumber = {
   value: string
   formattedValue: string
+  newCountryCode: Country
 }
 export interface UsersState {
   user: UserData
@@ -32,6 +36,7 @@ const initialState: UsersState = {
     name: null,
     selfieKey: null,
     phone: '',
+    countryCode: 'US',
     email: null,
     emailNotification: null,
     textMessagesNotification: null,
@@ -51,6 +56,19 @@ export const userSlice = createSlice({
     setUserData: (state, { payload }: PayloadAction<UserData>) => {
       state.user = payload
       state.isOnboarding = !payload.name || !payload.email
+
+      const callingCode = getCountryCallingCode(payload.countryCode)
+      const phoneWithoutCallingCode = payload.phone.replace(callingCode, '')
+
+      const formattedValue = patterFormatter(phoneWithoutCallingCode, {
+        format: `${masks[payload.countryCode]}`,
+      })
+
+      state.phoneNumber = {
+        formattedValue,
+        value: payload.phone,
+        newCountryCode: payload.countryCode,
+      }
     },
     setPhoneNumber: (state, { payload }: PayloadAction<PhoneNumber>) => {
       state.phoneNumber = payload
@@ -63,27 +81,25 @@ export const userSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(editNameAsync.pending, pendingCase())
     builder.addCase(editNameAsync.rejected, rejectedCase())
-    builder.addCase(editNameAsync.fulfilled, (state, { payload }) => {
-      state.user.name = payload.name
-      state.isOnboarding = !payload.name || !payload.email
+    builder.addCase(editNameAsync.fulfilled, (state) => {
       state.status = APIStatus.FULFILLED
     })
 
     builder.addCase(editEmailAsync.pending, pendingCase())
     builder.addCase(editEmailAsync.rejected, rejectedCase())
-    builder.addCase(editEmailAsync.fulfilled, (state, { payload }) => {
-      state.user.name = payload.email
-      state.isOnboarding = !payload.name || !payload.email
+    builder.addCase(editEmailAsync.fulfilled, (state) => {
+      state.status = APIStatus.FULFILLED
+    })
+
+    builder.addCase(editPhoneAsync.pending, pendingCase())
+    builder.addCase(editPhoneAsync.rejected, rejectedCase())
+    builder.addCase(editPhoneAsync.fulfilled, (state) => {
       state.status = APIStatus.FULFILLED
     })
 
     builder.addCase(editNotificationAsync.pending, pendingCase())
     builder.addCase(editNotificationAsync.rejected, rejectedCase())
-    builder.addCase(editNotificationAsync.fulfilled, (state, { payload }) => {
-      state.user.textMessagesNotification = payload.textMessagesNotification
-      state.user.emailNotification = payload.emailNotification
-      state.user.unsubscribe = payload.unsubscribe
-
+    builder.addCase(editNotificationAsync.fulfilled, (state) => {
       state.status = APIStatus.FULFILLED
     })
   },

@@ -24,6 +24,7 @@ export enum ERoutes {
   USER_EDIT_NAME = 'edit-name',
   USER_SETTINGS = 'settings',
   USER_SETTINGS_PHONE = 'edit-phone',
+  USER_EDIT_PHONE_CONFIRM = 'confirm-phone',
   USER_SETTINGS_EMAIL = 'edit-email',
   USER_NOTIFICATIONS = 'notifications',
   MAIN = '/main',
@@ -35,9 +36,6 @@ export enum ERoutes {
 const containerStyles: SxProps<Theme> = {
   padding: 0,
   flex: 'auto',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'start',
   position: 'relative',
 }
 

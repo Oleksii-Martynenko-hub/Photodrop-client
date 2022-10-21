@@ -1,9 +1,10 @@
 import { APIStatus } from 'api/MainApi'
 import { UserData } from 'api/ProtectedApi'
+import { Country } from 'react-phone-number-input'
 import { createSelector, Selector } from 'reselect'
 
 import { RootState } from 'store'
-import { UserNotifications } from './reducers'
+import { PhoneNumber, UserNotifications } from './reducers'
 
 const selectUserReducer = (state: RootState) => state.userReducer
 
@@ -25,6 +26,16 @@ export const selectUserName: Selector<RootState, string | null> = createSelector
 export const selectUserEmail: Selector<RootState, string | null> = createSelector(
   selectUserReducer,
   ({ user }) => user.email,
+)
+
+export const selectUserPhone: Selector<RootState, string> = createSelector(
+  selectUserReducer,
+  ({ user }) => user.phone,
+)
+
+export const selectUserCountryCode: Selector<RootState, Country> = createSelector(
+  selectUserReducer,
+  ({ user }) => user.countryCode,
 )
 
 export const selectUserAvatar: Selector<RootState, string | null> = createSelector(
@@ -51,10 +62,7 @@ export const selectUserIsOnboarding: Selector<RootState, boolean> = createSelect
   ({ isOnboarding }) => isOnboarding,
 )
 
-export const selectPhoneNumber: Selector<
-  RootState,
-  {
-    value: string
-    formattedValue: string
-  } | null
-> = createSelector(selectUserReducer, ({ phoneNumber }) => phoneNumber)
+export const selectPhoneNumber: Selector<RootState, PhoneNumber | null> = createSelector(
+  selectUserReducer,
+  ({ phoneNumber }) => phoneNumber,
+)

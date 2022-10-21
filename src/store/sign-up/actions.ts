@@ -15,9 +15,10 @@ import {
 import Tokens from 'utils/local-storage/tokens'
 import { UserData } from 'api/ProtectedApi'
 import { getSelfieAsync } from 'store/user/actions'
+import { Country } from 'react-phone-number-input'
 
 export const restoreAuthAsync = createAsyncThunk<void, void, ThunkExtra>(
-  'login/restoreAuthAsync',
+  'sign-up/restoreAuthAsync',
   async (_, { rejectWithValue, extra: { protectedApi }, dispatch, getState }) => {
     try {
       dispatch(setIsFullPageLoading(true))
@@ -46,11 +47,15 @@ export const restoreAuthAsync = createAsyncThunk<void, void, ThunkExtra>(
   },
 )
 
-export const signUpAsync = createAsyncThunk<void, string, ThunkExtra>(
-  'signUp/signUpAsync',
-  async (phone, { rejectWithValue, extra: { mainApi }, dispatch }) => {
+export const signUpAsync = createAsyncThunk<
+  void,
+  { phone: string; countryCode: Country },
+  ThunkExtra
+>(
+  'sign-up/signUpAsync',
+  async ({ phone, countryCode }, { rejectWithValue, extra: { mainApi }, dispatch }) => {
     try {
-      const { token } = await mainApi.postSignUp(phone)
+      const { token } = await mainApi.postSignUp({ phone, countryCode })
 
       const tokens = Tokens.getInstance()
 
@@ -66,7 +71,7 @@ export const signUpAsync = createAsyncThunk<void, string, ThunkExtra>(
 )
 
 export const generateOtpAsync = createAsyncThunk<{ OTP: string }, string, ThunkExtra>(
-  'signUp/generateOtpAsync',
+  'sign-up/generateOtpAsync',
   async (phone, { rejectWithValue, extra: { mainApi } }) => {
     try {
       const response = await mainApi.postGeneratedOTP(phone)
@@ -79,7 +84,7 @@ export const generateOtpAsync = createAsyncThunk<{ OTP: string }, string, ThunkE
 )
 
 export const logoutAsync = createAsyncThunk(
-  'signUp/logoutAsync',
+  'sign-up/logoutAsync',
   async (_, { rejectWithValue, dispatch }) => {
     try {
       dispatch(clearToken())

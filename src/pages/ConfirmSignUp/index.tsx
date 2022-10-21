@@ -8,7 +8,7 @@ import { motion } from 'framer-motion'
 import { APIStatus } from 'api/MainApi'
 
 import { generateOtpAsync, signUpAsync } from 'store/sign-up/actions'
-import { selectGeneratedOTP, selectIsLoggedIn, selectStatus } from 'store/sign-up/selectors'
+import { selectGeneratedOTP, selectIsLoggedIn, selectSignUpStatus } from 'store/sign-up/selectors'
 import { selectPhoneNumber } from 'store/user/selectors'
 
 import { ERoutes } from 'pages/App'
@@ -23,7 +23,7 @@ const ConfirmSignUp: FC = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const status = useSelector(selectStatus)
+  const status = useSelector(selectSignUpStatus)
   const isLoggedIn = useSelector(selectIsLoggedIn)
   const generatedOTP = useSelector(selectGeneratedOTP)
   const phoneNumber = useSelector(selectPhoneNumber)
@@ -40,7 +40,7 @@ const ConfirmSignUp: FC = () => {
 
   const handleOnClickLogin = (data?: string) => {
     if ((otpCode === generatedOTP || data === generatedOTP) && phoneNumber?.value) {
-      dispatch(signUpAsync(phoneNumber.value))
+      dispatch(signUpAsync({ phone: phoneNumber.value, countryCode: phoneNumber.newCountryCode }))
       return
     }
     toast.error('Incorrect verification code, please check again.')
@@ -71,11 +71,9 @@ const ConfirmSignUp: FC = () => {
 
           <SubtitleStyled>
             Enter the code sent to
-            <Text weight={Text.weight.medium}>
-              <PhoneNumberStyled>
-                {phoneNumber?.formattedValue.replace('(', ' (').replace(')', ') ')}
-              </PhoneNumberStyled>
-            </Text>
+            <PhoneNumberStyled forwardedAs='span' weight={Text.weight.medium}>
+              {phoneNumber?.formattedValue.replace('(', ' (').replace(')', ') ')}
+            </PhoneNumberStyled>
           </SubtitleStyled>
 
           <InputCodeWrapper>
@@ -115,7 +113,7 @@ const ConfirmSignUp: FC = () => {
 
 export default ConfirmSignUp
 
-const PhoneNumberStyled = styled.span`
+const PhoneNumberStyled = styled(Text)`
   display: inline-block;
   font-weight: bold;
   margin-left: 5px;
@@ -127,10 +125,6 @@ const MotionContainerStyled = styled(motion.div)`
   padding: 106px 15px 15px;
   display: flex;
   flex-direction: column;
-
-  @media ${({ theme }) => theme.media.desktop} {
-    max-width: 420px;
-  }
 `
 
 const InputCodeWrapper = styled.div``

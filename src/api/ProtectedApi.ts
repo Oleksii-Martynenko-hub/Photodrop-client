@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import HttpClientProtected from 'api/HttpClientProtected'
+import { Country } from 'react-phone-number-input'
 import { UserNotifications } from 'store/user/reducers'
 
 export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api'
@@ -9,6 +10,7 @@ export type UserData = {
   selfieKey: string | null
   name: string | null
   phone: string
+  countryCode: Country
   email: string | null
   textMessagesNotification: boolean | null
   emailNotification: boolean | null
@@ -37,6 +39,12 @@ export type UserEditEmailBody = {
 export type UserEditPhoneBody = {
   id: number
   phone: string
+  countryCode: Country
+}
+
+export type UserEditPhoneResponse = {
+  user: UserData
+  token: string
 }
 
 export interface UserEditNotificationBody extends UserNotifications {
@@ -142,7 +150,7 @@ class ProtectedApi extends HttpClientProtected {
     this.instance.put<UserData>('/edit-email', userBody)
 
   public putEditPhone = (userBody: UserEditPhoneBody) =>
-    this.instance.put<UserData>('/edit-phone', userBody)
+    this.instance.put<UserEditPhoneResponse>('/edit-phone', userBody)
 
   public putEditNotification = (userBody: UserEditNotificationBody) =>
     this.instance.put<UserData>('/edit-notification-settings', userBody)

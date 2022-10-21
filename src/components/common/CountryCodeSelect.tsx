@@ -2,7 +2,8 @@ import { HTMLAttributes, useState } from 'react'
 import styled from 'styled-components'
 import { getCountries, getCountryCallingCode, Country } from 'react-phone-number-input/input'
 import countryNames from 'react-phone-number-input/locale/en.json'
-import ReactCountryFlag from 'react-country-flag'
+import { hasFlag } from 'country-flag-icons'
+import getUnicodeFlagIcon from 'country-flag-icons/unicode'
 import {
   AppBar,
   Dialog,
@@ -119,7 +120,11 @@ export const CountryCodeSelect = ({
       />
 
       <CountryCodeStyled onClick={handleOnClickSelect}>
-        <FlagIconStyled countryCode={countryCode} alt={countryNames[countryCode]} />
+        {hasFlag(countryCode) ? (
+          <FlagUnicodeIconStyled>{getUnicodeFlagIcon(countryCode)}</FlagUnicodeIconStyled>
+        ) : (
+          <FlagIconStyled src={countryCode} alt={countryNames[countryCode]} />
+        )}
 
         <ArrowIconStyled src='/images/bottom-arrow.svg' alt='bottom-arrow' />
       </CountryCodeStyled>
@@ -137,10 +142,13 @@ const CountryCodeWrapperStyled = styled.div`
   margin-right: 10px;
   cursor: pointer;
   position: relative;
-  padding: 7px 9px 6px 7px;
+  padding: 8px 9px 6px 7px;
 `
 
-const CountryCodeStyled = styled.div``
+const CountryCodeStyled = styled.div`
+  display: flex;
+  align-items: center;
+`
 
 const CountryCodeSelectStyled = styled.select`
   position: absolute;
@@ -149,7 +157,15 @@ const CountryCodeSelectStyled = styled.select`
   width: 100%;
 `
 
-const FlagIconStyled = styled(ReactCountryFlag)`
+const FlagIconStyled = styled.img`
+  width: 30px !important;
+  font-size: 30px !important;
+  line-height: 25px !important;
+  margin-right: 8px;
+`
+
+const FlagUnicodeIconStyled = styled.div`
+  display: inline-block;
   width: 30px !important;
   font-size: 30px !important;
   line-height: 25px !important;

@@ -22,7 +22,7 @@ export const selectGeneratedOTP: Selector<RootState, string | null> = createSele
   ({ generatedOTP }) => generatedOTP,
 )
 
-export const selectStatus: Selector<RootState, APIStatus> = createSelector(
+export const selectSignUpStatus: Selector<RootState, APIStatus> = createSelector(
   selectSignUpReducer,
   ({ status }) => status,
 )

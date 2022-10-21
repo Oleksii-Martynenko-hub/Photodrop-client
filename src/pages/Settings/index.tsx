@@ -1,7 +1,10 @@
 import { FC, useEffect } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import { motion } from 'framer-motion'
 import styled from 'styled-components'
+
+import { selectPhoneNumber, selectUserEmail } from 'store/user/selectors'
 
 import { ERoutes } from 'pages/App'
 import useToggle from 'components/hooks/useToggle'
@@ -10,6 +13,9 @@ import Title from 'components/common/Title'
 
 const Settings: FC = () => {
   const location = useLocation()
+
+  const phoneNumber = useSelector(selectPhoneNumber)
+  const userEmail = useSelector(selectUserEmail)
 
   const [isShowOutlet, setIsShowOutlet] = useToggle(false)
 
@@ -40,7 +46,9 @@ const Settings: FC = () => {
                 </Verified>
               </LinkTitle>
 
-              <LinkDescription size={Text.size.sm}>+1 123-456-7890</LinkDescription>
+              <LinkDescription size={Text.size.sm}>
+                {phoneNumber?.formattedValue.replace('(', ' (').replace(')', ') ')}
+              </LinkDescription>
             </LinkTextWrapper>
 
             <ArrowIconStyled src='/images/back-arrow.svg' alt='right arrow' />
@@ -54,7 +62,9 @@ const Settings: FC = () => {
                 Email
               </LinkTitle>
 
-              <LinkDescription size={Text.size.sm}>the.real.jane.smith@gmail.com</LinkDescription>
+              <LinkDescription size={Text.size.sm}>
+                {userEmail || 'the.real.jane.smith@gmail.com'}
+              </LinkDescription>
             </LinkTextWrapper>
 
             <ArrowIconStyled src='/images/back-arrow.svg' alt='right arrow' />

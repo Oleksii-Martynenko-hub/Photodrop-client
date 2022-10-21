@@ -14,7 +14,7 @@ import { APIStatus } from 'api/MainApi'
 
 import { generateOtpAsync } from 'store/sign-up/actions'
 import { setPhoneNumber as setPhoneNumberToStore } from 'store/user/reducers'
-import { selectGeneratedOTP, selectIsLoggedIn, selectStatus } from 'store/sign-up/selectors'
+import { selectGeneratedOTP, selectIsLoggedIn, selectSignUpStatus } from 'store/sign-up/selectors'
 
 import { ERoutes } from 'pages/App'
 import { useDidMountEffect } from 'components/hooks/useDidMountEffect'
@@ -28,7 +28,7 @@ const SignUp: FC = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const status = useSelector(selectStatus)
+  const status = useSelector(selectSignUpStatus)
   const isLoggedIn = useSelector(selectIsLoggedIn)
   const generatedOTP = useSelector(selectGeneratedOTP)
 
@@ -36,32 +36,48 @@ const SignUp: FC = () => {
 
   const [phoneNumber, setPhoneNumber] = useState<NumberFormatValues | null>(null)
   const [countryCode, setCountryCode] = useState<Country>('US')
-
   const [isCountryDialogOpen, setCountryDialogOpen] = useState(false)
+  const [isSignUpLoading, setIsSignUpLoading] = useState(false)
 
   /* masks for :
       YT XK TA SJ PR PM MF JE IM GP GG GB EH CX CC BQ BL AX
   */
 
+  useEffect(() => {
+    if (isSignUpLoading) {
+      if (status === APIStatus.FULFILLED) {
+        if (phoneNumber && generatedOTP && generatedOTP.length === 6) {
+          dispatch(
+            setPhoneNumberToStore({
+              value: getCountryCallingCode(countryCode) + phoneNumber.value,
+              formattedValue: phoneNumber.formattedValue,
+              newCountryCode: countryCode,
+            }),
+          )
+
+          setPhoneNumber(null)
+          navigate(ERoutes.CONFIRM)
+        }
+      }
+
+      if (status === APIStatus.REJECTED) {
+        toast.error('Something went wrong, please try again later.')
+      }
+
+      if (status !== APIStatus.PENDING) setIsSignUpLoading(false)
+    }
+  }, [status, generatedOTP, isSignUpLoading])
+
   useDidMountEffect(() => {
     if (countryCode && !isCountryDialogOpen) {
+      setPhoneNumber({
+        value: '',
+        formattedValue: `${masks[countryCode]}`.replace(/#/g, '_'),
+        floatValue: undefined,
+      })
       if (phoneInputRef?.current) phoneInputRef.current.focus()
     }
   }, [isCountryDialogOpen])
-
-  useEffect(() => {
-    if (phoneNumber && generatedOTP && generatedOTP.length === 6) {
-      dispatch(
-        setPhoneNumberToStore({
-          value: getCountryCallingCode(countryCode) + phoneNumber.value,
-          formattedValue: phoneNumber.formattedValue,
-        }),
-      )
-
-      setPhoneNumber(null)
-      navigate(ERoutes.CONFIRM)
-    }
-  }, [generatedOTP])
 
   const onChangePhoneNumberHandler: OnValueChange = (values) => {
     setPhoneNumber({
@@ -77,6 +93,7 @@ const SignUp: FC = () => {
         return
       }
 
+      setIsSignUpLoading(true)
       dispatch(generateOtpAsync(getCountryCallingCode(countryCode) + phoneNumber.value))
     }
   }
@@ -138,11 +155,7 @@ const SignUp: FC = () => {
             />
           </InputNumberWrapperStyled>
 
-          <LoadingButton
-            loading={status === APIStatus.PENDING}
-            fullWidth
-            onClick={handleOnClickSignUp}
-          >
+          <LoadingButton loading={isSignUpLoading} fullWidth onClick={handleOnClickSignUp}>
             Create account
           </LoadingButton>
 

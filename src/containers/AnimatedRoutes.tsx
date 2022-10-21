@@ -21,6 +21,7 @@ import EditPhone from 'pages/Settings/EditPhone'
 import EditEmail from 'pages/Settings/EditEmail'
 import Notifications from 'pages/UserPage/Notifications'
 import { FullPageLoader } from 'components/common/FullPageLoader'
+import ConfirmPhone from 'pages/Settings/ConfirmPhone'
 
 const AnimatedRoutes: FC = () => {
   const isFullPageLoading = useSelector(selectIsFullPageLoading)
@@ -48,7 +49,9 @@ const AnimatedRoutes: FC = () => {
             <Route path={ERoutes.USER_EDIT_NAME} element={<EditName />} />
 
             <Route path={ERoutes.USER_SETTINGS} element={<Settings />}>
-              <Route path={ERoutes.USER_SETTINGS_PHONE} element={<EditPhone />} />
+              <Route path={ERoutes.USER_SETTINGS_PHONE} element={<EditPhone />}>
+                <Route path={ERoutes.USER_EDIT_PHONE_CONFIRM} element={<ConfirmPhone />} />
+              </Route>
 
               <Route path={ERoutes.USER_SETTINGS_EMAIL} element={<EditEmail />} />
             </Route>
