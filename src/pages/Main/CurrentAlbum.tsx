@@ -50,12 +50,6 @@ const CurrentAlbum: FC = () => {
       >
         <Image {...currentPhoto} />
       </Dialog>
-
-      <ImageList cols={lg ? 5 : md ? 4 : sm ? 3 : 2} gap={0}>
-        <ImageListItem key={id}>
-          <Image onClick={onClosePhoto} height={200} iconSize={36} src={'photoLink'} clickable />
-        </ImageListItem>
-      </ImageList>
     </motion.div>
   )
 }

@@ -8,11 +8,14 @@ import Title from 'components/common/Title'
 import { selectUserAvatar } from 'store/user/selectors'
 import { useSelector } from 'react-redux'
 import { ERoutes } from 'pages/App'
+import EmptyDashboard from 'components/EmptyDashboard'
+import BrowseArtPrints from 'components/BrowseArtPrints'
 
 const Main: FC = () => {
   const location = useLocation()
 
   const avatar = useSelector(selectUserAvatar)
+  const albums = null
 
   const [isShowOutlet, setIsShowOutlet] = useToggle(false)
 
@@ -24,24 +27,16 @@ const Main: FC = () => {
 
   return (
     <>
-      <Grid container direction='column'>
-        {isShowOutlet ? (
-          <Outlet />
-        ) : (
-          <motion.div
-            style={{ maxWidth: '100%' }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <Grid container alignItems='start'>
-              <Grid item xs>
-                <Title>Main</Title>
-              </Grid>
-            </Grid>
-          </motion.div>
-        )}
-      </Grid>
+      {isShowOutlet ? (
+        <Outlet />
+      ) : albums ? (
+        <div>main</div>
+      ) : (
+        <>
+          <EmptyDashboard />
+          <BrowseArtPrints />
+        </>
+      )}
     </>
   )
 }
