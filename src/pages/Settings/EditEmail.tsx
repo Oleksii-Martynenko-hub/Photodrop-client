@@ -150,6 +150,7 @@ const MotionContainerStyled = styled(motion.div)<{ onboarding: boolean }>`
   width: 100%;
   max-width: 450px;
   padding: ${({ onboarding }) => (onboarding ? '139px' : '166px')} 15px 15px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
 

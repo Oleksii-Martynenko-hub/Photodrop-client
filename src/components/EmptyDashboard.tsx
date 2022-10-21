@@ -30,6 +30,7 @@ const MotionContainerStyled = styled(motion.div)`
   width: 100%;
   max-width: 450px;
   padding: 30px 15px 41px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   border-bottom: 5px solid ${({ theme }) => theme.styledPalette.background};

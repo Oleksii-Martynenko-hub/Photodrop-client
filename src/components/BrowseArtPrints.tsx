@@ -64,6 +64,7 @@ const MotionContainerStyled = styled(motion.div)`
   width: 100%;
   max-width: 450px;
   padding: 41px 0 62px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
 `
