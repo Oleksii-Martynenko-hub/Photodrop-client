@@ -37,7 +37,6 @@ const containerStyles: SxProps<Theme> = {
   padding: { xs: 0 },
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'center',
   alignItems: 'start',
   flex: 'auto',
   position: 'relative',
