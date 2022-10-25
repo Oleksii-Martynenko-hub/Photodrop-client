@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { AppBar as Bar, Avatar, Toolbar } from '@mui/material'
+import { AppBar as Bar, Toolbar } from '@mui/material'
 import styled from 'styled-components'
 
 import { logoutAsync } from 'store/sign-up/actions'
@@ -10,6 +10,7 @@ import { selectUserAvatar, selectUserName } from 'store/user/selectors'
 
 import { ERoutes } from 'pages/App'
 import { useToggle } from 'components/hooks/useToggle'
+import Image from 'components/common/Image'
 import Button from 'components/common/Button'
 import HideOnScroll from 'components/common/HideOnScroll'
 import Logo from 'components/Logo'
@@ -68,10 +69,12 @@ const AppBar = () => {
 
             {location.pathname === ERoutes.MAIN && (
               <LinkStyled to={`${ERoutes.MAIN}/${ERoutes.USER}`}>
-                <Avatar
-                  sx={{ width: 35, height: 35 }}
+                <AvatarStyled
+                  width={35}
+                  height={35}
                   alt={userName || 'User name'}
                   src={avatar || 'Avatar'}
+                  shape='circle'
                 />
               </LinkStyled>
             )}
@@ -143,3 +146,5 @@ const ArrowIconStyled = styled.img`
     height: 20px;
   }
 `
+
+const AvatarStyled = styled(Image)``

@@ -132,6 +132,7 @@ const AddSelfie = ({ isUserPage = false, ...props }: Props) => {
       <SelfieImgStyled
         src={isUserPage && avatar ? avatar : '/images/default-selfie.png'}
         alt='selfie'
+        shape='circle'
       />
 
       <ButtonIconStyled
@@ -186,9 +187,7 @@ const ButtonIconStyled = styled(Button)`
   }
 `
 
-const SelfieImgStyled = styled(Image)`
-  border-radius: 50%;
-`
+const SelfieImgStyled = styled(Image)``
 
 const EditIconStyled = styled.img`
   width: 18px;

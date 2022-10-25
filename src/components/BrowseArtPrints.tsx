@@ -38,7 +38,13 @@ const BrowseArtPrints: FC = () => {
       <HorizontalScroll paddingX={md ? 40 : 15} spacing={md ? 10 : 5}>
         {[...images, ...images].map(({ src, alt }, i) => (
           <ArtWrapper key={src + i}>
-            <Image src={src} alt={alt} width={md ? 200 : 168} height={md ? 255 : 216} rounded />
+            <Image
+              src={src}
+              alt={alt}
+              width={md ? 200 : 168}
+              height={md ? 255 : 216}
+              shape='rounded'
+            />
           </ArtWrapper>
         ))}
       </HorizontalScroll>

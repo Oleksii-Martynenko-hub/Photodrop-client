@@ -8,11 +8,11 @@ interface Props extends ImgHTMLAttributes<HTMLImageElement> {
   src: string
   width?: number | string
   height?: number | string
-  rounded?: boolean
+  shape?: 'sharp' | 'rounded' | 'circle'
   onLoad?: () => void
 }
 
-const Image: FC<Props> = ({ src, width, height, rounded = false, onLoad, ...props }: Props) => {
+const Image: FC<Props> = ({ src, width, height, shape = 'sharp', onLoad, ...props }: Props) => {
   const [initAnimation] = useState({ opacity: 0, scale: 0.95 })
 
   const [isOriginalLoaded, setIsOriginalLoaded] = useToggle(false)
@@ -47,7 +47,7 @@ const Image: FC<Props> = ({ src, width, height, rounded = false, onLoad, ...prop
           onError={onError}
           width={width}
           height={height}
-          rounded={rounded}
+          shape={shape}
           {...props}
         />
       </motion.div>
@@ -60,7 +60,7 @@ export default Image
 const ImageStyled = styled.img<{
   width?: number | string
   height?: number | string
-  rounded: boolean
+  shape?: 'sharp' | 'rounded' | 'circle'
 }>`
   /* width: 110px; // albums
   height: 140px;
@@ -81,7 +81,8 @@ const ImageStyled = styled.img<{
   height: ${({ height }) => {
     return height !== undefined ? (typeof height === 'string' ? height : `${height}px`) : 'auto'
   }};
-  border-radius: ${({ rounded }) => (rounded ? '20px' : '0')};
+  border-radius: ${({ shape }) =>
+    shape === 'rounded' ? '20px' : shape === 'circle' ? '50%' : '0'};
   object-fit: cover;
 `
 
