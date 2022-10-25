@@ -46,6 +46,10 @@ const AppBar = () => {
       navigate(`${ERoutes.MAIN}/${ERoutes.USER}`)
       return
     }
+    if (location.pathname === `${ERoutes.MAIN}/${ERoutes.USER}`) {
+      navigate(ERoutes.MAIN)
+      return
+    }
     navigate(-1)
   }
 
