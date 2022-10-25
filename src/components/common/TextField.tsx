@@ -10,6 +10,8 @@ const TextField: FC<Props & TextFieldProps> = ({ height = '40px', ...props }) =>
   return <TextFieldStyled height={height} {...props} />
 }
 
+export default TextField
+
 const TextFieldStyled = styled(TextFieldMui)<Props>`
   & .MuiOutlinedInput-root {
     height: ${({ height }) => {
@@ -38,6 +40,10 @@ const TextFieldStyled = styled(TextFieldMui)<Props>`
       font-size: 16px;
       line-height: 21px;
 
+      @media ${({ theme }) => theme.media.desktop} {
+        padding: 14px 16px 13px;
+      }
+
       &::placeholder {
         color: ${({ theme }) => theme.styledPalette.secondaryText};
         opacity: 1;
@@ -45,5 +51,3 @@ const TextFieldStyled = styled(TextFieldMui)<Props>`
     }
   }
 `
-
-export default TextField

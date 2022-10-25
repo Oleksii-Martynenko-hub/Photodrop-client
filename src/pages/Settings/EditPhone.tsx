@@ -17,13 +17,13 @@ import { selectGeneratedOTP, selectSignUpStatus } from 'store/sign-up/selectors'
 import { selectPhoneNumber, selectUserCountryCode, selectUserPhone } from 'store/user/selectors'
 
 import { ERoutes } from 'pages/App'
-import useToggle from 'components/hooks/useToggle'
+import { useToggle } from 'components/hooks/useToggle'
 import { useDidMountEffect } from 'components/hooks/useDidMountEffect'
 import Text from 'components/common/Text'
 import Title from 'components/common/Title'
 import TextField from 'components/common/TextField'
 import LoadingButton from 'components/common/LoadingButton'
-import { CountryCodeSelect } from 'components/common/CountryCodeSelect'
+import CountryCodeSelect from 'components/common/CountryCodeSelect'
 
 const EditPhone: FC = () => {
   const dispatch = useDispatch()
@@ -85,11 +85,7 @@ const EditPhone: FC = () => {
 
   useDidMountEffect(() => {
     if (newCountryCode && !isCountryDialogOpen) {
-      setNewPhoneNumber({
-        value: '',
-        formattedValue: `${masks[newCountryCode]}`.replace(/#/g, '_'),
-        floatValue: undefined,
-      })
+      resetInputNumberValue()
       if (phoneInputRef?.current) phoneInputRef.current.focus()
     }
   }, [isCountryDialogOpen])
@@ -122,6 +118,22 @@ const EditPhone: FC = () => {
 
     setIsEditPhoneLoading(true)
     dispatch(generateOtpAsync(getCountryCallingCode(newCountryCode) + newPhoneNumber.value))
+  }
+
+  const resetInputNumberValue = () => {
+    setNewPhoneNumber({
+      value: '',
+      formattedValue: `${masks[countryCode]}`.replace(/#/g, '_'),
+      floatValue: undefined,
+    })
+  }
+
+  const handleOnFocusInputNumber = () => {
+    if (!phoneNumber?.value) resetInputNumberValue()
+  }
+
+  const handleOnBlurInputNumber = () => {
+    if (!phoneNumber?.value) setNewPhoneNumber(null)
   }
 
   return (
@@ -159,17 +171,8 @@ const EditPhone: FC = () => {
               mask='_'
               value={newPhoneNumber ? newPhoneNumber.formattedValue : ''}
               onValueChange={onChangePhoneNumberHandler}
-              onFocus={() => {
-                if (!newPhoneNumber?.value)
-                  setNewPhoneNumber({
-                    value: '',
-                    formattedValue: `${masks[newCountryCode]}`.replace(/#/g, '_'),
-                    floatValue: undefined,
-                  })
-              }}
-              onBlur={() => {
-                if (!newPhoneNumber?.value) setNewPhoneNumber(null)
-              }}
+              onFocus={handleOnFocusInputNumber}
+              onBlur={handleOnBlurInputNumber}
               sx={{ margin: 0 }}
               InputProps={{
                 sx: {
@@ -199,19 +202,34 @@ const MotionContainerStyled = styled(motion.div)`
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    max-width: 500px;
+    padding: 227px 40px 40px;
+  }
 `
 
 const InputNumberWrapperStyled = styled.div`
   display: flex;
-  margin-bottom: 20px;
+  margin: 0 0 20px 0;
 `
 
 const TitleStyled = styled(Title)`
   line-height: 14px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    line-height: 16px;
+  }
 `
 
 const SubtitleStyled = styled(Text)`
   margin: 15px 0 20px 0;
   line-height: 21px;
   letter-spacing: 0;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    margin: 30px 0 20px 0;
+    font-size: 18px;
+    line-height: 23px;
+  }
 `

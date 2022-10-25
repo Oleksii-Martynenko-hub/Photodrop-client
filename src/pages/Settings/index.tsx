@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import { selectPhoneNumber, selectUserEmail } from 'store/user/selectors'
 
 import { ERoutes } from 'pages/App'
-import useToggle from 'components/hooks/useToggle'
+import { useToggle } from 'components/hooks/useToggle'
 import Text from 'components/common/Text'
 import Title from 'components/common/Title'
 
@@ -84,60 +84,103 @@ const MotionContainerStyled = styled(motion.div)`
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    max-width: 500px;
+    padding: 40px;
+  }
 `
 
 const TitleStyled = styled(Title)`
   line-height: 13px;
-  margin-bottom: 20px;
+  margin: 0 0 20px 0;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    line-height: 12px;
+    margin: 0 0 32px 0;
+  }
 `
 
 const LinkTextWrapper = styled.div`
   flex: auto;
-  margin-right: 15px;
+  margin: 0 15px 0 0;
 `
 
 const LinkTitle = styled(Text)`
   display: block;
-  margin-bottom: 10px;
+  margin: 0 0 10px 0;
   line-height: 10px;
   letter-spacing: 0.4px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    font-size: 16px;
+  }
 `
 
 const Verified = styled(LinkTitle)`
-  margin-bottom: 0;
+  margin: 0;
   display: inline-block;
   color: ${({ theme }) => theme.styledPalette.success};
+
+  @media ${({ theme }) => theme.media.desktop} {
+  }
 `
 
 const LinkDescription = styled(Text)`
   display: block;
   line-height: 11px;
   letter-spacing: 0px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    font-size: 16px;
+    line-height: 13px;
+  }
 `
 
 const ArrowIconStyled = styled.img`
+  position: relative;
+  top: 8px;
   width: 8px;
   height: 16px;
   transform: rotate(180deg);
+
+  @media ${({ theme }) => theme.media.desktop} {
+    top: 6px;
+    width: 10px;
+    height: 20px;
+  }
 `
 
 const PhoneIconStyled = styled.img`
+  position: relative;
   width: 25px;
   height: 30px;
-  margin-right: 10px;
+  margin: 0 10px 0 0;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    top: 1px;
+  }
 `
 
 const EmailIconStyled = styled(PhoneIconStyled)`
   height: 20px;
+  top: 5px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    top: 6px;
+  }
 `
 
 const LinkStyled = styled(Link)`
   display: flex;
-  align-items: center;
   background: #ffffff;
   border-radius: 10px;
   padding: 9px 14px 8px;
-  margin-bottom: 5px;
+  margin: 0 0 5px 0;
   border: 1px solid ${({ theme }) => theme.styledPalette.secondaryBorder};
   text-decoration: none;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    padding: 10px 14px 8px;
+  }
 `

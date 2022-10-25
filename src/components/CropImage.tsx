@@ -18,7 +18,7 @@ interface Props {
   isSelfieUploading: boolean
 }
 
-export const CropImage = ({
+const CropImage = ({
   originalImage,
   setOriginalImage,
   imageSrc,
@@ -132,6 +132,8 @@ export const CropImage = ({
   )
 }
 
+export default CropImage
+
 const CropContainerStyled = styled.div`
   width: 100%;
   height: 100%;
@@ -140,6 +142,12 @@ const CropContainerStyled = styled.div`
   background: ${({ theme }) => theme.styledPalette.mainText};
   padding: 23px 15px 15px;
   position: relative;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    min-width: 379px;
+    padding: 23px 15px 40px;
+    border-radius: 20px;
+  }
 `
 
 const CropperWrapper = styled.div`
@@ -176,7 +184,7 @@ const TitleStyled = styled(Text)`
   letter-spacing: 0.5px;
   color: #fff;
   text-align: center;
-  margin-bottom: 94px;
+  margin: 0 0 94px 0;
 `
 
 const DescriptionStyled = styled(Text)`
@@ -195,7 +203,7 @@ const RetakeButtonStyled = styled(Button)`
   text-align: center;
   line-height: 23px;
   padding: 12px 13px 13px;
-  margin-right: 10px;
+  margin: 0 10px 0 0;
 `
 
 const SaveButtonStyled = styled(Button)`

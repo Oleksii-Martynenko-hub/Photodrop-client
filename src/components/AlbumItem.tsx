@@ -6,8 +6,9 @@ import { motion } from 'framer-motion'
 import styled from 'styled-components'
 
 import { AlbumData } from 'api/ProtectedApi'
-import { Image } from 'components/common/Image'
-import { useMediaQuery } from 'components/hooks/useMediaQuery'
+
+import { useMediaQueryMin } from 'components/hooks/useMediaQuery'
+import Image from 'components/common/Image'
 
 interface Props {
   album: AlbumData
@@ -17,7 +18,7 @@ interface Props {
 const AlbumItem: FC<Props> = ({ album, index }) => {
   const { id, name, location: albumLocation, date, icon } = album
 
-  const isMediumScreenSize = useMediaQuery.min(900)
+  const isMediumScreenSize = useMediaQueryMin(900)
 
   const [formattedDate] = useState(moment(date).format('DD.MM.YYYY HH:mm'))
   const [delay] = useState(

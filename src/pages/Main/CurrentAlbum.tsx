@@ -1,11 +1,11 @@
 import { FC, useRef, useState } from 'react'
 import { useParams } from 'react-router'
-import { Dialog, Grid, ImageList, ImageListItem, Typography, useMediaQuery } from '@mui/material'
+import { Dialog, Grid, Typography, useMediaQuery } from '@mui/material'
 import { motion } from 'framer-motion'
 import styled from 'styled-components'
 
-import useObserver from 'components/hooks/useObserver'
-import { Image } from 'components/common/Image'
+import { useObserver } from 'components/hooks/useObserver'
+import Image from 'components/common/Image'
 import { useDidMountEffect } from 'components/hooks/useDidMountEffect'
 
 const CurrentAlbum: FC = () => {

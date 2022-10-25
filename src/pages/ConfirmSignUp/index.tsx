@@ -17,7 +17,7 @@ import Text from 'components/common/Text'
 import Title from 'components/common/Title'
 import Button from 'components/common/Button'
 import LoadingButton from 'components/common/LoadingButton'
-import { InputVerificationCode } from 'components/common/InputVerificationCode'
+import InputVerificationCode from 'components/common/InputVerificationCode'
 
 const ConfirmSignUp: FC = () => {
   const dispatch = useDispatch()
@@ -25,11 +25,10 @@ const ConfirmSignUp: FC = () => {
 
   const status = useSelector(selectSignUpStatus)
   const isLoggedIn = useSelector(selectIsLoggedIn)
-  const generatedOTP = useSelector(selectGeneratedOTP)
   const phoneNumber = useSelector(selectPhoneNumber)
+  const generatedOTP = useSelector(selectGeneratedOTP)
 
   const [otpCode, setOtpCode] = useState('')
-
   const [hasCodeResent, setHasCodeResent] = useState(false)
 
   useEffect(() => {
@@ -87,15 +86,13 @@ const ConfirmSignUp: FC = () => {
             />
           </InputCodeWrapper>
 
-          <ResendButtonWrapper>
-            <Button
-              btnTheme={Button.themes.text}
-              disabled={hasCodeResent}
-              onClick={handleOnClickResendOTP}
-            >
-              Resend code
-            </Button>
-          </ResendButtonWrapper>
+          <ResendButtonStyled
+            btnTheme={Button.themes.text}
+            disabled={hasCodeResent}
+            onClick={handleOnClickResendOTP}
+          >
+            Resend code
+          </ResendButtonStyled>
 
           <LoadingButton
             loading={status === APIStatus.PENDING}
@@ -113,12 +110,6 @@ const ConfirmSignUp: FC = () => {
 
 export default ConfirmSignUp
 
-const PhoneNumberStyled = styled(Text)`
-  display: inline-block;
-  font-weight: bold;
-  margin-left: 5px;
-`
-
 const MotionContainerStyled = styled(motion.div)`
   width: 100%;
   max-width: 450px;
@@ -126,25 +117,47 @@ const MotionContainerStyled = styled(motion.div)`
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    padding: 177px 40px 40px;
+    max-width: 500px;
+  }
 `
 
 const InputCodeWrapper = styled.div``
 
 const TitleStyled = styled(Title)`
   line-height: 17px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    line-height: 22px;
+  }
 `
 
 const SubtitleStyled = styled(Text)`
   margin: 14px 0 19px 0;
   line-height: 13px;
   letter-spacing: 0;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    margin: 29px 0 18px 0;
+    font-size: 18px;
+    line-height: 16px;
+  }
 `
 
-const ResendButtonWrapper = styled.div`
-  margin: 20px 0 19px 0;
+const PhoneNumberStyled = styled(SubtitleStyled)`
+  display: inline-block;
+  margin: 0 0 0 5px;
+`
 
-  & > button {
-    line-height: 13px;
-    letter-spacing: 0px;
+const ResendButtonStyled = styled(Button)`
+  margin: 20px 0 19px;
+  line-height: 13px;
+  letter-spacing: 0px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    margin: 20px 0;
+    font-size: 18px;
   }
 `

@@ -1,6 +1,6 @@
 import { Provider } from 'react-redux'
 import { HistoryRouter } from 'redux-first-history/rr6'
-import { Container, CssBaseline, SxProps, Theme } from '@mui/material'
+import { CssBaseline } from '@mui/material'
 import { Slide, ToastContainer } from 'react-toastify'
 
 import { GlobalStyles } from 'themes/global'
@@ -8,9 +8,10 @@ import { GlobalStyles } from 'themes/global'
 import { store, history } from 'store'
 import { restoreAuthAsync } from 'store/sign-up/actions'
 
-import { AppBar } from 'components/AppBar'
 import ThemeProvider from 'containers/ThemeProvider'
+import MainContainer from 'containers/MainContainer'
 import AnimatedRoutes from 'containers/AnimatedRoutes'
+import AppBar from 'components/AppBar'
 
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -31,15 +32,6 @@ export enum ERoutes {
   ALBUMS_ID = 'album-:id',
   TERMS = '/terms',
   PRIVACY = '/privacy',
-}
-
-const containerStyles: SxProps<Theme> = {
-  padding: { xs: 0 },
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'start',
-  flex: 'auto',
-  position: 'relative',
 }
 
 store.dispatch(restoreAuthAsync())
@@ -65,9 +57,9 @@ const App = () => {
 
             <AppBar />
 
-            <Container sx={{ ...containerStyles }}>
+            <MainContainer>
               <AnimatedRoutes />
-            </Container>
+            </MainContainer>
           </ThemeProvider>
         </HistoryRouter>
       </Provider>

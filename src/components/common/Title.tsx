@@ -21,6 +21,8 @@ const Title = ({ size = sizes.normal, children, ...props }: Props) => {
 
 Title.size = sizes
 
+export default Title
+
 const TitleStyled = styled.h2<Props>`
   font-family: ${({ theme }) => theme.fonts.termina};
   color: ${({ theme }) => theme.styledPalette.mainText};
@@ -37,4 +39,3 @@ const TitleStyled = styled.h2<Props>`
 
   margin: 0;
 `
-export default Title

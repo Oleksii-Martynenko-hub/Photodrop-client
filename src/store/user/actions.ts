@@ -1,12 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
+import { Country } from 'react-phone-number-input'
 
 import { getExceptionPayload } from 'api/ErrorHandler'
 
-import { ThunkExtra } from 'store'
-import { setAvatar, setUserData, UserNotifications } from 'store/user/reducers'
-import { clearOTP } from 'store/sign-up/reducers'
-import { Country } from 'react-phone-number-input'
 import Tokens from 'utils/local-storage/tokens'
+
+import { ThunkExtra } from 'store'
+import { clearOTP } from 'store/sign-up/reducers'
+import { setAvatar, setUserData, UserNotifications } from 'store/user/reducers'
 
 export const getSelfieAsync = createAsyncThunk<void, void, ThunkExtra>(
   'login/getSelfieAsync',

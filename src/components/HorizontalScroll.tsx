@@ -1,19 +1,21 @@
 import React, { FC, MouseEvent } from 'react'
-
 import {
   ScrollMenu,
   VisibilityContext,
   Props as ScrollMenuProps,
 } from 'react-horizontal-scrolling-menu'
 import styled from 'styled-components'
-import useDrag from './hooks/useDrag'
+
+import { useDrag } from 'components/hooks/useDrag'
 
 type scrollVisibilityApiType = React.ContextType<typeof VisibilityContext>
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface Props extends ScrollMenuProps {}
+interface Props extends ScrollMenuProps {
+  paddingX?: number
+  spacing?: number
+}
 
-const HorizontalScroll: FC<Props> = ({ children }) => {
+const HorizontalScroll: FC<Props> = ({ paddingX = 15, spacing = 5, children }) => {
   const { dragStart, dragStop, dragMove, dragging } = useDrag()
 
   const handleDrag =
@@ -26,7 +28,12 @@ const HorizontalScroll: FC<Props> = ({ children }) => {
       })
 
   return (
-    <HorizontalScrollWrapper dragging={dragging} onMouseLeave={dragStop}>
+    <HorizontalScrollWrapper
+      paddingX={paddingX}
+      spacing={spacing}
+      dragging={dragging}
+      onMouseLeave={dragStop}
+    >
       <ScrollMenu onMouseDown={() => dragStart} onMouseUp={() => dragStop} onMouseMove={handleDrag}>
         {children}
       </ScrollMenu>
@@ -36,7 +43,11 @@ const HorizontalScroll: FC<Props> = ({ children }) => {
 
 export default HorizontalScroll
 
-const HorizontalScrollWrapper = styled.div<{ dragging: boolean }>`
+const HorizontalScrollWrapper = styled.div<{
+  dragging: boolean
+  paddingX?: number
+  spacing?: number
+}>`
   .react-horizontal-scrolling-menu--scroll-container::-webkit-scrollbar {
     display: none;
   }
@@ -44,10 +55,10 @@ const HorizontalScrollWrapper = styled.div<{ dragging: boolean }>`
   .react-horizontal-scrolling-menu--scroll-container {
     -ms-overflow-style: none;
     scrollbar-width: none;
-    padding: 0 15px;
+    padding: 0 ${({ paddingX }) => paddingX + 'px'};
 
     .react-horizontal-scrolling-menu--separator {
-      min-width: 5px;
+      min-width: ${({ spacing }) => spacing + 'px'};
     }
   }
 

@@ -1,10 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import jwt from 'jwt-decode'
+import { Country } from 'react-phone-number-input'
 
 import { getExceptionPayload } from 'api/ErrorHandler'
+import { UserData } from 'api/ProtectedApi'
+
+import Tokens from 'utils/local-storage/tokens'
 
 import { ThunkExtra } from 'store'
-import { clearUserState, setAvatar, setUserData } from 'store/user/reducers'
 import {
   clearOTP,
   clearSignUpState,
@@ -12,14 +15,12 @@ import {
   setIsFullPageLoading,
   setIsLoggedIn,
 } from 'store/sign-up/reducers'
-import Tokens from 'utils/local-storage/tokens'
-import { UserData } from 'api/ProtectedApi'
+import { clearUserState, setAvatar, setUserData } from 'store/user/reducers'
 import { getSelfieAsync } from 'store/user/actions'
-import { Country } from 'react-phone-number-input'
 
 export const restoreAuthAsync = createAsyncThunk<void, void, ThunkExtra>(
   'sign-up/restoreAuthAsync',
-  async (_, { rejectWithValue, extra: { protectedApi }, dispatch, getState }) => {
+  async (_, { rejectWithValue, extra: { protectedApi }, dispatch }) => {
     try {
       dispatch(setIsFullPageLoading(true))
 

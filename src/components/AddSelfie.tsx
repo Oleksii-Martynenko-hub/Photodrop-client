@@ -1,27 +1,30 @@
 import { HTMLAttributes, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import styled, { css } from 'styled-components'
-import { Dialog } from '@mui/material'
+import { Dialog, useMediaQuery } from '@mui/material'
 import Uppy from '@uppy/core'
 import AwsS3 from '@uppy/aws-s3'
-
-import useUppy from 'components/hooks/useUppy'
-import Button from 'components/common/Button'
-import { CropImage } from 'components/CropImage'
-import { useDispatch, useSelector } from 'react-redux'
-import { selectUserAvatar, selectUserId } from 'store/user/selectors'
-import ProtectedApi from 'api/ProtectedApi'
-import { setAvatar } from 'store/user/reducers'
 import { toast } from 'react-toastify'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+import ProtectedApi from 'api/ProtectedApi'
+
+import { setAvatar } from 'store/user/reducers'
+import { selectUserAvatar, selectUserId } from 'store/user/selectors'
+
+import { useUppy } from 'components/hooks/useUppy'
+import Button from 'components/common/Button'
+import CropImage from 'components/CropImage'
+
 interface Props extends HTMLAttributes<HTMLDivElement> {
   isUserPage?: boolean
 }
 
-export const AddSelfie = ({ isUserPage = false, ...props }: Props) => {
+const AddSelfie = ({ isUserPage = false, ...props }: Props) => {
   const dispatch = useDispatch()
   const userId = useSelector(selectUserId)
   const avatar = useSelector(selectUserAvatar)
+
+  const md = useMediaQuery('(min-width:1024px)')
 
   const [originalImage, setOriginalImage] = useState<File | null>(null)
   const [image, setImage] = useState<File | null>(null)
@@ -40,7 +43,7 @@ export const AddSelfie = ({ isUserPage = false, ...props }: Props) => {
 
         const data = await api.postGetPresignedPostSelfie({
           name: file.name,
-          userId: userId || 0,
+          userId: userId || '',
         })
 
         return Promise.resolve({
@@ -100,7 +103,12 @@ export const AddSelfie = ({ isUserPage = false, ...props }: Props) => {
 
   return (
     <SelfieWrapperStyled isUserPage={isUserPage} {...props}>
-      <Dialog fullScreen open={isDialogOpen} onClose={() => setDialogOpen(false)}>
+      <Dialog
+        fullScreen={!md}
+        open={isDialogOpen}
+        onClose={() => setDialogOpen(false)}
+        PaperProps={{ sx: { background: 'transparent', boxShadow: 'none' } }}
+      >
         {(originalImage || (isUserPage && avatar)) && (
           <CropImage
             originalImage={originalImage}
@@ -140,6 +148,8 @@ export const AddSelfie = ({ isUserPage = false, ...props }: Props) => {
   )
 }
 
+export default AddSelfie
+
 const ButtonIconStyled = styled(Button)`
   border-radius: 50%;
   position: absolute;
@@ -176,6 +186,11 @@ const SelfieImgStyled = styled.img`
 const EditIconStyled = styled.img`
   width: 18px;
   height: 23px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    width: 22px;
+    height: 29px;
+  }
 `
 
 const SelfieWrapperStyled = styled.div<{ isUserPage: boolean }>`
@@ -186,21 +201,41 @@ const SelfieWrapperStyled = styled.div<{ isUserPage: boolean }>`
   position: relative;
   margin: ${({ isUserPage }) => (isUserPage ? '0' : '0 auto')};
 
+  @media ${({ theme }) => theme.media.desktop} {
+    width: ${({ isUserPage }) => (isUserPage ? '150px' : '181px')};
+    height: ${({ isUserPage }) => (isUserPage ? '150px' : '181px')};
+    flex: 0 0 ${({ isUserPage }) => (isUserPage ? '150px' : '181px')};
+  }
+
   ${SelfieImgStyled} {
     width: ${({ isUserPage }) => (isUserPage ? '100px' : '181px')};
     height: ${({ isUserPage }) => (isUserPage ? '100px' : '181px')};
+
+    @media ${({ theme }) => theme.media.desktop} {
+      width: ${({ isUserPage }) => (isUserPage ? '150px' : '181px')};
+      height: ${({ isUserPage }) => (isUserPage ? '150px' : '181px')};
+    }
   }
 
   ${ButtonIconStyled} {
     width: ${({ isUserPage }) => (isUserPage ? '37px' : '42px')};
     height: ${({ isUserPage }) => (isUserPage ? '37px' : '42px')};
 
+    @media ${({ theme }) => theme.media.desktop} {
+      width: ${({ isUserPage }) => (isUserPage ? '45px' : '42px')};
+      height: ${({ isUserPage }) => (isUserPage ? '45px' : '42px')};
+    }
+
     ${({ isUserPage }) =>
       isUserPage &&
       css`
         border: 2px solid #ffffff;
         transform: translateX(50%);
-        padding: 5px 8px 5px 8px;
+        padding: 5px 8px 5px 9px;
+
+        @media ${({ theme }) => theme.media.desktop} {
+          padding: 7px 10px 7px 11px;
+        }
 
         &::before,
         &::after {

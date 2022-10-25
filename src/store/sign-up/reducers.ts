@@ -3,10 +3,11 @@ import { createSlice } from '@reduxjs/toolkit'
 import { ErrorObject } from 'api/ErrorHandler'
 import { APIStatus } from 'api/MainApi'
 
+import Tokens from 'utils/local-storage/tokens'
+
 import { pendingCase, rejectedCase } from 'store'
 import { generateOtpAsync, restoreAuthAsync, signUpAsync } from 'store/sign-up/actions'
 
-import Tokens from 'utils/local-storage/tokens'
 
 export interface SignUpState {
   isLoggedIn: boolean

@@ -5,7 +5,7 @@ interface Props {
   children: React.ReactElement
 }
 
-export default function HideOnScroll({ children }: Props) {
+const HideOnScroll = ({ children }: Props) => {
   const trigger = useScrollTrigger()
 
   return (
@@ -14,3 +14,5 @@ export default function HideOnScroll({ children }: Props) {
     </Slide>
   )
 }
+
+export default HideOnScroll

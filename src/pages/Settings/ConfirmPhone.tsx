@@ -16,7 +16,7 @@ import Text from 'components/common/Text'
 import Title from 'components/common/Title'
 import Button from 'components/common/Button'
 import LoadingButton from 'components/common/LoadingButton'
-import { InputVerificationCode } from 'components/common/InputVerificationCode'
+import InputVerificationCode from 'components/common/InputVerificationCode'
 
 const ConfirmPhone: FC = () => {
   const dispatch = useDispatch()
@@ -61,7 +61,7 @@ const ConfirmPhone: FC = () => {
       <TitleStyled size={Title.size.small}>What’s the code?</TitleStyled>
 
       <SubtitleStyled>
-        Enter the code sent to
+        Enter the code sent to{' '}
         <PhoneNumberStyled forwardedAs='span' weight={Text.weight.medium}>
           {phoneNumber?.formattedValue.replace('(', ' (').replace(')', ') ')}
         </PhoneNumberStyled>
@@ -78,15 +78,13 @@ const ConfirmPhone: FC = () => {
         />
       </InputCodeWrapper>
 
-      <ResendButtonWrapper>
-        <Button
-          btnTheme={Button.themes.text}
-          disabled={hasCodeResent}
-          onClick={handleOnClickResendOTP}
-        >
-          Resend code
-        </Button>
-      </ResendButtonWrapper>
+      <ResendButtonStyled
+        btnTheme={Button.themes.text}
+        disabled={hasCodeResent}
+        onClick={handleOnClickResendOTP}
+      >
+        Resend code
+      </ResendButtonStyled>
 
       <LoadingButton
         loading={statusUser === APIStatus.PENDING || statusSignUp === APIStatus.PENDING}
@@ -104,8 +102,11 @@ export default ConfirmPhone
 
 const PhoneNumberStyled = styled(Text)`
   display: inline-block;
-  font-weight: bold;
-  margin-left: 5px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    font-size: 18px;
+    line-height: 16px;
+  }
 `
 
 const MotionContainerStyled = styled(motion.div)`
@@ -115,25 +116,42 @@ const MotionContainerStyled = styled(motion.div)`
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    max-width: 500px;
+    padding: 222px 40px 40px;
+  }
 `
 
 const InputCodeWrapper = styled.div``
 
 const TitleStyled = styled(Title)`
   line-height: 14px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    line-height: 16px;
+  }
 `
 
 const SubtitleStyled = styled(Text)`
   margin: 14px 0 19px 0;
   line-height: 13px;
   letter-spacing: 0;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    margin: 29px 0 18px 0;
+    font-size: 18px;
+    line-height: 16px;
+  }
 `
 
-const ResendButtonWrapper = styled.div`
-  margin: 20px 0 19px 0;
+const ResendButtonStyled = styled(Button)`
+  margin: 20px 0 19px;
+  line-height: 13px;
+  letter-spacing: 0px;
 
-  & > button {
-    line-height: 13px;
-    letter-spacing: 0px;
+  @media ${({ theme }) => theme.media.desktop} {
+    margin: 20px 0;
+    font-size: 18px;
   }
 `

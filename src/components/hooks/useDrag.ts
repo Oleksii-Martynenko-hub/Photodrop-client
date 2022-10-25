@@ -1,6 +1,6 @@
 import { MouseEvent, useCallback, useRef, useState } from 'react'
 
-export default function useDrag() {
+export const useDrag = () => {
   const [clicked, setClicked] = useState(false)
   const [dragging, setDragging] = useState(false)
   const position = useRef(0)

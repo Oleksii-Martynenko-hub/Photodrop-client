@@ -6,7 +6,7 @@ import { UserNotifications } from 'store/user/reducers'
 export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api'
 
 export type UserData = {
-  id: number
+  id: string
   selfieKey: string | null
   name: string | null
   phone: string
@@ -23,21 +23,21 @@ export type GetSelfieBody = {
 
 export type PresignedSelfieBody = {
   name: string
-  userId: number
+  userId: string
 }
 
 export type UserEditNameBody = {
-  id: number
+  id: string
   name: string
 }
 
 export type UserEditEmailBody = {
-  id: number
+  id: string
   email: string
 }
 
 export type UserEditPhoneBody = {
-  id: number
+  id: string
   phone: string
   countryCode: Country
 }
@@ -48,7 +48,7 @@ export type UserEditPhoneResponse = {
 }
 
 export interface UserEditNotificationBody extends UserNotifications {
-  id: number
+  id: string
 }
 
 export type AlbumData = {
@@ -131,7 +131,7 @@ class ProtectedApi extends HttpClientProtected {
     return this.classInstance
   }
 
-  public getMe = (params: { userId: number }) => {
+  public getMe = (params: { userId: string }) => {
     return this.instance.get<{ userObject: UserData }>('/get-me', { params })
   }
 

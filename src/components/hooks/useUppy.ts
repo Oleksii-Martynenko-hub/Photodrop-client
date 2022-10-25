@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Uppy } from '@uppy/core'
 
-export default function useUppy(factory: () => Uppy) {
+export const useUppy = (factory: () => Uppy) => {
   if (typeof factory !== 'function') {
     throw new TypeError('useUppy: expected a function that returns a new Uppy instance')
   }

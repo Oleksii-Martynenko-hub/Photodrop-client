@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 
 export type HandleToggle = (value: boolean | React.MouseEvent) => void;
 
-export default (defaultValue = false): [boolean, HandleToggle] => {
-  const [isOn, toggle] = useState<boolean>(defaultValue);
+export const useToggle = (defaultValue = false): [boolean, HandleToggle] => {
+  const [isOn, toggle] = useState<boolean>(defaultValue)
 
   const handleToggle: HandleToggle = (value) => {
-    const toggleState = typeof value === 'boolean' ? value : !isOn;
+    const toggleState = typeof value === 'boolean' ? value : !isOn
 
-    toggle(toggleState);
-  };
+    toggle(toggleState)
+  }
 
-  return [isOn, handleToggle];
-};
+  return [isOn, handleToggle]
+}

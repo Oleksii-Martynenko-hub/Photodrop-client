@@ -22,7 +22,7 @@ import Text from 'components/common/Text'
 import Title from 'components/common/Title'
 import TextField from 'components/common/TextField'
 import LoadingButton from 'components/common/LoadingButton'
-import { CountryCodeSelect } from 'components/common/CountryCodeSelect'
+import CountryCodeSelect from 'components/common/CountryCodeSelect'
 
 const SignUp: FC = () => {
   const dispatch = useDispatch()
@@ -70,11 +70,7 @@ const SignUp: FC = () => {
 
   useDidMountEffect(() => {
     if (countryCode && !isCountryDialogOpen) {
-      setPhoneNumber({
-        value: '',
-        formattedValue: `${masks[countryCode]}`.replace(/#/g, '_'),
-        floatValue: undefined,
-      })
+      resetInputNumberValue()
       if (phoneInputRef?.current) phoneInputRef.current.focus()
     }
   }, [isCountryDialogOpen])
@@ -96,6 +92,22 @@ const SignUp: FC = () => {
       setIsSignUpLoading(true)
       dispatch(generateOtpAsync(getCountryCallingCode(countryCode) + phoneNumber.value))
     }
+  }
+
+  const resetInputNumberValue = () => {
+    setPhoneNumber({
+      value: '',
+      formattedValue: `${masks[countryCode]}`.replace(/#/g, '_'),
+      floatValue: undefined,
+    })
+  }
+
+  const handleOnFocusInputNumber = () => {
+    if (!phoneNumber?.value) resetInputNumberValue()
+  }
+
+  const handleOnBlurInputNumber = () => {
+    if (!phoneNumber?.value) setPhoneNumber(null)
   }
 
   return (
@@ -133,17 +145,8 @@ const SignUp: FC = () => {
               mask='_'
               value={phoneNumber ? phoneNumber.formattedValue : ''}
               onValueChange={onChangePhoneNumberHandler}
-              onFocus={() => {
-                if (!phoneNumber?.value)
-                  setPhoneNumber({
-                    value: '',
-                    formattedValue: `${masks[countryCode]}`.replace(/#/g, '_'),
-                    floatValue: undefined,
-                  })
-              }}
-              onBlur={() => {
-                if (!phoneNumber?.value) setPhoneNumber(null)
-              }}
+              onFocus={handleOnFocusInputNumber}
+              onBlur={handleOnBlurInputNumber}
               sx={{ margin: 0 }}
               InputProps={{
                 sx: {
@@ -185,30 +188,44 @@ const MotionContainerStyled = styled(motion.div)`
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    padding: 177px 40px 40px;
+    max-width: 500px;
+  }
 `
 
 const InputNumberWrapperStyled = styled.div`
   display: flex;
-  margin-bottom: 20px;
+  margin: 0 0 20px 0;
 `
 
 const TitleStyled = styled(Title)`
   line-height: 17px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    line-height: 22px;
+  }
 `
 
 const SubtitleStyled = styled(Text)`
   margin: 14px 0 19px 0;
   line-height: 15px;
   letter-spacing: 0.6px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    margin: 29px 0 18px 0;
+    line-height: 16px;
+  }
 `
 
 const DescriptionStyled = styled(Text)`
   margin: 20px 0 38px 0;
   letter-spacing: -0.05px;
-  padding-left: 1px;
   line-height: 18px;
 
   @media ${({ theme }) => theme.media.desktop} {
+    margin: 20px 0 0 0;
     font-size: 16px;
     line-height: 21px;
   }
@@ -216,8 +233,11 @@ const DescriptionStyled = styled(Text)`
 
 const TermsPrivacyWrapperStyled = styled(Text)`
   letter-spacing: -0.32px;
-  padding-left: 1px;
   line-height: 18px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    display: none;
+  }
 `
 
 const TermsPrivacyLinkStyled = styled(Link)`

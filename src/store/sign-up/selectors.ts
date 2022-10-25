@@ -1,9 +1,9 @@
 import { createSelector, Selector } from 'reselect'
 
+import { ErrorObject } from 'api/ErrorHandler'
 import { APIStatus } from 'api/MainApi'
 
 import { RootState } from 'store'
-import { ErrorObject } from 'api/ErrorHandler'
 
 const selectSignUpReducer = (state: RootState) => state.signUpReducer
 

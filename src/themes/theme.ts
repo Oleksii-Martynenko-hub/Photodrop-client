@@ -39,7 +39,7 @@ export const theme = {
     error: '#FE5F55',
     border: '#EEEEEE',
     secondaryBorder: '#CECCB5',
-    appbarBorder: '#F1F0EC',
+    appBarBorder: '#F1F0EC',
     background: '#F4F4F4',
     mainText: '#262626',
     secondaryText: '#6d6d6d',

@@ -133,9 +133,14 @@ const TextFieldStyled = styled(TextField)``
 
 const TermsPrivacyWrapperStyled = styled(Text)`
   letter-spacing: -0.32px;
-  padding-left: 1px;
   line-height: 18px;
-  margin-top: 213px;
+  margin: 213px 0 0 0;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    font-size: 16px;
+    line-height: 21px;
+    margin: 260px 0 0 0;
+  }
 `
 
 const TermsPrivacyLinkStyled = styled(Link)`
@@ -144,6 +149,10 @@ const TermsPrivacyLinkStyled = styled(Link)`
   line-height: 12px;
   border-bottom: 1px solid ${({ theme }) => theme.styledPalette.primary};
   text-decoration: none;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    line-height: 14px;
+  }
 `
 
 const MotionContainerStyled = styled(motion.div)<{ onboarding: boolean }>`
@@ -154,18 +163,31 @@ const MotionContainerStyled = styled(motion.div)<{ onboarding: boolean }>`
   display: flex;
   flex-direction: column;
 
+  @media ${({ theme }) => theme.media.desktop} {
+    max-width: 500px;
+    padding: ${({ onboarding }) => (onboarding ? '234px' : '254px')} 40px 40px;
+  }
+
   ${TextFieldStyled} {
     margin: ${({ onboarding }) => (onboarding ? '20px 0' : '19px 0 21px')};
+
+    @media ${({ theme }) => theme.media.desktop} {
+      margin: 30px 0 20px;
+    }
   }
 
   ${TitleStyled} {
     line-height: ${({ onboarding }) => (onboarding ? '14px' : '13px')};
 
+    @media ${({ theme }) => theme.media.desktop} {
+      line-height: ${({ onboarding }) => (onboarding ? '22px' : '18px')};
+    }
+
     ${({ onboarding }) =>
       onboarding &&
       css`
         &:not(:last-child) {
-          margin-bottom: 14px;
+          margin: 0 0 14px 0;
         }
       `}
   }

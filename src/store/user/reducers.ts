@@ -3,12 +3,17 @@ import { Country, getCountryCallingCode } from 'react-phone-number-input'
 import { patterFormatter } from 'react-number-format'
 import masks from 'pages/../../country-phone-masks.json'
 
-import { APIStatus } from 'api/MainApi'
 import { ErrorObject } from 'api/ErrorHandler'
-
+import { APIStatus } from 'api/MainApi'
 import { UserData } from 'api/ProtectedApi'
-import { editEmailAsync, editNameAsync, editNotificationAsync, editPhoneAsync } from './actions'
+
 import { pendingCase, rejectedCase } from 'store'
+import {
+  editEmailAsync,
+  editNameAsync,
+  editNotificationAsync,
+  editPhoneAsync,
+} from 'store/user/actions'
 
 export type UserNotifications = {
   textMessagesNotification: boolean | null
@@ -32,7 +37,7 @@ export interface UsersState {
 
 const initialState: UsersState = {
   user: {
-    id: 0,
+    id: '',
     name: null,
     selfieKey: null,
     phone: '',

@@ -432,28 +432,42 @@ const MotionContainerStyled = styled(motion.div)`
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    max-width: 780px;
+    padding: 40px;
+  }
 `
 
 const TitleStyled = styled(Title)`
   line-height: 13px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    line-height: 22px;
+  }
 `
 
 const TextWrapper = styled(Text)`
   margin: 16px 0 0 0;
   line-height: 21px;
   letter-spacing: -0.31px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    margin: 15px 0 0 0;
+    font-size: 18px;
+    line-height: 23px;
+    letter-spacing: -0.37px;
+  }
 `
 
 const Paragraph = styled(TextWrapper)`
   margin: 0 0 21px 0;
-`
 
+  @media ${({ theme }) => theme.media.desktop} {
+    margin: 0 0 23px 0;
+  }
+`
 const ParagraphTitle = styled(TextWrapper)`
   display: block;
   margin: 0;
-`
-
-const BoldText = styled(ParagraphTitle)`
-  display: inline;
-  letter-spacing: -0.1px;
 `

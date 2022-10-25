@@ -1,10 +1,7 @@
 import { FC, useEffect } from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
-import { Grid } from '@mui/material'
-import { motion } from 'framer-motion'
 
-import useToggle from 'components/hooks/useToggle'
-import Title from 'components/common/Title'
+import { useToggle } from 'components/hooks/useToggle'
 import { selectUserAvatar } from 'store/user/selectors'
 import { useSelector } from 'react-redux'
 import { ERoutes } from 'pages/App'

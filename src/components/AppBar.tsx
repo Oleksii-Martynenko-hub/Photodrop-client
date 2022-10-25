@@ -9,12 +9,12 @@ import { clearOTP } from 'store/sign-up/reducers'
 import { selectUserAvatar, selectUserName } from 'store/user/selectors'
 
 import { ERoutes } from 'pages/App'
-import useToggle from 'components/hooks/useToggle'
-import Button from './common/Button'
-import { Logo } from 'components/Logo'
+import { useToggle } from 'components/hooks/useToggle'
+import Button from 'components/common/Button'
 import HideOnScroll from 'components/common/HideOnScroll'
+import Logo from 'components/Logo'
 
-export const AppBar = () => {
+const AppBar = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const location = useLocation()
@@ -80,18 +80,20 @@ export const AppBar = () => {
   )
 }
 
+export default AppBar
+
 const LinkStyled = styled(Link)`
   display: block;
   text-decoration: none;
   position: absolute;
-  top: 10px;
-  right: 15px;
+  top: 12px;
+  right: 40px;
 `
 
 const AppBarStyled = styled(Bar)`
   box-shadow: none;
   background: #fff;
-  border-bottom: 1px solid ${({ theme }) => theme.styledPalette.appbarBorder};
+  border-bottom: 1px solid ${({ theme }) => theme.styledPalette.appBarBorder};
   height: 55px;
   min-height: 55px;
 
@@ -102,16 +104,17 @@ const AppBarStyled = styled(Bar)`
 `
 
 const ToolbarStyled = styled(Toolbar)`
-  padding: 20px 15px 19px;
+  padding: 20px 15px 18px;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
-  height: 55px;
-  min-height: 55px;
+  height: 54px;
+  min-height: 54px;
 
   @media ${({ theme }) => theme.media.desktop} {
-    height: 60px;
-    min-height: 60px;
+    padding: 19px 40px 18px;
+    height: 59px;
+    min-height: 59px;
   }
 `
 
@@ -121,9 +124,18 @@ const BackButtonStyled = styled(Button)`
   top: 12px;
   left: 7px;
   padding: 8px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    left: 32px;
+  }
 `
 
 const ArrowIconStyled = styled.img`
   width: 8px;
   height: 16px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    width: 10px;
+    height: 20px;
+  }
 `

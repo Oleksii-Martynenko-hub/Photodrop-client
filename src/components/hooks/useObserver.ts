@@ -1,6 +1,6 @@
 import { useEffect, useState, RefObject } from 'react'
 
-export default function useObserver(ref: RefObject<Element | undefined>, rootMargin = '0px') {
+export const useObserver = (ref: RefObject<Element | undefined>, rootMargin = '0px') => {
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {

@@ -1,12 +1,8 @@
 import { FC, ImgHTMLAttributes, useState } from 'react'
 import styled from 'styled-components'
-
 import { motion } from 'framer-motion'
-import { Box, Skeleton, SxProps, Theme } from '@mui/material'
-import PhotoCameraRoundedIcon from '@mui/icons-material/PhotoCameraRounded'
-import NoPhotographyRoundedIcon from '@mui/icons-material/NoPhotographyRounded'
 
-import useToggle from 'components/hooks/useToggle'
+import { useToggle } from 'components/hooks/useToggle'
 
 interface Props extends ImgHTMLAttributes<HTMLImageElement> {
   src: string
@@ -16,7 +12,7 @@ interface Props extends ImgHTMLAttributes<HTMLImageElement> {
   onLoad?: () => void
 }
 
-export const Image: FC<Props> = ({ src, width, height, rounded = false, onLoad, ...props }: Props) => {
+const Image: FC<Props> = ({ src, width, height, rounded = false, onLoad, ...props }: Props) => {
   const [initAnimation] = useState({ opacity: 0, scale: 0.95 })
 
   const [isOriginalLoaded, setIsOriginalLoaded] = useToggle(false)
@@ -58,6 +54,8 @@ export const Image: FC<Props> = ({ src, width, height, rounded = false, onLoad, 
     </ImageWrapper>
   )
 }
+
+export default Image
 
 const ImageStyled = styled.img<{
   width?: number | string

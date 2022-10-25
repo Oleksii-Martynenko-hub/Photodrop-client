@@ -2,7 +2,7 @@ import { FC } from 'react'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 
-import Text from './common/Text'
+import Text from 'components/common/Text'
 
 const EmptyDashboard: FC = () => {
   return (
@@ -34,6 +34,12 @@ const MotionContainerStyled = styled(motion.div)`
   display: flex;
   flex-direction: column;
   border-bottom: 5px solid ${({ theme }) => theme.styledPalette.background};
+
+  @media ${({ theme }) => theme.media.desktop} {
+    min-width: 100%;
+    padding: 53px 40px 40px;
+    border-bottom: none;
+  }
 `
 
 const IconsWrapper = styled.div`
@@ -45,6 +51,11 @@ const IconsWrapper = styled.div`
 const LargeMsgIcon = styled.img`
   width: 70px;
   height: 65px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    width: 94px;
+    height: 87px;
+  }
 `
 
 const SmallMsgIcon = styled.img`
@@ -53,6 +64,13 @@ const SmallMsgIcon = styled.img`
   left: 23px;
   width: 27px;
   height: 26px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    top: 22px;
+    left: 31px;
+    width: 36px;
+    height: 35px;
+  }
 `
 
 const RoundedBadgeIcon = styled.img`
@@ -61,6 +79,13 @@ const RoundedBadgeIcon = styled.img`
   right: -11px;
   width: 26px;
   height: 26px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    top: -13px;
+    right: -15px;
+    width: 34px;
+    height: 34px;
+  }
 `
 
 const TitleStyled = styled(Text)`
@@ -68,6 +93,12 @@ const TitleStyled = styled(Text)`
   margin: 21px 0 16px 0;
   text-align: center;
   letter-spacing: 0.6px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    font-size: 30px;
+    line-height: 22px;
+    margin: 30px 0 19px 0;
+  }
 `
 
 const SubtitleStyled = styled(Text)`
@@ -75,4 +106,9 @@ const SubtitleStyled = styled(Text)`
   text-align: center;
   line-height: 23px;
   letter-spacing: 0;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    font-size: 22px;
+    line-height: 16px;
+  }
 `

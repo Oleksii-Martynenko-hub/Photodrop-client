@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { Dialog } from '@mui/material'
 
-export const FullPageLoader = () => {
+const FullPageLoader = () => {
   return (
     <Dialog
       open
@@ -16,6 +16,8 @@ export const FullPageLoader = () => {
     </Dialog>
   )
 }
+
+export default FullPageLoader
 
 const FullPageLoaderStyled = styled.div`
   display: flex;

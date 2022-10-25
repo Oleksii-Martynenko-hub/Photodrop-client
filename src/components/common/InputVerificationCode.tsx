@@ -4,13 +4,15 @@ import ReactInputVerificationCode, {
 } from 'react-input-verification-code'
 import styled from 'styled-components'
 
-export const InputVerificationCode: FC<ReactInputVerificationCodeProps> = (props) => {
+const InputVerificationCode: FC<ReactInputVerificationCodeProps> = (props) => {
   return (
     <VerificationCodeStyled>
       <ReactInputVerificationCode {...props} />
     </VerificationCodeStyled>
   )
 }
+
+export default InputVerificationCode
 
 const VerificationCodeStyled = styled.div`
   --ReactInputVerificationCode-itemWidth: 45px;
@@ -26,7 +28,7 @@ const VerificationCodeStyled = styled.div`
     font-weight: normal;
     border: 1px solid ${({ theme }) => theme.styledPalette.border};
     border-radius: 10px;
-    padding: 14px 0 15px;
+    padding: 13px 0 14px;
     background-color: #f4f4f4;
     box-shadow: none;
     cursor: text;
@@ -36,6 +38,12 @@ const VerificationCodeStyled = styled.div`
     width: 45px;
     height: 40px;
 
+    @media ${({ theme }) => theme.media.desktop} {
+      padding: 11px 0 11px;
+      font-size: 18px;
+      line-height: 16px;
+    }
+
     &.is-active {
       box-shadow: none;
       border: 1px solid ${({ theme }) => theme.styledPalette.border};
@@ -43,6 +51,10 @@ const VerificationCodeStyled = styled.div`
 
     &:not(:last-child) {
       margin-right: 15px;
+
+      @media ${({ theme }) => theme.media.desktop} {
+        margin-right: 30px;
+      }
     }
   }
 `

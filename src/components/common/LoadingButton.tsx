@@ -22,18 +22,19 @@ const LoadingButton: FC<Props> = ({ loading = false, disabled, fullWidth, childr
   )
 }
 
+export default LoadingButton
+
 const LoadingButtonStyled = styled.button<Props>`
   font-family: ${({ theme }) => theme.fonts.futuraPT};
   font-size: 18px;
+  line-height: 23px;
   font-weight: 500;
   letter-spacing: 0.5px;
-  padding-left: 45px;
-  padding-right: ${({ loading }) => (loading ? '17px' : '45px')};
+  padding: ${({ loading }) => (loading ? '14px 17px 13px 45px' : '14px 45px 13px')};
   background: ${({ theme, loading, disabled }) =>
     loading || disabled ? theme.styledPalette.primaryDisabled : theme.styledPalette.primary};
   color: #fff;
   width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
-  height: 50px;
   border-radius: 25px;
   text-transform: none;
   box-shadow: none;
@@ -50,6 +51,8 @@ const LoadingButtonStyled = styled.button<Props>`
 
   @media ${({ theme }) => theme.media.desktop} {
     font-size: 22px;
+    line-height: 15px;
+    padding: ${({ loading }) => (loading ? '17px 17px 18px 45px' : '17px 45px 18px')};
   }
 `
 
@@ -59,5 +62,3 @@ const CircularLoader = styled(CircularProgress)`
   position: relative;
   top: 2px;
 `
-
-export default LoadingButton

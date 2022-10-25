@@ -4,7 +4,7 @@ import { Country } from 'react-phone-number-input'
 import { createSelector, Selector } from 'reselect'
 
 import { RootState } from 'store'
-import { PhoneNumber, UserNotifications } from './reducers'
+import { PhoneNumber, UserNotifications } from 'store/user/reducers'
 
 const selectUserReducer = (state: RootState) => state.userReducer
 
@@ -13,7 +13,7 @@ export const selectUser: Selector<RootState, UserData> = createSelector(
   ({ user }) => user,
 )
 
-export const selectUserId: Selector<RootState, number | null> = createSelector(
+export const selectUserId: Selector<RootState, string | null> = createSelector(
   selectUserReducer,
   ({ user }) => user.id || null,
 )

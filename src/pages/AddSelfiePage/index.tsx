@@ -7,9 +7,9 @@ import styled from 'styled-components'
 import { selectUserAvatar } from 'store/user/selectors'
 
 import { ERoutes } from 'pages/App'
-import Title from 'components/common/Title'
 import Text from 'components/common/Text'
-import { AddSelfie } from 'components/AddSelfie'
+import Title from 'components/common/Title'
+import AddSelfie from 'components/AddSelfie'
 
 const AddSelfiePage: FC = () => {
   const avatar = useSelector(selectUserAvatar)
@@ -40,11 +40,17 @@ const MotionContainerStyled = styled(motion.div)`
   flex-direction: column;
 
   @media ${({ theme }) => theme.media.desktop} {
+    max-width: 500px;
+    padding: 177px 40px 40px;
   }
 `
 
 const TitleStyled = styled(Title)`
   line-height: 17px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    line-height: 22px;
+  }
 `
 
 const SubtitleStyled = styled(Text)`
@@ -52,4 +58,9 @@ const SubtitleStyled = styled(Text)`
   line-height: 23px;
   letter-spacing: 0;
   text-align: center;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    margin: 29px 0 28px;
+    line-height: 16px;
+  }
 `

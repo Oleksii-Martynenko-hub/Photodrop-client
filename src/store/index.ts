@@ -3,13 +3,13 @@ import { createReduxHistoryContext } from 'redux-first-history'
 import { createBrowserHistory } from 'history'
 import logger from 'redux-logger'
 
+import { ErrorObject } from 'api/ErrorHandler'
 import MainApi, { APIStatus } from 'api/MainApi'
 import ProtectedApi from 'api/ProtectedApi'
-import { ErrorObject } from 'api/ErrorHandler'
+import StorageApi from 'api/StorageApi'
 
 import signUpReducer, { SignUpState } from 'store/sign-up/reducers'
 import userReducer, { UsersState } from 'store/user/reducers'
-import StorageApi from 'api/StorageApi'
 
 const { createReduxHistory, routerMiddleware, routerReducer } = createReduxHistoryContext({
   history: createBrowserHistory(),

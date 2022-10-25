@@ -130,49 +130,72 @@ const MotionContainerStyled = styled(motion.div)`
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    max-width: 500px;
+    padding: 40px;
+  }
 `
 
 const TitleStyled = styled(Title)`
   line-height: 14px;
-  margin-bottom: 19px;
+  margin: 0 0 19px 0;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    line-height: 12px;
+    margin: 0 0 32px 0;
+  }
 `
 
 const DescriptionStyled = styled(Text)`
   letter-spacing: 0px;
-  padding-left: 30px;
+  padding: 0 0 0 30px;
   line-height: 18px;
   margin: 10px 0 39px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    font-size: 16px;
+    line-height: 21px;
+    letter-spacing: -0.1px;
+  }
 `
 
 const OptionTitle = styled(Text)`
   letter-spacing: 0.5px;
-  line-height: 10px;
+  line-height: 20px;
   cursor: pointer;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    font-size: 18px;
+  }
 `
 
 const TickIconStyled = styled.img`
+  position: absolute;
+  top: 5px;
+  left: 3px;
   width: 13px;
   height: 10px;
+  user-select: none;
 `
 
 const OptionWrapper = styled.div`
   display: flex;
-  align-items: center;
 
   &:not(:last-of-type) {
-    margin-bottom: 10px;
+    margin: 0 0 10px 0;
   }
 `
 
 const OptionCheckbox = styled(Button)<{ active: boolean }>`
+  position: relative;
   width: 20px;
   height: 20px;
   border: 1px solid
     ${({ theme, active }) =>
       active ? theme.styledPalette.primary : theme.styledPalette.checkboxDisabled};
   border-radius: 5px;
-  padding: 4px 2px;
-  margin-right: 10px;
+  margin: 0 10px 0 0;
 
   ${TickIconStyled} {
     display: ${({ active }) => (active ? 'block' : 'none')};

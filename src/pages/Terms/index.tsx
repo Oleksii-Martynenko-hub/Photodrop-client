@@ -1,14 +1,19 @@
 import { FC } from 'react'
-import { motion } from 'framer-motion'
 import styled from 'styled-components'
+import { motion } from 'framer-motion'
+import { useMediaQuery } from '@mui/material'
 
 import Text from 'components/common/Text'
 import Title from 'components/common/Title'
 
 const Terms: FC = () => {
+  const md = useMediaQuery('(min-width:1024px)')
+
   return (
     <MotionContainerStyled initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      <TitleStyled size={Title.size.small}>Terms of service</TitleStyled>
+      <TitleStyled size={Title.size.small}>
+        {md ? 'Terms of Use & Privacy Policy' : 'Terms of service'}
+      </TitleStyled>
 
       <TextWrapper>
         <Paragraph>
@@ -36,9 +41,10 @@ const Terms: FC = () => {
 
         <Paragraph>
           <ParagraphTitle weight={Text.weight.bold}>Privacy Policy</ParagraphTitle>
-          Please refer to our Privacy Policy at https://photodrop.me/ privacy for information on how
-          we collect, use and disclose information from our users. You acknowledge and agree that
-          your use of the Service is subject to our Privacy Policy.
+          Please refer to our Privacy Policy at{' '}
+          <BoldText weight={Text.weight.bold}>https://photodrop.me/</BoldText> privacy for
+          information on how we collect, use and disclose information from our users. You
+          acknowledge and agree that your use of the Service is subject to our Privacy Policy.
         </Paragraph>
 
         <Paragraph>
@@ -970,20 +976,39 @@ const MotionContainerStyled = styled(motion.div)`
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    max-width: 780px;
+    padding: 40px;
+  }
 `
 
 const TitleStyled = styled(Title)`
   line-height: 13px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    line-height: 22px;
+  }
 `
 
 const TextWrapper = styled(Text)`
   margin: 16px 0 0 0;
   line-height: 21px;
   letter-spacing: -0.31px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    margin: 15px 0 0 0;
+    font-size: 18px;
+    line-height: 23px;
+  }
 `
 
 const Paragraph = styled(TextWrapper)`
   margin: 0 0 21px 0;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    margin: 0 0 23px 0;
+  }
 `
 
 const ParagraphTitle = styled(TextWrapper)`

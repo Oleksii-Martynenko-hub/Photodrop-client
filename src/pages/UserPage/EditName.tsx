@@ -104,11 +104,24 @@ const MotionContainerStyled = styled(motion.div)<{ onboarding: boolean }>`
   display: flex;
   flex-direction: column;
 
+  @media ${({ theme }) => theme.media.desktop} {
+    max-width: 500px;
+    padding: ${({ onboarding }) => (onboarding ? '252px' : '254px')} 40px 40px;
+  }
+
   ${TextFieldStyled} {
     margin: ${({ onboarding }) => (onboarding ? '21px 0' : '20px 0 21px')};
+
+    @media ${({ theme }) => theme.media.desktop} {
+      margin: 30px 0 20px;
+    }
   }
 
   ${TitleStyled} {
     line-height: ${({ onboarding }) => (onboarding ? '14px' : '13px')};
+
+    @media ${({ theme }) => theme.media.desktop} {
+      line-height: ${({ onboarding }) => (onboarding ? '22px' : '18px')};
+    }
   }
 `

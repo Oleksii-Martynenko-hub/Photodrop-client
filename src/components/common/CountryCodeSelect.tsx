@@ -1,9 +1,5 @@
 import { HTMLAttributes, useState } from 'react'
 import styled from 'styled-components'
-import { getCountries, getCountryCallingCode, Country } from 'react-phone-number-input/input'
-import countryNames from 'react-phone-number-input/locale/en.json'
-import { hasFlag } from 'country-flag-icons'
-import getUnicodeFlagIcon from 'country-flag-icons/unicode'
 import {
   AppBar,
   Dialog,
@@ -18,6 +14,8 @@ import {
   Toolbar,
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
+import { getCountries, getCountryCallingCode, Country } from 'react-phone-number-input/input'
+import countryNames from 'react-phone-number-input/locale/en.json'
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   countryCode: Country
@@ -26,7 +24,7 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
   setCountryDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const CountryCodeSelect = ({
+const CountryCodeSelect = ({
   countryCode,
   setCountryCode,
   isCountryDialogOpen,
@@ -120,17 +118,18 @@ export const CountryCodeSelect = ({
       />
 
       <CountryCodeStyled onClick={handleOnClickSelect}>
-        {hasFlag(countryCode) ? (
-          <FlagUnicodeIconStyled>{getUnicodeFlagIcon(countryCode)}</FlagUnicodeIconStyled>
-        ) : (
-          <FlagIconStyled src={countryCode} alt={countryNames[countryCode]} />
-        )}
+        <FlagIconStyled
+          src={`https://purecatamphetamine.github.io/country-flag-icons/3x2/${countryCode}.svg`}
+          alt={countryNames[countryCode]}
+        />
 
         <ArrowIconStyled src='/images/bottom-arrow.svg' alt='bottom-arrow' />
       </CountryCodeStyled>
     </CountryCodeWrapperStyled>
   )
 }
+
+export default CountryCodeSelect
 
 const CountryCodeWrapperStyled = styled.div`
   width: 70px;
@@ -142,12 +141,11 @@ const CountryCodeWrapperStyled = styled.div`
   margin-right: 10px;
   cursor: pointer;
   position: relative;
-  padding: 8px 9px 6px 7px;
 `
 
 const CountryCodeStyled = styled.div`
-  display: flex;
-  align-items: center;
+  width: 100%;
+  height: 100%;
 `
 
 const CountryCodeSelectStyled = styled.select`
@@ -158,21 +156,19 @@ const CountryCodeSelectStyled = styled.select`
 `
 
 const FlagIconStyled = styled.img`
-  width: 30px !important;
-  font-size: 30px !important;
-  line-height: 25px !important;
-  margin-right: 8px;
-`
-
-const FlagUnicodeIconStyled = styled.div`
-  display: inline-block;
-  width: 30px !important;
-  font-size: 30px !important;
-  line-height: 25px !important;
+  position: absolute;
+  top: 10px;
+  left: 9px;
+  width: 27px;
+  height: 18px;
+  border-radius: 3px;
   margin-right: 8px;
 `
 
 const ArrowIconStyled = styled.img`
+  position: absolute;
+  top: 17px;
+  right: 9px;
   width: 14px;
   height: 7px;
 `

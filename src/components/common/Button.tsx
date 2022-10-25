@@ -32,6 +32,8 @@ const Button = ({ btnTheme = themes.primary, disabled, fullWidth, children, ...p
 
 Button.themes = themes
 
+export default Button
+
 const ButtonStyled = styled.button<Props>`
   font-family: ${({ theme }) => theme.fonts.futuraPT};
   font-size: 18px;
@@ -90,5 +92,3 @@ const TextButton = styled(ButtonStyled)`
       color: ${({ theme }) => theme.styledPalette.secondaryText};
     `}
 `
-
-export default Button
