@@ -60,10 +60,6 @@ const SignUp: FC = () => {
         }
       }
 
-      if (status === APIStatus.REJECTED) {
-        toast.error('Something went wrong, please try again later.')
-      }
-
       if (status !== APIStatus.PENDING) setIsSignUpLoading(false)
     }
   }, [status, generatedOTP, isSignUpLoading])
@@ -83,6 +79,11 @@ const SignUp: FC = () => {
   }
 
   const handleOnClickSignUp = () => {
+    if (!phoneNumber || !phoneNumber.value) {
+      toast.error('Please enter your phone number.')
+      return
+    }
+
     if (phoneNumber) {
       if (!isValidPhoneNumber(phoneNumber.value, countryCode)) {
         toast.error('Invalid phone number.')

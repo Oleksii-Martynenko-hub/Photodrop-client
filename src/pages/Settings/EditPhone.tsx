@@ -81,10 +81,6 @@ const EditPhone: FC = () => {
         }
       }
 
-      if (status === APIStatus.REJECTED) {
-        toast.error('Something went wrong, please try again later.')
-      }
-
       if (status !== APIStatus.PENDING) setIsEditPhoneLoading(false)
     }
   }, [status, generatedOTP, isEditPhoneLoading])

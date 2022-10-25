@@ -54,10 +54,6 @@ const EditEmail: FC = () => {
         if (!onboarding) navigate(-1)
       }
 
-      if (status === APIStatus.REJECTED) {
-        toast.error('Something went wrong, please try again later.')
-      }
-
       if (status !== APIStatus.PENDING) setIsEditEmailLoading(false)
     }
   }, [status, isEditEmailLoading])
