@@ -7,6 +7,7 @@ import { motion } from 'framer-motion'
 
 import { APIStatus } from 'api/MainApi'
 
+import { clearOTP } from 'store/sign-up/reducers'
 import { generateOtpAsync, signUpAsync } from 'store/sign-up/actions'
 import { selectGeneratedOTP, selectIsLoggedIn, selectSignUpStatus } from 'store/sign-up/selectors'
 import { selectPhoneNumber } from 'store/user/selectors'
@@ -30,6 +31,19 @@ const ConfirmSignUp: FC = () => {
 
   const [otpCode, setOtpCode] = useState('')
   const [hasCodeResent, setHasCodeResent] = useState(false)
+
+  useEffect(() => {
+    let timer: string | number | NodeJS.Timeout | undefined
+
+    if (generatedOTP) {
+      timer = setTimeout(() => {
+        dispatch(clearOTP())
+        toast.error('Verification code has expired.', { autoClose: false })
+      }, 1000 * 60 * 3)
+    }
+
+    return () => clearTimeout(timer)
+  }, [])
 
   useEffect(() => {
     if (!generatedOTP || generatedOTP.length !== 6 || !phoneNumber) {
