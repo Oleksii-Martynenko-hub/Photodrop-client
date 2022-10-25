@@ -1,16 +1,36 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { Country } from 'react-phone-number-input'
 
-import { getExceptionPayload } from 'api/ErrorHandler'
+import { ErrorObject, getExceptionPayload } from 'api/ErrorHandler'
 
 import Tokens from 'utils/local-storage/tokens'
 
 import { ThunkExtra } from 'store'
 import { clearOTP } from 'store/sign-up/reducers'
 import { setAvatar, setUserData, UserNotifications } from 'store/user/reducers'
+import { logoutAsync } from 'store/sign-up/actions'
+
+export const logoutIfTokenInvalid = createAsyncThunk<void, unknown, ThunkExtra>(
+  'login/logoutIfTokenInvalid',
+  async (errorData, { rejectWithValue, dispatch }) => {
+    try {
+      const ex = errorData as { response: { data: { errors: ErrorObject[] } } }
+
+      if (ex && ex.response && ex.response.data && ex.response.data.errors) {
+        if (ex.response.data.errors.length) {
+          const { msg } = ex.response.data.errors[0]
+
+          if (msg === 'Not authorized') dispatch(logoutAsync())
+        }
+      }
+    } catch (error) {
+      return rejectWithValue(getExceptionPayload(error))
+    }
+  },
+)
 
 export const getSelfieAsync = createAsyncThunk<void, void, ThunkExtra>(
-  'login/getSelfieAsync',
+  'user/getSelfieAsync',
   async (_, { rejectWithValue, extra: { protectedApi }, dispatch, getState }) => {
     try {
       const {
@@ -25,6 +45,7 @@ export const getSelfieAsync = createAsyncThunk<void, void, ThunkExtra>(
 
       dispatch(setAvatar(avatar))
     } catch (error) {
+      dispatch(logoutIfTokenInvalid(error))
       dispatch(setAvatar(null))
       return rejectWithValue(getExceptionPayload(error))
     }
@@ -45,6 +66,7 @@ export const editNameAsync = createAsyncThunk<void, string, ThunkExtra>(
 
       dispatch(setUserData(user))
     } catch (error) {
+      dispatch(logoutIfTokenInvalid(error))
       return rejectWithValue(getExceptionPayload(error))
     }
   },
@@ -64,6 +86,7 @@ export const editEmailAsync = createAsyncThunk<void, string, ThunkExtra>(
 
       dispatch(setUserData(user))
     } catch (error) {
+      dispatch(logoutIfTokenInvalid(error))
       return rejectWithValue(getExceptionPayload(error))
     }
   },
@@ -96,6 +119,7 @@ export const editPhoneAsync = createAsyncThunk<
 
       dispatch(clearOTP())
     } catch (error) {
+      dispatch(logoutIfTokenInvalid(error))
       return rejectWithValue(getExceptionPayload(error))
     }
   },
@@ -115,6 +139,7 @@ export const editNotificationAsync = createAsyncThunk<void, UserNotifications, T
 
       dispatch(setUserData(user))
     } catch (error) {
+      dispatch(logoutIfTokenInvalid(error))
       return rejectWithValue(getExceptionPayload(error))
     }
   },

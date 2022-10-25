@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Country, getCountryCallingCode } from 'react-phone-number-input'
 import { patterFormatter } from 'react-number-format'
+import { toast } from 'react-toastify'
 import masks from 'pages/../../country-phone-masks.json'
 
 import { ErrorObject } from 'api/ErrorHandler'
@@ -54,6 +55,14 @@ const initialState: UsersState = {
   errors: [],
 }
 
+export const errorToast = (payload: ErrorObject[] | undefined) => {
+  if (payload) {
+    payload.forEach(({ msg }) => {
+      toast.error(msg === 'Not authorized' ? 'Your login has expired, please login again' : msg)
+    })
+  }
+}
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -85,25 +94,37 @@ export const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(editNameAsync.pending, pendingCase())
-    builder.addCase(editNameAsync.rejected, rejectedCase())
+    builder.addCase(
+      editNameAsync.rejected,
+      rejectedCase((_, { payload }) => errorToast(payload)),
+    )
     builder.addCase(editNameAsync.fulfilled, (state) => {
       state.status = APIStatus.FULFILLED
     })
 
     builder.addCase(editEmailAsync.pending, pendingCase())
-    builder.addCase(editEmailAsync.rejected, rejectedCase())
+    builder.addCase(
+      editEmailAsync.rejected,
+      rejectedCase((_, { payload }) => errorToast(payload)),
+    )
     builder.addCase(editEmailAsync.fulfilled, (state) => {
       state.status = APIStatus.FULFILLED
     })
 
     builder.addCase(editPhoneAsync.pending, pendingCase())
-    builder.addCase(editPhoneAsync.rejected, rejectedCase())
+    builder.addCase(
+      editPhoneAsync.rejected,
+      rejectedCase((_, { payload }) => errorToast(payload)),
+    )
     builder.addCase(editPhoneAsync.fulfilled, (state) => {
       state.status = APIStatus.FULFILLED
     })
 
     builder.addCase(editNotificationAsync.pending, pendingCase())
-    builder.addCase(editNotificationAsync.rejected, rejectedCase())
+    builder.addCase(
+      editNotificationAsync.rejected,
+      rejectedCase((_, { payload }) => errorToast(payload)),
+    )
     builder.addCase(editNotificationAsync.fulfilled, (state) => {
       state.status = APIStatus.FULFILLED
     })
