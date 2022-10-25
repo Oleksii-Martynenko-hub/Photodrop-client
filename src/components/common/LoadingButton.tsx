@@ -58,7 +58,7 @@ const LoadingButtonStyled = styled.button<Props>`
 
 const CircularLoader = styled(CircularProgress)`
   color: inherit;
-  margin-left: 10px;
+  margin: -3px 0 0px 10px;
   position: relative;
   top: 2px;
 `
