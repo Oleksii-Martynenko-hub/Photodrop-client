@@ -41,9 +41,9 @@ export const editNameAsync = createAsyncThunk<void, string, ThunkExtra>(
 
       if (!id) throw new Error('User id is missing')
 
-      const response = await protectedApi.putEditName({ id, name })
+      const { user } = await protectedApi.putEditName({ id, name })
 
-      dispatch(setUserData(response))
+      dispatch(setUserData(user))
     } catch (error) {
       return rejectWithValue(getExceptionPayload(error))
     }
@@ -60,9 +60,9 @@ export const editEmailAsync = createAsyncThunk<void, string, ThunkExtra>(
 
       if (!id) throw new Error('User id is missing')
 
-      const response = await protectedApi.putEditEmail({ id, email })
+      const { user } = await protectedApi.putEditEmail({ id, email })
 
-      dispatch(setUserData(response))
+      dispatch(setUserData(user))
     } catch (error) {
       return rejectWithValue(getExceptionPayload(error))
     }
@@ -111,9 +111,9 @@ export const editNotificationAsync = createAsyncThunk<void, UserNotifications, T
 
       if (!id) throw new Error('User id is missing')
 
-      const response = await protectedApi.putEditNotification({ id, ...notifications })
+      const { user } = await protectedApi.putEditNotification({ id, ...notifications })
 
-      dispatch(setUserData(response))
+      dispatch(setUserData(user))
     } catch (error) {
       return rejectWithValue(getExceptionPayload(error))
     }

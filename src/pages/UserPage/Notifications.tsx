@@ -47,6 +47,12 @@ const Notifications: FC = () => {
   )
 
   useEffect(() => {
+    if (notifications.emailNotification !== null) {
+      setNewNotifications(notifications)
+    }
+  }, [notifications])
+
+  useEffect(() => {
     if (isEditNotificationsLoading) {
       if (status === APIStatus.FULFILLED) {
         navigate(-1)

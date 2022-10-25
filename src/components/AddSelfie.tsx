@@ -29,7 +29,7 @@ const AddSelfie = ({ isUserPage = false, ...props }: Props) => {
 
   const [originalImage, setOriginalImage] = useState<File | null>(null)
   const [image, setImage] = useState<File | null>(null)
-  const [imageSrc, setImageSrc] = useState<string | ArrayBuffer | null>(isUserPage ? avatar : null)
+  const [imageSrc, setImageSrc] = useState<string | ArrayBuffer | null>(null)
   const [isDialogOpen, setDialogOpen] = useState(false)
   const [isSelfieUploading, setSelfieUploading] = useState(false)
 
@@ -110,13 +110,13 @@ const AddSelfie = ({ isUserPage = false, ...props }: Props) => {
 
   return (
     <SelfieWrapperStyled isUserPage={isUserPage} {...props}>
-      <Dialog
-        fullScreen={!md}
-        open={isDialogOpen}
-        onClose={() => setDialogOpen(false)}
-        PaperProps={{ sx: { background: 'transparent', boxShadow: 'none' } }}
-      >
-        {(originalImage || (isUserPage && avatar)) && (
+      {(originalImage || (isUserPage && avatar)) && (
+        <Dialog
+          fullScreen={!md}
+          open={isDialogOpen}
+          onClose={() => setDialogOpen(false)}
+          PaperProps={{ sx: { background: 'transparent', boxShadow: 'none' } }}
+        >
           <CropImage
             originalImage={originalImage}
             setOriginalImage={setOriginalImage}
@@ -126,8 +126,8 @@ const AddSelfie = ({ isUserPage = false, ...props }: Props) => {
             setDialogOpen={setDialogOpen}
             isSelfieUploading={isSelfieUploading}
           />
-        )}
-      </Dialog>
+        </Dialog>
+      )}
 
       <SelfieImgStyled
         src={isUserPage && avatar ? avatar : '/images/default-selfie.png'}

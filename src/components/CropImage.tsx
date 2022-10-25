@@ -90,21 +90,23 @@ const CropImage = ({
       <DescriptionStyled>Drag and zoom image to crop</DescriptionStyled>
 
       <CropperWrapper>
-        <Cropper
-          image={imageSrc ? imageSrc.toString() : undefined}
-          crop={crop}
-          rotation={rotation}
-          zoom={zoom}
-          aspect={1}
-          maxZoom={8}
-          cropShape='round'
-          showGrid={false}
-          objectFit='auto-cover'
-          onCropChange={setCrop}
-          onRotationChange={!originalImage ? undefined : setRotation}
-          onCropComplete={!originalImage ? undefined : onCropComplete}
-          onZoomChange={!originalImage ? undefined : setZoom}
-        />
+        {imageSrc && (
+          <Cropper
+            image={imageSrc.toString()}
+            crop={crop}
+            rotation={rotation}
+            zoom={zoom}
+            aspect={1}
+            maxZoom={8}
+            cropShape='round'
+            showGrid={false}
+            objectFit='auto-cover'
+            onCropChange={setCrop}
+            onRotationChange={!originalImage ? undefined : setRotation}
+            onCropComplete={!originalImage ? undefined : onCropComplete}
+            onZoomChange={!originalImage ? undefined : setZoom}
+          />
+        )}
       </CropperWrapper>
 
       <ButtonsWrapper>
@@ -161,6 +163,11 @@ const CropperWrapper = styled.div`
     height: 285px !important;
     border: none;
     box-shadow: 0 0 0 9999em ${({ theme }) => theme.styledPalette.mainText};
+    cursor: move;
+  }
+
+  & .reactEasyCrop_Image {
+    cursor: auto;
   }
 `
 

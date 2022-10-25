@@ -38,18 +38,8 @@ const EditPhone: FC = () => {
 
   const phoneInputRef = useRef<HTMLInputElement>(null)
 
-  const [newPhoneNumber, setNewPhoneNumber] = useState<NumberFormatValues | null>(
-    phoneNumber
-      ? {
-          value: phoneNumber.value,
-          formattedValue: phoneNumber.formattedValue,
-          floatValue: +phoneNumber.value,
-        }
-      : null,
-  )
-  const [newCountryCode, setNewCountryCode] = useState<Country>(
-    countryCode || phoneNumber?.newCountryCode || 'US',
-  )
+  const [newPhoneNumber, setNewPhoneNumber] = useState<NumberFormatValues | null>(null)
+  const [newCountryCode, setNewCountryCode] = useState<Country>('US')
   const [isCountryDialogOpen, setCountryDialogOpen] = useState(false)
   const [isEditPhoneLoading, setIsEditPhoneLoading] = useState(false)
   const [isShowOutlet, setIsShowOutlet] = useToggle(false)
@@ -57,6 +47,22 @@ const EditPhone: FC = () => {
   useEffect(() => {
     setIsShowOutlet(location.pathname.split('/').filter((p) => !!p).length > 4)
   }, [location.pathname])
+
+  useEffect(() => {
+    if (phoneNumber) {
+      setNewPhoneNumber({
+        value: phoneNumber.value,
+        formattedValue: phoneNumber.formattedValue,
+        floatValue: +phoneNumber.value,
+      })
+    }
+  }, [phoneNumber])
+
+  useEffect(() => {
+    if (countryCode) {
+      setNewCountryCode(countryCode)
+    }
+  }, [countryCode])
 
   useEffect(() => {
     if (isEditPhoneLoading) {

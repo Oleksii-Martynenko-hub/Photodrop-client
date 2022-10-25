@@ -32,11 +32,17 @@ const EditEmail: FC = () => {
   const userName = useSelector(selectUserName)
   const onboarding = useSelector(selectUserIsOnboarding)
 
-  const [newUserEmail, setNewUserEmail] = useInput(userEmail || '')
+  const [newUserEmail, setNewUserEmail] = useInput('')
   const [isEditEmailLoading, setIsEditEmailLoading] = useState(false)
 
   useEffect(() => {
-    if (!userName) {
+    if (userEmail) {
+      setNewUserEmail.setState(userEmail)
+    }
+  }, [userEmail])
+
+  useEffect(() => {
+    if (status !== APIStatus.IDLE && !userName) {
       navigate(`${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_EDIT_NAME}`)
     }
   }, [userName])

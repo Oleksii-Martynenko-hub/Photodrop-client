@@ -24,8 +24,18 @@ const EditName: FC = () => {
   const userName = useSelector(selectUserName)
   const onboarding = useSelector(selectUserIsOnboarding)
 
-  const [newUserName, setNewUserName] = useInput(userName || '')
+  const [newUserName, setNewUserName] = useInput('')
   const [isEditNameLoading, setIsEditNameLoading] = useState(false)
+
+  useEffect(() => {
+    if (userName) {
+      if (onboarding)
+        navigate(
+          `${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_SETTINGS}/${ERoutes.USER_SETTINGS_EMAIL}`,
+        )
+      if (!onboarding) setNewUserName.setState(userName)
+    }
+  }, [userName])
 
   useEffect(() => {
     if (isEditNameLoading) {

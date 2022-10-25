@@ -144,16 +144,16 @@ class ProtectedApi extends HttpClientProtected {
   }
 
   public putEditName = (userBody: UserEditNameBody) =>
-    this.instance.put<UserData>('/edit-name', userBody)
+    this.instance.put<{ user: UserData }>('/edit-name', userBody)
 
   public putEditEmail = (userBody: UserEditEmailBody) =>
-    this.instance.put<UserData>('/edit-email', userBody)
+    this.instance.put<{ user: UserData }>('/edit-email', userBody)
 
   public putEditPhone = (userBody: UserEditPhoneBody) =>
     this.instance.put<UserEditPhoneResponse>('/edit-phone', userBody)
 
   public putEditNotification = (userBody: UserEditNotificationBody) =>
-    this.instance.put<UserData>('/edit-notification-settings', userBody)
+    this.instance.put<{ user: UserData }>('/edit-notification-settings', userBody)
 
   // older
 
