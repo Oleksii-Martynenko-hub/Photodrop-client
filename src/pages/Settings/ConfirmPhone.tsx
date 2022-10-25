@@ -53,6 +53,7 @@ const ConfirmPhone: FC = () => {
     if (phoneNumber?.value) {
       dispatch(generateOtpAsync(phoneNumber.value))
       setHasCodeResent(true)
+      setOtpCode('')
     }
   }
 
