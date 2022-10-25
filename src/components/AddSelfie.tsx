@@ -12,6 +12,7 @@ import { setAvatar } from 'store/user/reducers'
 import { selectUserAvatar, selectUserId } from 'store/user/selectors'
 
 import { useUppy } from 'components/hooks/useUppy'
+import Image from 'components/common/Image'
 import Button from 'components/common/Button'
 import CropImage from 'components/CropImage'
 
@@ -69,6 +70,12 @@ const AddSelfie = ({ isUserPage = false, ...props }: Props) => {
     setSelfieUploading(false)
     toast.error(error.stack)
   })
+
+  useEffect(() => {
+    if (isUserPage && avatar) {
+      setImageSrc(avatar)
+    }
+  }, [avatar])
 
   useEffect(() => {
     if (image && originalImage) {
@@ -179,7 +186,7 @@ const ButtonIconStyled = styled(Button)`
   }
 `
 
-const SelfieImgStyled = styled.img`
+const SelfieImgStyled = styled(Image)`
   border-radius: 50%;
 `
 
