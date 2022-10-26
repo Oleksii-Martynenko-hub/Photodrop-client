@@ -12,20 +12,32 @@ const BrowseArtPrints: FC = () => {
 
   const [images] = useState([
     {
+      src: '/images/artist-prints-1.jpg',
+      alt: 'photo1',
+    },
+    {
+      src: '/images/artist-prints-2.jpg',
+      alt: 'photo2',
+    },
+    {
+      src: '/images/artist-prints-3.jpg',
+      alt: 'photo3',
+    },
+    {
       src: 'https://static.dezeen.com/uploads/2022/03/1915-canakkale-bridge-suspension-architecture-turkey_dezeen_1704_col_1.jpg',
-      alt: 'photo',
+      alt: 'photo4',
     },
     {
       src: 'https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Giovanni%20Gagliardi,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1557332734/tzo1xnilo1che43lfyak.jpg',
-      alt: 'photo',
+      alt: 'photo5',
     },
     {
       src: 'https://www.history.com/.image/ar_16:9%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTY1MTc3MjE0MzExMDgxNTQ1/topic-golden-gate-bridge-gettyimages-177770941.jpg',
-      alt: 'photo',
+      alt: 'photo6',
     },
     {
       src: 'https://images.squarespace-cdn.com/content/v1/56e8fcc03c44d89db7df9b3e/1554701537572-8O5FIP3KP5MN1274S1K2/11+Picture-Perfect+Views+of+the+Golden+Gate+Bridge+in+San+Francisco',
-      alt: 'photo',
+      alt: 'photo7',
     },
   ])
 
@@ -36,7 +48,7 @@ const BrowseArtPrints: FC = () => {
       </TitleStyled>
 
       <HorizontalScroll paddingX={md ? 40 : 15} spacing={md ? 10 : 5}>
-        {[...images, ...images].map(({ src, alt }, i) => (
+        {images.map(({ src, alt }, i) => (
           <ArtWrapper key={src + i}>
             <Image
               src={src}
@@ -56,7 +68,7 @@ export default BrowseArtPrints
 
 const MotionContainerStyled = styled(motion.div)`
   width: 100%;
-  max-width: 700px;
+  max-width: 720px;
   padding: 41px 0 62px;
   margin: 0 auto;
   display: flex;
