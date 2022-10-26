@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 import { logoutAsync } from 'store/sign-up/actions'
 import { clearOTP } from 'store/sign-up/reducers'
-import { selectUserAvatar, selectUserName } from 'store/user/selectors'
+import { selectUserAvatar, selectUserIsOnboarding, selectUserName } from 'store/user/selectors'
 
 import { ERoutes } from 'pages/App'
 import { useToggle } from 'components/hooks/useToggle'
@@ -22,6 +22,7 @@ const AppBar = () => {
 
   const userName = useSelector(selectUserName)
   const avatar = useSelector(selectUserAvatar)
+  const onboarding = useSelector(selectUserIsOnboarding)
 
   const [isShowBackButton, setIsShowBackButton] = useToggle(false)
 
@@ -44,6 +45,18 @@ const AppBar = () => {
       dispatch(clearOTP())
     }
     if (location.pathname === `${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_EDIT_NAME}`) {
+      navigate(`${ERoutes.MAIN}/${ERoutes.USER}`)
+      return
+    }
+    if (
+      location.pathname ===
+        `${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_SETTINGS}/${ERoutes.USER_SETTINGS_EMAIL}` &&
+      onboarding
+    ) {
+      navigate(`${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_SETTINGS}`)
+      return
+    }
+    if (location.pathname === `${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_SETTINGS}`) {
       navigate(`${ERoutes.MAIN}/${ERoutes.USER}`)
       return
     }

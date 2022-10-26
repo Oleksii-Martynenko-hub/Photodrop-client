@@ -55,6 +55,21 @@ const initialState: UsersState = {
   errors: [],
 }
 
+export const getFormattedPhoneNumber = (countryCode: Country, phone: string) => {
+  const callingCode = getCountryCallingCode(countryCode)
+  const phoneWithoutCallingCode = phone.replace(callingCode, '')
+
+  const formattedValue = patterFormatter(phoneWithoutCallingCode, {
+    format: `${masks[countryCode]}`,
+  })
+
+  return {
+    formattedValue,
+    value: phone,
+    newCountryCode: countryCode,
+  }
+}
+
 export const errorToast = (payload: ErrorObject[] | undefined) => {
   if (payload) {
     payload.forEach(({ msg }) => {
@@ -67,22 +82,20 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUserData: (state, { payload }: PayloadAction<UserData>) => {
+    initUserData: (state, { payload }: PayloadAction<UserData>) => {
+      state.status = APIStatus.FULFILLED
       state.user = payload
       state.isOnboarding = !payload.name || !payload.email
 
-      const callingCode = getCountryCallingCode(payload.countryCode)
-      const phoneWithoutCallingCode = payload.phone.replace(callingCode, '')
+      state.phoneNumber = getFormattedPhoneNumber(payload.countryCode, payload.phone)
+    },
+    setUserData: (state, { payload }: PayloadAction<UserData>) => {
+      state.user = payload
 
-      const formattedValue = patterFormatter(phoneWithoutCallingCode, {
-        format: `${masks[payload.countryCode]}`,
-      })
-
-      state.phoneNumber = {
-        formattedValue,
-        value: payload.phone,
-        newCountryCode: payload.countryCode,
-      }
+      state.phoneNumber = getFormattedPhoneNumber(payload.countryCode, payload.phone)
+    },
+    setIsOnboarding: (state, { payload }: PayloadAction<boolean>) => {
+      state.isOnboarding = payload
     },
     setPhoneNumber: (state, { payload }: PayloadAction<PhoneNumber>) => {
       state.phoneNumber = payload
@@ -131,6 +144,13 @@ export const userSlice = createSlice({
   },
 })
 
-export const { setUserData, clearUserState, setPhoneNumber, setAvatar } = userSlice.actions
+export const {
+  initUserData,
+  setUserData,
+  clearUserState,
+  setPhoneNumber,
+  setAvatar,
+  setIsOnboarding,
+} = userSlice.actions
 
 export default userSlice.reducer

@@ -22,6 +22,7 @@ import Text from 'components/common/Text'
 import Title from 'components/common/Title'
 import TextField from 'components/common/TextField'
 import LoadingButton from 'components/common/LoadingButton'
+import { setIsOnboarding } from 'store/user/reducers'
 
 const EditEmail: FC = () => {
   const dispatch = useDispatch()
@@ -45,13 +46,16 @@ const EditEmail: FC = () => {
     if (status !== APIStatus.IDLE && !userName) {
       navigate(`${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_EDIT_NAME}`)
     }
-  }, [userName])
+  }, [userName, status])
 
   useEffect(() => {
     if (isEditEmailLoading) {
       if (status === APIStatus.FULFILLED) {
-        if (onboarding) navigate(`${ERoutes.MAIN}`)
-        if (!onboarding) navigate(-1)
+        if (onboarding) {
+          dispatch(setIsOnboarding(false))
+          navigate(`${ERoutes.MAIN}`)
+        }
+        if (!onboarding) navigate(`${ERoutes.MAIN}/${ERoutes.USER}`)
       }
 
       if (status !== APIStatus.PENDING) setIsEditEmailLoading(false)

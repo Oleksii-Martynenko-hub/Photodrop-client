@@ -15,7 +15,7 @@ import {
   setIsFullPageLoading,
   setIsLoggedIn,
 } from 'store/sign-up/reducers'
-import { clearUserState, setAvatar, setUserData } from 'store/user/reducers'
+import { clearUserState, setAvatar, initUserData } from 'store/user/reducers'
 import { getSelfieAsync } from 'store/user/actions'
 
 export const restoreAuthAsync = createAsyncThunk<void, void, ThunkExtra>(
@@ -36,7 +36,7 @@ export const restoreAuthAsync = createAsyncThunk<void, void, ThunkExtra>(
 
       const { userObject } = await protectedApi.getMe({ userId: id })
 
-      await dispatch(setUserData(userObject))
+      await dispatch(initUserData(userObject))
 
       await dispatch(getSelfieAsync())
     } catch (error) {
