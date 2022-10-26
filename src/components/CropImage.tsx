@@ -185,18 +185,12 @@ const CropperWrapper = styled.div`
   margin: 42px auto 95px;
 
   & .reactEasyCrop_CropArea {
-    /* width: 285px !important;
-    height: 285px !important; */
     border: none;
     box-shadow: 0 0 0 9999em ${({ theme }) => theme.styledPalette.mainText};
     cursor: move;
   }
 
   & .reactEasyCrop_Image {
-    /* width: 285px;
-    height: 285px;
-    object-fit: cover;
-    object-position: center; */
     cursor: auto;
   }
 `

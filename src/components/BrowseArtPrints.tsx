@@ -32,7 +32,7 @@ const BrowseArtPrints: FC = () => {
   return (
     <MotionContainerStyled initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <TitleStyled size={Text.size.xl} weight={Text.weight.medium}>
-        Browse Art Prints
+        Browse {md ? 'Artist' : 'Art'} Prints
       </TitleStyled>
 
       <HorizontalScroll paddingX={md ? 40 : 15} spacing={md ? 10 : 5}>
@@ -56,7 +56,7 @@ export default BrowseArtPrints
 
 const MotionContainerStyled = styled(motion.div)`
   width: 100%;
-  max-width: 450px;
+  max-width: 700px;
   padding: 41px 0 62px;
   margin: 0 auto;
   display: flex;
@@ -93,5 +93,6 @@ const TitleStyled = styled(Text)`
     line-height: 20px;
     margin: 0 0 20px 0;
     padding: 0 40px;
+    letter-spacing: 0.9px;
   }
 `

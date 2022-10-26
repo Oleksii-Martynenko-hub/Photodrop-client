@@ -11,6 +11,7 @@ import { restoreAuthAsync } from 'store/sign-up/actions'
 import ThemeProvider from 'containers/ThemeProvider'
 import MainContainer from 'containers/MainContainer'
 import AnimatedRoutes from 'containers/AnimatedRoutes'
+import Footer from 'components/common/Footer'
 import AppBar from 'components/AppBar'
 
 import 'react-toastify/dist/ReactToastify.css'
@@ -60,6 +61,8 @@ const App = () => {
             <MainContainer>
               <AnimatedRoutes />
             </MainContainer>
+
+            <Footer />
           </ThemeProvider>
         </HistoryRouter>
       </Provider>

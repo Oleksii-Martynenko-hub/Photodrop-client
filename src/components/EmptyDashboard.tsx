@@ -28,7 +28,6 @@ export default EmptyDashboard
 
 const MotionContainerStyled = styled(motion.div)`
   width: 100%;
-  max-width: 450px;
   padding: 30px 15px 41px;
   margin: 0 auto;
   display: flex;
@@ -36,7 +35,6 @@ const MotionContainerStyled = styled(motion.div)`
   border-bottom: 5px solid ${({ theme }) => theme.styledPalette.background};
 
   @media ${({ theme }) => theme.media.desktop} {
-    min-width: 100%;
     padding: 53px 40px 40px;
     border-bottom: none;
   }
