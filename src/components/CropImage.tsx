@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
-import Cropper, { Area } from 'react-easy-crop'
+import Cropper, { Area, MediaSize, Point } from 'react-easy-crop'
 
 import { getCroppedImage } from 'utils/get-cropped-image'
 import { convertFileToDataURL } from 'utils/convert-file-to-data-url'
@@ -30,6 +30,7 @@ const CropImage = ({
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [rotation, setRotation] = useState(0)
   const [zoom, setZoom] = useState(1)
+  const [minZoom, setMinZoom] = useState(1)
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null)
 
   const onCropComplete = useCallback((_: Area, croppedAreaPixels: Area) => {
@@ -77,6 +78,17 @@ const CropImage = ({
     setOriginalImage(null)
   }
 
+  const handleOnCrop = (location: Point) => {
+    if (originalImage) setCrop(location)
+  }
+
+  const handleOnMediaLoaded = (mediaSize: MediaSize) => {
+    const min = Math.min(mediaSize.width, mediaSize.height)
+    const aspect = 285 / min
+    setZoom(aspect)
+    setMinZoom(aspect)
+  }
+
   return (
     <CropContainerStyled>
       <CloseButton btnTheme={Button.themes.text} onClick={handleOnClickCross}>
@@ -95,13 +107,16 @@ const CropImage = ({
             image={imageSrc.toString()}
             crop={crop}
             rotation={rotation}
-            zoom={zoom}
             aspect={1}
+            zoom={zoom}
+            minZoom={minZoom}
             maxZoom={8}
             cropShape='round'
+            cropSize={{ width: 285, height: 285 }}
             showGrid={false}
             objectFit='auto-cover'
-            onCropChange={setCrop}
+            onCropChange={handleOnCrop}
+            onMediaLoaded={handleOnMediaLoaded}
             onRotationChange={!originalImage ? undefined : setRotation}
             onCropComplete={!originalImage ? undefined : onCropComplete}
             onZoomChange={!originalImage ? undefined : setZoom}
@@ -125,6 +140,17 @@ const CropImage = ({
           />
           Retake
         </RetakeButtonStyled>
+
+        <Button
+          style={{ position: 'absolute', width: '10px', height: '10px', bottom: 5, right: 5 }}
+          btnTheme={Button.themes.text}
+          onClick={() => setRotation((prev) => prev + 1)}
+        ></Button>
+        <Button
+          style={{ position: 'absolute', width: '10px', height: '10px', bottom: 5, left: 5 }}
+          btnTheme={Button.themes.text}
+          onClick={() => setRotation((prev) => prev - 1)}
+        ></Button>
 
         <SaveButtonStyled fullWidth btnTheme={Button.themes.white} onClick={handleOnClickSave}>
           {isSelfieUploading ? 'Uploading...' : 'Save'}
@@ -159,14 +185,18 @@ const CropperWrapper = styled.div`
   margin: 42px auto 95px;
 
   & .reactEasyCrop_CropArea {
-    width: 285px !important;
-    height: 285px !important;
+    /* width: 285px !important;
+    height: 285px !important; */
     border: none;
     box-shadow: 0 0 0 9999em ${({ theme }) => theme.styledPalette.mainText};
     cursor: move;
   }
 
   & .reactEasyCrop_Image {
+    /* width: 285px;
+    height: 285px;
+    object-fit: cover;
+    object-position: center; */
     cursor: auto;
   }
 `
