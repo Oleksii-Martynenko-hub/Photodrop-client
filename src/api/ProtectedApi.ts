@@ -47,6 +47,24 @@ export type UserEditPhoneResponse = {
   token: string
 }
 
+export type GetThumbnailsParams = {
+  userId: string
+  albumId: string
+}
+
+export type GetOriginalPhotoParams = {
+  userId: string
+  albumId: string
+  originalKey: string
+}
+
+export type ThumbnailData = {
+  isPaid: boolean
+  url: string
+  originalKey: string
+  albumId: string
+}
+
 export interface UserEditNotificationBody extends UserNotifications {
   id: string
 }
@@ -155,29 +173,17 @@ class ProtectedApi extends HttpClientProtected {
   public putEditNotification = (userBody: UserEditNotificationBody) =>
     this.instance.put<{ user: UserData }>('/edit-notification-settings', userBody)
 
-  // older
-
-  public getAlbums = (photographerId: number) => {
-    return this.instance.get<AlbumData[]>('/get-albums-from-db', { params: { photographerId } })
+  public getAlbums = (phone: number) => {
+    return this.instance.get<string[]>('/get-albums-with-person', { params: { phone } })
   }
 
-  public getAlbumIcons = (albumIds: number[]) => {
-    return this.instance.post<{ [k: string]: string | null }>('/get-albums-thumbnail-icons', {
-      albumIds,
-    })
+  public getThumbnails = (params: GetThumbnailsParams) => {
+    return this.instance.get<ThumbnailData[]>('/get-thumbnails-with-person', { params })
   }
 
-  public getPhotos = (params: GetPhotosBody) => {
-    return this.instance.get<GetPhotosResponse>('/get-photos-from-db', { params })
+  public getOriginalPhoto = (params: GetOriginalPhotoParams) => {
+    return this.instance.get<string>('/get-original-photo', { params })
   }
-
-  public postPresignedPostPhotos = (photosToUpload: PresignedPhotosPostBody) =>
-    this.instance.post<PresignedPhotosPostResponse[]>('/s3-upload', photosToUpload)
-
-  public postPresignedGetPhotos = (photoKeys: { photoKey: string }[]) =>
-    this.instance.post<string[]>('/get-signed-photos', photoKeys)
-
-  public getAllPeople = () => this.instance.get<{ people: People[] }>('/get-all-people')
 }
 
 export default ProtectedApi
