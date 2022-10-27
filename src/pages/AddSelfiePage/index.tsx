@@ -14,7 +14,7 @@ import AddSelfie from 'components/AddSelfie'
 const AddSelfiePage: FC = () => {
   const avatar = useSelector(selectUserAvatar)
 
-  if (avatar) return <Navigate to={ERoutes.MAIN} replace />
+  if (avatar) return <Navigate to={ERoutes.DASHBOARD} replace />
 
   return (
     <MotionContainerStyled initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>

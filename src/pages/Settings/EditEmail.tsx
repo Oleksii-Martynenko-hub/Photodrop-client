@@ -44,7 +44,7 @@ const EditEmail: FC = () => {
 
   useEffect(() => {
     if (status !== APIStatus.IDLE && !userName) {
-      navigate(`${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_EDIT_NAME}`)
+      navigate(`${ERoutes.DASHBOARD}/${ERoutes.USER}/${ERoutes.USER_EDIT_NAME}`)
     }
   }, [userName, status])
 
@@ -53,9 +53,9 @@ const EditEmail: FC = () => {
       if (status === APIStatus.FULFILLED) {
         if (onboarding) {
           dispatch(setIsOnboarding(false))
-          navigate(`${ERoutes.MAIN}`)
+          navigate(`${ERoutes.DASHBOARD}`)
         }
-        if (!onboarding) navigate(`${ERoutes.MAIN}/${ERoutes.USER}`)
+        if (!onboarding) navigate(`${ERoutes.DASHBOARD}/${ERoutes.USER}`)
       }
 
       if (status !== APIStatus.PENDING) setIsEditEmailLoading(false)

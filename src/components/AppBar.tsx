@@ -72,8 +72,8 @@ const AppBar = () => {
 
             <Logo />
 
-            {location.pathname === ERoutes.MAIN && (
-              <LinkStyled to={`${ERoutes.MAIN}/${ERoutes.USER}`}>
+            {location.pathname === ERoutes.DASHBOARD && (
+              <LinkStyled to={`${ERoutes.DASHBOARD}/${ERoutes.USER}`}>
                 <AvatarStyled
                   width={35}
                   height={35}

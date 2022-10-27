@@ -114,7 +114,7 @@ const SignUp: FC = () => {
   return (
     <>
       {isLoggedIn ? (
-        <Navigate to={ERoutes.MAIN} replace />
+        <Navigate to={ERoutes.DASHBOARD} replace />
       ) : (
         <MotionContainerStyled
           initial={{ opacity: 0 }}

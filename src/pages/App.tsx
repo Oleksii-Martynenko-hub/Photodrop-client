@@ -29,7 +29,7 @@ export enum ERoutes {
   USER_EDIT_PHONE_CONFIRM = 'confirm-phone',
   USER_SETTINGS_EMAIL = 'edit-email',
   USER_NOTIFICATIONS = 'notifications',
-  MAIN = '/main',
+  DASHBOARD = '/dashboard',
   ALBUMS_ID = 'album-:id',
   TERMS = '/terms',
   PRIVACY = '/privacy',

@@ -9,7 +9,8 @@ import Image from 'components/common/Image'
 import { useDidMountEffect } from 'components/hooks/useDidMountEffect'
 
 const CurrentAlbum: FC = () => {
-  const id = +(useParams<{ id: string }>().id || '')
+  const id = useParams<{ id: string }>().id || ''
+  console.log('🚀 ~ id', id)
 
   const sm = useMediaQuery('(min-width:600px)')
   const md = useMediaQuery('(min-width:900px)')

@@ -8,7 +8,7 @@ import { ERoutes } from 'pages/App'
 import EmptyDashboard from 'components/EmptyDashboard'
 import BrowseArtPrints from 'components/BrowseArtPrints'
 
-const Main: FC = () => {
+const Dashboard: FC = () => {
   const location = useLocation()
 
   const avatar = useSelector(selectUserAvatar)
@@ -38,4 +38,4 @@ const Main: FC = () => {
   )
 }
 
-export default Main
+export default Dashboard

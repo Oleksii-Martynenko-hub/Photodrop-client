@@ -16,8 +16,8 @@ const Footer = () => {
     location.pathname === ERoutes.SIGN_UP ||
     location.pathname === ERoutes.CONFIRM ||
     location.pathname === ERoutes.ADD_SELFIE ||
-    location.pathname === `${ERoutes.MAIN}/${ERoutes.USER}` ||
-    location.pathname === `${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_EDIT_NAME}`
+    location.pathname === `${ERoutes.DASHBOARD}/${ERoutes.USER}` ||
+    location.pathname === `${ERoutes.DASHBOARD}/${ERoutes.USER}/${ERoutes.USER_EDIT_NAME}`
   )
     return null
 

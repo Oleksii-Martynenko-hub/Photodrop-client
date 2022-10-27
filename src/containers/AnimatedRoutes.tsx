@@ -7,18 +7,18 @@ import { selectIsFullPageLoading } from 'store/sign-up/selectors'
 
 import ProtectedRoute from 'containers/ProtectedRoute'
 import { ERoutes } from 'pages/App'
-import Main from 'pages/Main'
 import Terms from 'pages/Terms'
 import SignUp from 'pages/SignUp'
 import Privacy from 'pages/Privacy'
 import UserPage from 'pages/UserPage'
 import Settings from 'pages/Settings'
+import Dashboard from 'pages/Dashboard'
 import EditName from 'pages/UserPage/EditName'
 import AddSelfiePage from 'pages/AddSelfiePage'
 import ConfirmSignUp from 'pages/ConfirmSignUp'
 import EditPhone from 'pages/Settings/EditPhone'
 import EditEmail from 'pages/Settings/EditEmail'
-import CurrentAlbum from 'pages/Main/CurrentAlbum'
+import CurrentAlbum from 'pages/Dashboard/CurrentAlbum'
 import ConfirmPhone from 'pages/Settings/ConfirmPhone'
 import Notifications from 'pages/UserPage/Notifications'
 import FullPageLoader from 'components/common/FullPageLoader'
@@ -42,7 +42,7 @@ const AnimatedRoutes: FC = () => {
 
         <Route path={ERoutes.ADD_SELFIE} element={<ProtectedRoute element={AddSelfiePage} />} />
 
-        <Route path={ERoutes.MAIN} element={<ProtectedRoute element={Main} />}>
+        <Route path={ERoutes.DASHBOARD} element={<ProtectedRoute element={Dashboard} />}>
           <Route path={ERoutes.ALBUMS_ID} element={<CurrentAlbum />} />
 
           <Route path={ERoutes.USER} element={<UserPage />}>

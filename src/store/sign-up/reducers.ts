@@ -25,19 +25,6 @@ const initialState: SignUpState = {
   errors: [],
 }
 
-export const errorToast = (msg: string) =>
-  [
-    msg === 'Not authorized' ? 'Your login has expired, please login again' : msg,
-    {
-      position: 'top-center',
-      hideProgressBar: true,
-      closeOnClick: true,
-      draggable: true,
-      autoClose: 3000,
-      progress: undefined,
-    },
-  ] as const
-
 export const signUpSlice = createSlice({
   name: 'sign-up',
   initialState,
