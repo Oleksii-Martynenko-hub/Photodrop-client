@@ -70,25 +70,9 @@ export interface UserEditNotificationBody extends UserNotifications {
 }
 
 export type AlbumData = {
-  id: number
-  name: string
+  id: string
   location: string
   date: string
-  photographerId: number
-  icon: string | null
-}
-
-export interface CreateAlbumData extends Omit<AlbumData, 'id' | 'icon'> {}
-
-export type PhotosArray = [
-  { photographerId: number },
-  { albumId: number },
-  { photoName: string },
-  { 'Content-Type': string },
-]
-export interface PresignedPhotosPostBody {
-  photosArray: PhotosArray[]
-  people: string[]
 }
 
 export interface PresignedPhotosPostResponse {
@@ -105,33 +89,6 @@ export interface PresignedPhotosPostResponse {
     Policy: string
     'X-Amz-Signature': string
   }
-}
-
-export interface GetPhotosResponse {
-  count: number
-  rows: PhotosData[]
-}
-
-export interface GetPhotosBody {
-  photographerId: number
-  albumId: number
-  page?: number
-  limit?: number
-}
-
-export interface People {
-  id: number
-  name: string | null
-  phone: string
-  email: string | null
-  textMessagesNotification: boolean
-  emailNotification: boolean
-  unsubscribe: boolean
-}
-
-export interface PhotosData extends Omit<AlbumData, 'date' | 'location'> {
-  photoUrl: string
-  albumId: number
 }
 
 class ProtectedApi extends HttpClientProtected {
@@ -173,12 +130,23 @@ class ProtectedApi extends HttpClientProtected {
   public putEditNotification = (userBody: UserEditNotificationBody) =>
     this.instance.put<{ user: UserData }>('/edit-notification-settings', userBody)
 
-  public getAlbums = (phone: number) => {
-    return this.instance.get<string[]>('/get-albums-with-person', { params: { phone } })
+  public getAlbums = (phone: string) => {
+    return this.instance.get<{ albumsInfo: AlbumData[] }>('/get-albums-with-person', {
+      params: { phone },
+    })
   }
 
-  public getThumbnails = (params: GetThumbnailsParams) => {
-    return this.instance.get<ThumbnailData[]>('/get-thumbnails-with-person', { params })
+  public getThumbnailsForAlbums = (albumIds: string[]) => {
+    return this.instance.post<{ [k in string]: string }>('/get-albums-thumbnail-icons', {
+      albumIds,
+    })
+  }
+
+  public getThumbnailsForPhotos = (params: GetThumbnailsParams) => {
+    return this.instance.get<{ totalPhotos: number; thumbnails: ThumbnailData[] }>(
+      '/get-thumbnails-with-person',
+      { params },
+    )
   }
 
   public getOriginalPhoto = (params: GetOriginalPhotoParams) => {
