@@ -12,7 +12,14 @@ const Footer = () => {
 
   const md = useMediaQueryMin(1024)
 
-  if (location.pathname !== ERoutes.MAIN) return null
+  if (
+    location.pathname === ERoutes.SIGN_UP ||
+    location.pathname === ERoutes.CONFIRM ||
+    location.pathname === ERoutes.ADD_SELFIE ||
+    location.pathname === `${ERoutes.MAIN}/${ERoutes.USER}` ||
+    location.pathname === `${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_EDIT_NAME}`
+  )
+    return null
 
   return (
     <FooterStyled>

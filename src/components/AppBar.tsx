@@ -31,39 +31,31 @@ const AppBar = () => {
       location.pathname.split('/').filter((p) => !!p).length > 1 ||
         location.pathname === ERoutes.CONFIRM ||
         location.pathname === ERoutes.TERMS ||
-        location.pathname === ERoutes.PRIVACY ||
-        location.pathname === ERoutes.ADD_SELFIE,
+        location.pathname === ERoutes.PRIVACY,
     )
   }, [location.pathname])
 
   const handleOnClickBack = () => {
-    if (location.pathname === ERoutes.ADD_SELFIE) {
-      dispatch(logoutAsync())
-      return
-    }
-    if (location.pathname === ERoutes.CONFIRM) {
-      dispatch(clearOTP())
-    }
-    if (location.pathname === `${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_EDIT_NAME}`) {
-      navigate(`${ERoutes.MAIN}/${ERoutes.USER}`)
-      return
-    }
-    if (
-      location.pathname ===
-        `${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_SETTINGS}/${ERoutes.USER_SETTINGS_EMAIL}` &&
-      onboarding
-    ) {
-      navigate(`${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_SETTINGS}`)
-      return
-    }
-    if (location.pathname === `${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_SETTINGS}`) {
-      navigate(`${ERoutes.MAIN}/${ERoutes.USER}`)
-      return
-    }
-    if (location.pathname === `${ERoutes.MAIN}/${ERoutes.USER}`) {
-      navigate(ERoutes.MAIN)
-      return
-    }
+    // if (location.pathname === `${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_EDIT_NAME}`) {
+    //   navigate(`${ERoutes.MAIN}/${ERoutes.USER}`)
+    //   return
+    // }
+    // if (
+    //   location.pathname ===
+    //     `${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_SETTINGS}/${ERoutes.USER_SETTINGS_EMAIL}` &&
+    //   onboarding
+    // ) {
+    //   navigate(`${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_SETTINGS}`)
+    //   return
+    // }
+    // if (location.pathname === `${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_SETTINGS}`) {
+    //   navigate(`${ERoutes.MAIN}/${ERoutes.USER}`)
+    //   return
+    // }
+    // if (location.pathname === `${ERoutes.MAIN}/${ERoutes.USER}`) {
+    //   navigate(ERoutes.MAIN)
+    //   return
+    // }
     navigate(-1)
   }
 

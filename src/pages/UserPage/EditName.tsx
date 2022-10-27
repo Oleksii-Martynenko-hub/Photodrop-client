@@ -29,10 +29,10 @@ const EditName: FC = () => {
 
   useEffect(() => {
     if (userName) {
-      if (onboarding)
-        navigate(
-          `${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_SETTINGS}/${ERoutes.USER_SETTINGS_EMAIL}`,
-        )
+      // if (onboarding)
+      //   navigate(
+      //     `${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_SETTINGS}/${ERoutes.USER_SETTINGS_EMAIL}`,
+      //   )
       if (!onboarding) setNewUserName.setState(userName)
     }
   }, [userName])
@@ -40,11 +40,12 @@ const EditName: FC = () => {
   useEffect(() => {
     if (isEditNameLoading) {
       if (status === APIStatus.FULFILLED) {
-        if (onboarding)
-          navigate(
-            `${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_SETTINGS}/${ERoutes.USER_SETTINGS_EMAIL}`,
-          )
-        if (!onboarding) navigate(-1)
+        // if (onboarding)
+        //   navigate(
+        //     `${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_SETTINGS}/${ERoutes.USER_SETTINGS_EMAIL}`,
+        //   )
+        // if (!onboarding)
+        navigate(-1)
       }
 
       if (status !== APIStatus.PENDING) setIsEditNameLoading(false)

@@ -24,16 +24,16 @@ const UserPage: FC = () => {
       title: 'Your name',
       description: 'Tell us your name to personalize communications.',
     },
-    {
-      route: ERoutes.USER_SETTINGS,
-      title: 'Account settings',
-      description: 'Update your phone and email',
-    },
-    {
-      route: ERoutes.USER_NOTIFICATIONS,
-      title: 'Notification settings',
-      description: 'How should we contact you?',
-    },
+    // {
+    //   route: ERoutes.USER_SETTINGS,
+    //   title: 'Account settings',
+    //   description: 'Update your phone and email',
+    // },
+    // {
+    //   route: ERoutes.USER_NOTIFICATIONS,
+    //   title: 'Notification settings',
+    //   description: 'How should we contact you?',
+    // },
   ])
 
   useEffect(() => {

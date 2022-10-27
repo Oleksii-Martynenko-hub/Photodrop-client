@@ -42,7 +42,10 @@ const ConfirmSignUp: FC = () => {
       }, 1000 * 60 * 3)
     }
 
-    return () => clearTimeout(timer)
+    return () => {
+      clearTimeout(timer)
+      dispatch(clearOTP())
+    }
   }, [])
 
   useEffect(() => {
