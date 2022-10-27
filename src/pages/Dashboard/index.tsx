@@ -1,10 +1,13 @@
 import { FC, useEffect } from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
-
-import { useToggle } from 'components/hooks/useToggle'
-import { selectUserAvatar } from 'store/user/selectors'
 import { useSelector } from 'react-redux'
+
+import { selectAlbums } from 'store/albums/selectors'
+import { selectUserAvatar } from 'store/user/selectors'
+
 import { ERoutes } from 'pages/App'
+import { useToggle } from 'components/hooks/useToggle'
+import Albums from 'components/Albums'
 import EmptyDashboard from 'components/EmptyDashboard'
 import BrowseArtPrints from 'components/BrowseArtPrints'
 
@@ -12,7 +15,7 @@ const Dashboard: FC = () => {
   const location = useLocation()
 
   const avatar = useSelector(selectUserAvatar)
-  const albums = null
+  const albums = useSelector(selectAlbums)
 
   const [isShowOutlet, setIsShowOutlet] = useToggle(false)
 
@@ -26,8 +29,8 @@ const Dashboard: FC = () => {
     <>
       {isShowOutlet ? (
         <Outlet />
-      ) : albums ? (
-        <div>main</div>
+      ) : albums.length ? (
+        <Albums albums={albums} />
       ) : (
         <>
           <EmptyDashboard />

@@ -17,6 +17,8 @@ import {
 } from 'store/sign-up/reducers'
 import { clearUserState, setAvatar, initUserData } from 'store/user/reducers'
 import { getSelfieAsync } from 'store/user/actions'
+import { getAlbumsAsync } from 'store/albums/actions'
+import { clearAlbumsState } from 'store/albums/reducers'
 
 export const restoreAuthAsync = createAsyncThunk<void, void, ThunkExtra>(
   'sign-up/restoreAuthAsync',
@@ -37,6 +39,7 @@ export const restoreAuthAsync = createAsyncThunk<void, void, ThunkExtra>(
       const { userObject } = await protectedApi.getMe({ userId: id })
 
       await dispatch(initUserData(userObject))
+      await dispatch(getAlbumsAsync(userObject.phone))
 
       await dispatch(getSelfieAsync())
     } catch (error) {
@@ -91,6 +94,7 @@ export const logoutAsync = createAsyncThunk(
       dispatch(clearToken())
       dispatch(clearSignUpState())
       dispatch(clearUserState())
+      dispatch(clearAlbumsState())
 
       return new Promise(() => ({}))
     } catch (error) {

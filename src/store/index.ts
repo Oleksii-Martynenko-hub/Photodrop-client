@@ -10,6 +10,7 @@ import StorageApi from 'api/StorageApi'
 
 import signUpReducer, { SignUpState } from 'store/sign-up/reducers'
 import userReducer, { UsersState } from 'store/user/reducers'
+import albumsReducer, { AlbumsState } from 'store/albums/reducers'
 
 const { createReduxHistory, routerMiddleware, routerReducer } = createReduxHistoryContext({
   history: createBrowserHistory(),
@@ -55,6 +56,7 @@ export const store = configureStore({
     router: routerReducer,
     signUpReducer,
     userReducer,
+    albumsReducer,
   },
   middleware: (gDM) =>
     gDM({
@@ -67,6 +69,6 @@ export const store = configureStore({
 
 export const history = createReduxHistory(store)
 
-export type CommonState = SignUpState | UsersState
+export type CommonState = SignUpState | UsersState | AlbumsState
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
