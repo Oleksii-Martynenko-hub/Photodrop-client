@@ -35,6 +35,7 @@ export const albumsSlice = createSlice({
     setAlbumsData: (state, { payload }: PayloadAction<Album[]>) => {
       state.albums = payload
     },
+
     clearAlbumsState: () => initialState,
   },
   extraReducers: (builder) => {
