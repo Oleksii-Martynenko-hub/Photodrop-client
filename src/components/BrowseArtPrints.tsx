@@ -68,14 +68,13 @@ export default BrowseArtPrints
 
 const MotionContainerStyled = styled(motion.div)`
   width: 100%;
-  max-width: 720px;
+  min-width: 100%;
   padding: 41px 0 62px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
 
   @media ${({ theme }) => theme.media.desktop} {
-    min-width: 100%;
     padding: 60px 0 100px;
   }
 `
