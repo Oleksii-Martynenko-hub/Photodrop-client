@@ -6,6 +6,7 @@ import { useMediaQuery } from '@mui/material'
 
 import { Album } from 'store/albums/reducers'
 
+import { ERoutes } from 'pages/App'
 import Text from 'components/common/Text'
 import Image from 'components/common/Image'
 import HorizontalScroll from 'components/HorizontalScroll'
@@ -29,7 +30,11 @@ const Albums: FC<Props> = ({ albums }) => {
 
       <HorizontalScroll paddingX={md ? 40 : 15} spacing={5}>
         {localAlbums.map(({ id, location, mainThumbnail, isThumbnailLoaded }) => (
-          <WrapperLink key={id} to={`album-${id}`} isThumbnailLoaded={isThumbnailLoaded}>
+          <WrapperLink
+            key={id}
+            to={`${ERoutes.ALBUMS_ID.split(':')[0]}${id}`}
+            isThumbnailLoaded={isThumbnailLoaded}
+          >
             <Image
               src={mainThumbnail}
               alt={location}

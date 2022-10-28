@@ -30,7 +30,7 @@ export enum ERoutes {
   USER_SETTINGS_EMAIL = 'edit-email',
   USER_NOTIFICATIONS = 'notifications',
   DASHBOARD = '/dashboard',
-  ALBUMS_ID = 'album-:id',
+  ALBUMS_ID = 'album-id-:id',
   TERMS = '/terms',
   PRIVACY = '/privacy',
 }

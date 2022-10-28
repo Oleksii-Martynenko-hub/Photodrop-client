@@ -7,10 +7,15 @@ import styled from 'styled-components'
 import { useObserver } from 'components/hooks/useObserver'
 import Image from 'components/common/Image'
 import { useDidMountEffect } from 'components/hooks/useDidMountEffect'
+import Photos from 'components/Photos'
+import { useSelector } from 'react-redux'
+import { selectAlbums } from 'store/albums/selectors'
 
 const CurrentAlbum: FC = () => {
   const id = useParams<{ id: string }>().id || ''
   console.log('🚀 ~ id', id)
+
+  const albums = useSelector(selectAlbums)
 
   const sm = useMediaQuery('(min-width:600px)')
   const md = useMediaQuery('(min-width:900px)')
@@ -37,11 +42,7 @@ const CurrentAlbum: FC = () => {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      <Grid container>
-        <Grid item xs sx={{ minWidth: 0 }}>
-          <Name>current album</Name>
-        </Grid>
-      </Grid>
+      {/* <Photos thumbnails={} /> */}
 
       <Dialog
         scroll='body'

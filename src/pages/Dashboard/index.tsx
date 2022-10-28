@@ -2,12 +2,15 @@ import { FC, useEffect } from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
+import { ThumbnailData } from 'api/ProtectedApi'
+
 import { selectAlbums } from 'store/albums/selectors'
 import { selectUserAvatar } from 'store/user/selectors'
 
 import { ERoutes } from 'pages/App'
 import { useToggle } from 'components/hooks/useToggle'
 import Albums from 'components/Albums'
+import Photos from 'components/Photos'
 import EmptyDashboard from 'components/EmptyDashboard'
 import BrowseArtPrints from 'components/BrowseArtPrints'
 
@@ -30,7 +33,16 @@ const Dashboard: FC = () => {
       {isShowOutlet ? (
         <Outlet />
       ) : albums.length ? (
-        <Albums albums={albums} />
+        <>
+          <Albums albums={albums} />
+          <Photos
+            thumbnails={albums.reduce(
+              (thumbnails: ThumbnailData[], album) => [...thumbnails, ...album.thumbnails],
+              [],
+            )}
+            isDashboard
+          />
+        </>
       ) : (
         <>
           <EmptyDashboard />
