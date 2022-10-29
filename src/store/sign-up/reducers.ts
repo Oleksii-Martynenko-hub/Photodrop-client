@@ -7,6 +7,7 @@ import Tokens from 'utils/local-storage/tokens'
 
 import { pendingCase, rejectedCase } from 'store'
 import { generateOtpAsync, restoreAuthAsync, signUpAsync } from 'store/sign-up/actions'
+import { errorToast } from 'store/user/reducers'
 
 
 export interface SignUpState {
@@ -49,20 +50,29 @@ export const signUpSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(generateOtpAsync.pending, pendingCase())
-    builder.addCase(generateOtpAsync.rejected, rejectedCase())
+    builder.addCase(
+      generateOtpAsync.rejected,
+      rejectedCase((_, { payload }) => errorToast(payload)),
+    )
     builder.addCase(generateOtpAsync.fulfilled, (state, { payload }) => {
       state.generatedOTP = payload.OTP
       state.status = APIStatus.FULFILLED
     })
 
     builder.addCase(signUpAsync.pending, pendingCase())
-    builder.addCase(signUpAsync.rejected, rejectedCase())
+    builder.addCase(
+      signUpAsync.rejected,
+      rejectedCase((_, { payload }) => errorToast(payload)),
+    )
     builder.addCase(signUpAsync.fulfilled, (state) => {
       state.status = APIStatus.FULFILLED
     })
 
     builder.addCase(restoreAuthAsync.pending, pendingCase())
-    builder.addCase(restoreAuthAsync.rejected, rejectedCase())
+    builder.addCase(
+      restoreAuthAsync.rejected,
+      rejectedCase((_, { payload }) => errorToast(payload)),
+    )
     builder.addCase(restoreAuthAsync.fulfilled, (state) => {
       state.status = APIStatus.FULFILLED
     })
