@@ -97,6 +97,13 @@ const AppBar = () => {
     //   navigate(ERoutes.MAIN)
     //   return
     // }
+    if (
+      location.pathname.includes(`${ERoutes.DASHBOARD}/${ERoutes.ALBUMS_ID.split(':')[0]}`) ||
+      location.pathname.includes(`${ERoutes.DASHBOARD}/${ERoutes.SUCCESSFULLY_PAID.split(':')[0]}`)
+    ) {
+      navigate(ERoutes.DASHBOARD)
+      return
+    }
     navigate(-1)
   }
 
