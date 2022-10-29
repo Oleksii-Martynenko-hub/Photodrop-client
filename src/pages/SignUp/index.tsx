@@ -10,7 +10,7 @@ import { getCountryCallingCode, isValidPhoneNumber, Country } from 'react-phone-
 import masks from 'pages/../../country-phone-masks.json'
 import 'react-phone-number-input/style.css'
 
-import { APIStatus } from 'api/MainApi'
+import MainApi, { APIStatus } from 'api/MainApi'
 
 import { generateOtpAsync } from 'store/sign-up/actions'
 import { setPhoneNumber as setPhoneNumberToStore } from 'store/user/reducers'
@@ -78,21 +78,26 @@ const SignUp: FC = () => {
     })
   }
 
-  const handleOnClickSignUp = () => {
-    if (!phoneNumber || !phoneNumber.value) {
-      toast.error('Please enter your phone number.')
-      return
-    }
+  const handleOnClickSignUp = async () => {
+    const api = MainApi.getInstance()
 
-    if (phoneNumber) {
-      if (!isValidPhoneNumber(phoneNumber.value, countryCode)) {
-        toast.error('Invalid phone number.')
-        return
-      }
+    const res = await api.getOrigin()
+    console.log('🚀 ~ handleOnClickSignUp ~ res', res)
 
-      setIsSignUpLoading(true)
-      dispatch(generateOtpAsync(getCountryCallingCode(countryCode) + phoneNumber.value))
-    }
+    // if (!phoneNumber || !phoneNumber.value) {
+    //   toast.error('Please enter your phone number.')
+    //   return
+    // }
+
+    // if (phoneNumber) {
+    //   if (!isValidPhoneNumber(phoneNumber.value, countryCode)) {
+    //     toast.error('Invalid phone number.')
+    //     return
+    //   }
+
+    //   setIsSignUpLoading(true)
+    //   dispatch(generateOtpAsync(getCountryCallingCode(countryCode) + phoneNumber.value))
+    // }
   }
 
   const resetInputNumberValue = () => {

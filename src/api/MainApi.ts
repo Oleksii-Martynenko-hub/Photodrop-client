@@ -2,7 +2,7 @@
 import HttpClient from 'api/HttpClient'
 import { Country } from 'react-phone-number-input'
 
-export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api'
+export const API_URL = process.env.REACT_APP_API_URL_D || 'http://localhost:8080/api'
 
 export enum APIStatus {
   IDLE = 'IDLE',
@@ -37,6 +37,8 @@ class MainApi extends HttpClient {
 
   public postGeneratedOTP = (phone: string) =>
     this.instance.post<{ OTP: string }>('/send-otp', { phone })
+
+  public getOrigin = () => this.instance.get<any>('/get-origin')
 
   public postSignUp = (body: SignUpBody) => this.instance.post<TokensData>('/create-app-user', body)
 }
