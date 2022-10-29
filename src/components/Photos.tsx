@@ -1,10 +1,14 @@
 import { FC, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import { useMediaQuery } from '@mui/material'
 
+import { APIStatus } from 'api/MainApi'
 import { ThumbnailData } from 'api/ProtectedApi'
+
+import { getOriginalPhotos } from 'store/albums/actions'
+import { selectAlbumsStatus } from 'store/albums/selectors'
 
 import Text from 'components/common/Text'
 import Image from 'components/common/Image'
@@ -18,6 +22,8 @@ interface Props {
 const Photos: FC<Props> = ({ thumbnails, isDashboard = false }) => {
   const dispatch = useDispatch()
 
+  const status = useSelector(selectAlbumsStatus)
+
   const md = useMediaQuery('(min-width:1024px)')
 
   const [hasLockedPhotos, setHasLockedPhotos] = useState(false)
@@ -26,8 +32,18 @@ const Photos: FC<Props> = ({ thumbnails, isDashboard = false }) => {
     setHasLockedPhotos(thumbnails.some(({ isPaid }) => !isPaid))
   }, [thumbnails])
 
-  const onClickUnlockBtnHandler = () => {
-    // dispatch(getOriginalPhotos())
+  const onClickUnlockBtnHandler = async () => {
+    if (thumbnails.length) {
+      const { albumId, originalKey } = thumbnails[0]
+
+      const { payload } = (await dispatch(
+        getOriginalPhotos({ albumId, originalKey }),
+      )) as unknown as {
+        payload: string
+      }
+
+      window.location.replace(payload)
+    }
   }
 
   return (
@@ -53,7 +69,12 @@ const Photos: FC<Props> = ({ thumbnails, isDashboard = false }) => {
 
       {hasLockedPhotos && (
         <UnlockButtonWrapper>
-          <UnlockButton fullWidth onClick={onClickUnlockBtnHandler}>
+          <UnlockButton
+            loading={status === APIStatus.PENDING}
+            disabled={isDashboard}
+            fullWidth
+            onClick={onClickUnlockBtnHandler}
+          >
             Unlock your photos
           </UnlockButton>
         </UnlockButtonWrapper>

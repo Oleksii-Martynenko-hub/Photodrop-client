@@ -13,11 +13,8 @@ const Footer = () => {
   const md = useMediaQueryMin(1024)
 
   if (
-    location.pathname === ERoutes.SIGN_UP ||
-    location.pathname === ERoutes.CONFIRM ||
-    location.pathname === ERoutes.ADD_SELFIE ||
-    location.pathname === `${ERoutes.DASHBOARD}/${ERoutes.USER}` ||
-    location.pathname === `${ERoutes.DASHBOARD}/${ERoutes.USER}/${ERoutes.USER_EDIT_NAME}`
+    location.pathname !== ERoutes.DASHBOARD &&
+    !location.pathname.includes(ERoutes.ALBUMS_ID.split(':')[0])
   )
     return null
 
@@ -35,7 +32,7 @@ const Footer = () => {
             photographers and makes PhotoDrop possible.
           </DescriptionStyled>
 
-          <FramePhotoButton fullWidth btnTheme={Button.themes.outlined}>
+          <FramePhotoButton disabled fullWidth btnTheme={Button.themes.outlined}>
             {md ? 'Order photos' : 'Frame a photo'}
           </FramePhotoButton>
 

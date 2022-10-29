@@ -68,13 +68,14 @@ const PrimaryButton = styled(ButtonStyled)`
 `
 
 const OutlinedButton = styled(ButtonStyled)`
-  border: 1px solid #fff;
+  border: 1px solid ${({ disabled }) => (disabled ? '#fffa' : '#fff')};
+  color: ${({ disabled }) => (disabled ? '#fffa' : '#fff')};
   background: transparent;
 `
 
 const WhiteButton = styled(ButtonStyled)`
   color: ${({ theme }) => theme.styledPalette.mainText};
-  background: #fff;
+  background: ${({ disabled }) => (disabled ? '#fffa' : '#fff')};
 `
 
 const TextButton = styled(ButtonStyled)`

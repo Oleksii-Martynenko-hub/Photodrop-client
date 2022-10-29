@@ -62,12 +62,6 @@ const ImageStyled = styled.img<{
   height?: number | string
   shape?: 'sharp' | 'rounded' | 'circle'
 }>`
-  /* width: 110px; // albums
-  height: 140px;
-
-  width: 125px; // photos
-  height: 125px; */
-
   user-drag: none;
   user-select: none;
   -moz-user-select: none;
