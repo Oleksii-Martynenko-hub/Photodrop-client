@@ -18,9 +18,10 @@ import AddSelfiePage from 'pages/AddSelfiePage'
 import ConfirmSignUp from 'pages/ConfirmSignUp'
 import EditPhone from 'pages/Settings/EditPhone'
 import EditEmail from 'pages/Settings/EditEmail'
-import CurrentAlbum from 'pages/Dashboard/CurrentAlbum'
 import ConfirmPhone from 'pages/Settings/ConfirmPhone'
+import CurrentAlbum from 'pages/Dashboard/CurrentAlbum'
 import Notifications from 'pages/UserPage/Notifications'
+import SuccessfullyPaid from 'pages/Dashboard/SuccessfullyPaid'
 import FullPageLoader from 'components/common/FullPageLoader'
 
 const AnimatedRoutes: FC = () => {
@@ -44,6 +45,8 @@ const AnimatedRoutes: FC = () => {
 
         <Route path={ERoutes.DASHBOARD} element={<ProtectedRoute element={Dashboard} />}>
           <Route path={ERoutes.ALBUMS_ID} element={<CurrentAlbum />} />
+
+          <Route path={ERoutes.SUCCESSFULLY_PAID} element={<SuccessfullyPaid />} />
 
           <Route path={ERoutes.USER} element={<UserPage />}>
             <Route path={ERoutes.USER_EDIT_NAME} element={<EditName />} />

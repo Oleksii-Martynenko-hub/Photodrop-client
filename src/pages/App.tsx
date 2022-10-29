@@ -31,6 +31,7 @@ export enum ERoutes {
   USER_NOTIFICATIONS = 'notifications',
   DASHBOARD = '/dashboard',
   ALBUMS_ID = 'album-id-:id',
+  SUCCESSFULLY_PAID = 'success-:id',
   TERMS = '/terms',
   PRIVACY = '/privacy',
 }
