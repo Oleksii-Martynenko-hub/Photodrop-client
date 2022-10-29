@@ -98,7 +98,8 @@ const EditSelfieWrapper = styled.div`
 `
 
 const TitleStyled = styled(Title)`
-  line-height: 12px;
+  line-height: 22px;
+  margin: -5px 0 -5px;
 `
 
 const SubtitleStyled = styled(Text)`

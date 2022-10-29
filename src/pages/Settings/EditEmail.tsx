@@ -183,18 +183,18 @@ const MotionContainerStyled = styled(motion.div)<{ onboarding: boolean }>`
   }
 
   ${TitleStyled} {
-    line-height: ${({ onboarding }) => (onboarding ? '14px' : '13px')};
+    line-height: ${({ onboarding }) => (onboarding ? '26px' : '13px')};
 
     @media ${({ theme }) => theme.media.desktop} {
-      line-height: ${({ onboarding }) => (onboarding ? '22px' : '18px')};
+      line-height: ${({ onboarding }) => (onboarding ? '36px' : '18px')};
     }
+  }
 
-    ${({ onboarding }) =>
-      onboarding &&
-      css`
-        &:not(:last-child) {
-          margin: 0 0 14px 0;
-        }
-      `}
+  ${TitleWrapper} {
+    margin: ${({ onboarding }) => (onboarding ? '-5px 0' : '0')};
+
+    @media ${({ theme }) => theme.media.desktop} {
+      margin: ${({ onboarding }) => (onboarding ? '-7px 0 -8px' : '0')};
+    }
   }
 `
