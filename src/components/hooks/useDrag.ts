@@ -1,6 +1,15 @@
 import { MouseEvent, useCallback, useRef, useState } from 'react'
 
-export const useDrag = () => {
+export interface UseDragObject {
+  dragStart: (ev: MouseEvent) => void
+  dragStop: () => number
+  dragMove: (ev: MouseEvent, cb: (posDif: number) => void) => void
+  dragging: boolean
+  position: React.MutableRefObject<number>
+  setDragging: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export const useDrag = (): UseDragObject => {
   const [clicked, setClicked] = useState(false)
   const [dragging, setDragging] = useState(false)
   const position = useRef(0)

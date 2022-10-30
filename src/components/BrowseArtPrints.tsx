@@ -3,12 +3,21 @@ import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import { useMediaQuery } from '@mui/material'
 
+import { ThumbnailData } from 'api/ProtectedApi'
+
+import { useDrag } from 'components/hooks/useDrag'
 import Text from 'components/common/Text'
 import Image from 'components/common/Image'
 import HorizontalScroll from 'components/HorizontalScroll'
+import PhotoDialog from 'components/PhotoDialog'
 
 const BrowseArtPrints: FC = () => {
   const md = useMediaQuery('(min-width:1024px)')
+
+  const { dragging, ...dragObject } = useDrag()
+
+  const [isPhotoDialogOpen, setPhotoDialogOpen] = useState(false)
+  const [openedPhoto, setOpenedPhoto] = useState<Partial<ThumbnailData> | null>(null)
 
   const [images] = useState([
     {
@@ -41,15 +50,26 @@ const BrowseArtPrints: FC = () => {
     },
   ])
 
+  const handleOnClickPhoto = (thumbnail: typeof openedPhoto) => () => {
+    if (dragging) return
+
+    setOpenedPhoto(thumbnail)
+    setPhotoDialogOpen(true)
+  }
+
   return (
     <MotionContainerStyled initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <TitleStyled size={Text.size.xl} weight={Text.weight.medium}>
         Browse {md ? 'Artist' : 'Art'} Prints
       </TitleStyled>
 
-      <HorizontalScroll paddingX={md ? 40 : 15} spacing={md ? 10 : 5}>
+      <HorizontalScroll
+        useDragObject={{ dragging, ...dragObject }}
+        paddingX={md ? 40 : 15}
+        spacing={md ? 10 : 5}
+      >
         {images.map(({ src, alt }, i) => (
-          <ArtWrapper key={src + i}>
+          <ArtWrapper key={src + i} onClick={handleOnClickPhoto({ url: src })}>
             <Image
               src={src}
               alt={alt}
@@ -60,6 +80,13 @@ const BrowseArtPrints: FC = () => {
           </ArtWrapper>
         ))}
       </HorizontalScroll>
+
+      <PhotoDialog
+        thumbnail={openedPhoto}
+        isArtistPrint
+        isDialogOpen={isPhotoDialogOpen}
+        setIsDialogOpen={setPhotoDialogOpen}
+      />
     </MotionContainerStyled>
   )
 }

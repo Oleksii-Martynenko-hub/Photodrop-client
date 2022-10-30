@@ -6,17 +6,18 @@ import {
 } from 'react-horizontal-scrolling-menu'
 import styled from 'styled-components'
 
-import { useDrag } from 'components/hooks/useDrag'
+import { UseDragObject } from 'components/hooks/useDrag'
 
 type scrollVisibilityApiType = React.ContextType<typeof VisibilityContext>
 
 interface Props extends ScrollMenuProps {
   paddingX?: number
   spacing?: number
+  useDragObject: UseDragObject
 }
 
-const HorizontalScroll: FC<Props> = ({ paddingX = 15, spacing = 5, children }) => {
-  const { dragStart, dragStop, dragMove, dragging } = useDrag()
+const HorizontalScroll: FC<Props> = ({ paddingX = 15, spacing = 5, useDragObject, children }) => {
+  const { dragStart, dragMove, dragStop, dragging } = useDragObject
 
   const handleDrag =
     ({ scrollContainer }: scrollVisibilityApiType) =>

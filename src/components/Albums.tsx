@@ -7,6 +7,7 @@ import { useMediaQuery } from '@mui/material'
 import { Album } from 'store/albums/reducers'
 
 import { ERoutes } from 'pages/App'
+import { useDrag } from 'components/hooks/useDrag'
 import Text from 'components/common/Text'
 import Image from 'components/common/Image'
 import HorizontalScroll from 'components/HorizontalScroll'
@@ -18,6 +19,8 @@ interface Props {
 const Albums: FC<Props> = ({ albums }) => {
   const md = useMediaQuery('(min-width:1024px)')
 
+  const { dragging, ...dragObject } = useDrag()
+
   const [localAlbums, setLocalAlbums] = useState(
     albums.map((a) => ({ ...a, isThumbnailLoaded: false })),
   )
@@ -28,12 +31,17 @@ const Albums: FC<Props> = ({ albums }) => {
         Albums
       </TitleStyled>
 
-      <HorizontalScroll paddingX={md ? 40 : 15} spacing={5}>
+      <HorizontalScroll
+        useDragObject={{ dragging, ...dragObject }}
+        paddingX={md ? 40 : 15}
+        spacing={5}
+      >
         {localAlbums.map(({ id, location, mainThumbnail, isThumbnailLoaded }) => (
           <WrapperLink
             key={id}
-            to={`${ERoutes.ALBUMS_ID.split(':')[0]}${id}`}
+            to={dragging ? '' : `${ERoutes.ALBUMS_ID.split(':')[0]}${id}`}
             isThumbnailLoaded={isThumbnailLoaded}
+            draggable={false}
           >
             <Image
               src={mainThumbnail}
