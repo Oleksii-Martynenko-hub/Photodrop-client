@@ -14,6 +14,7 @@ import { selectAlbumById } from 'store/albums/selectors'
 import Text from 'components/common/Text'
 import Image from 'components/common/Image'
 import Button from 'components/common/Button'
+import axios from 'axios'
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   thumbnail: Partial<ThumbnailData> | null
@@ -74,15 +75,16 @@ const PhotoDialog = ({
   const handleClickDownload = async () => {
     try {
       if (thumbnail?.originalKey && originalPhoto) {
-        const imageBlob = await fetch(originalPhoto, {
-          mode: 'no-cors',
-        }).then((res) => res.blob())
-        const imageURL = URL.createObjectURL(imageBlob)
-        console.log('🚀 ~ handleClickDownload ~ imageURL', imageURL)
+        const res = await axios({
+          url: originalPhoto,
+          method: 'GET',
+          responseType: 'blob',
+        })
+        const imageURL = URL.createObjectURL(new Blob([res.data]))
 
         const link = document.createElement('a')
         link.href = imageURL
-        link.download = `Photodrop-${thumbnail?.originalKey}`
+        link.setAttribute('download', `Photodrop-${thumbnail?.originalKey}`)
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
