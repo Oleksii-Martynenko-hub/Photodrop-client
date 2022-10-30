@@ -1,32 +1,41 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { AppBar as Bar, Toolbar } from '@mui/material'
+import { AppBar as Bar, CircularProgress, Toolbar } from '@mui/material'
 import styled from 'styled-components'
+import moment from 'moment'
+
+import { APIStatus } from 'api/MainApi'
 
 import { logoutAsync } from 'store/sign-up/actions'
 import { clearOTP, setIsFullPageLoading } from 'store/sign-up/reducers'
 import { selectUserAvatar, selectUserIsOnboarding, selectUserName } from 'store/user/selectors'
+import { getOriginalPhotosAsync } from 'store/albums/actions'
+import { selectAlbumById, selectAlbumsStatus } from 'store/albums/selectors'
 
 import { ERoutes } from 'pages/App'
 import { useToggle } from 'components/hooks/useToggle'
+import Text from 'components/common/Text'
+import Title from 'components/common/Title'
 import Image from 'components/common/Image'
 import Button from 'components/common/Button'
 import HideOnScroll from 'components/common/HideOnScroll'
 import Logo from 'components/Logo'
-import Title from './common/Title'
-import Text from './common/Text'
-import { selectAlbums } from 'store/albums/selectors'
-import moment from 'moment'
 
 const AppBar = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const location = useLocation()
 
+  const id = useMemo(
+    () => location.pathname.split(ERoutes.ALBUMS_ID.split(':')[0])[1],
+    [location.pathname],
+  )
+
   const userName = useSelector(selectUserName)
+  const status = useSelector(selectAlbumsStatus)
   const avatar = useSelector(selectUserAvatar)
-  const albums = useSelector(selectAlbums)
+  const album = useSelector(selectAlbumById(id))
   // const onboarding = useSelector(selectUserIsOnboarding)
 
   const [formattedDate, setFormattedDate] = useState<string | null>(null)
@@ -55,15 +64,13 @@ const AppBar = () => {
 
   useEffect(() => {
     if (isShowAlbumBar) {
-      const id = location.pathname.split(ERoutes.ALBUMS_ID.split(':')[0])[1]
-      const album = albums.find((a) => a.id === id)
       if (album) {
         setFormattedDate(moment(album.date).format('MMM DD, YYYY'))
         setAlbumLocation(album.location)
         setPhotosCount(album.thumbnails.length)
       }
     }
-  }, [albums, isShowAlbumBar])
+  }, [album, isShowAlbumBar])
 
   useEffect(() => {
     if (
@@ -107,6 +114,21 @@ const AppBar = () => {
     navigate(-1)
   }
 
+  const onClickUnlockBtnHandler = async () => {
+    if (album) {
+      const { thumbnails } = album
+      const { albumId, originalKey } = thumbnails[0]
+
+      const { payload } = (await dispatch(
+        getOriginalPhotosAsync({ albumId, originalKey }),
+      )) as unknown as {
+        payload: string
+      }
+
+      window.location.replace(payload)
+    }
+  }
+
   return (
     <>
       <HideOnScroll>
@@ -125,6 +147,24 @@ const AppBar = () => {
                 <DateAndPhotosCount size={Text.size.sm}>
                   {formattedDate} • <PhotosCount>{photosCount} photos</PhotosCount>{' '}
                 </DateAndPhotosCount>
+
+                {album?.thumbnails.some(({ isPaid }) => !isPaid) && (
+                  <>
+                    {status === APIStatus.PENDING && (
+                      <Spinner>
+                        <CircularProgress size={20} />
+                      </Spinner>
+                    )}
+
+                    <UnlockButton
+                      isLoading={status === APIStatus.PENDING}
+                      btnTheme={Button.themes.text}
+                      onClick={onClickUnlockBtnHandler}
+                    >
+                      Unlock your photos
+                    </UnlockButton>
+                  </>
+                )}
               </AlbumBar>
             ) : (
               <Logo />
@@ -181,13 +221,13 @@ const AppBarStyled = styled(Bar)`
 const ToolbarStyled = styled(Toolbar)<{ isShowAlbumBar?: boolean }>`
   padding: ${({ isShowAlbumBar }) => (isShowAlbumBar ? '11px 15px 10px' : '20px 15px 18px')};
   width: 100%;
-  max-width: 1280px;
+  max-width: ${({ isShowAlbumBar }) => (isShowAlbumBar ? '1440px' : '1280px')};
   margin: 0 auto;
   height: 54px;
   min-height: 54px;
 
   @media ${({ theme }) => theme.media.desktop} {
-    padding: 19px 40px 18px;
+    padding: ${({ isShowAlbumBar }) => (isShowAlbumBar ? '24px 40px 23px' : '19px 40px 18px')};
     height: 59px;
     min-height: 59px;
   }
@@ -223,7 +263,21 @@ const AlbumBar = styled.div`
   line-height: 0;
 
   @media ${({ theme }) => theme.media.desktop} {
-    /* left: 32px; */
+    padding: 0 0 0 40px;
+    display: flex;
+  }
+
+  @media ${({ theme }) => theme.media.desktopLg} {
+    padding: 0 80px;
+  }
+`
+const Spinner = styled.div`
+  line-height: 0;
+  margin: 0 0 0 auto;
+  display: none;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    display: block;
   }
 `
 
@@ -236,7 +290,17 @@ const AlbumLocation = styled(Title)`
   white-space: nowrap;
 
   @media ${({ theme }) => theme.media.desktop} {
-    line-height: 22px;
+    margin: -6px 38px -7px 0;
+    line-height: 26px;
+    max-width: 400px;
+  }
+
+  @media ${({ theme }) => theme.media.desktopLg} {
+    max-width: 550px;
+  }
+
+  @media ${({ theme }) => theme.media.desktopXl} {
+    max-width: 680px;
   }
 `
 
@@ -245,8 +309,21 @@ const DateAndPhotosCount = styled(Text)`
   letter-spacing: 0.6px;
 
   @media ${({ theme }) => theme.media.desktop} {
-    margin: 29px 0 18px 0;
-    line-height: 16px;
+    margin: 0;
+    padding: 4px 0 0 0;
+    font-size: 16px;
+  }
+`
+
+const UnlockButton = styled(Button)<{ isLoading: boolean }>`
+  display: none;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 15px;
+  margin: ${({ isLoading }) => (isLoading ? '0 0 0 15px' : '0 0 0 auto')};
+
+  @media ${({ theme }) => theme.media.desktop} {
+    display: block;
   }
 `
 

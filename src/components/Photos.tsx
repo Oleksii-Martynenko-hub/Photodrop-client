@@ -73,7 +73,8 @@ const Photos: FC<Props> = ({ thumbnails, isDashboard = false }) => {
             key={originalKey}
             onClick={handleOnClickPhoto({ originalKey, url, isPaid, albumId })}
           >
-            <Image src={url} alt={url} width={md ? 400 : 125} height={md ? 400 : 125} />
+            <Image src={url} alt={url} width={'100%'} height={'100%'} />
+            {/* <Image src={url} alt={url} width={md ? 400 : 125} height={md ? 400 : 125} /> */}
           </ImageWrapper>
         ))}
       </PhotoList>
@@ -104,15 +105,15 @@ export default Photos
 
 const MotionContainerStyled = styled(motion.div)<{ isDashboard: boolean }>`
   width: 100%;
-  max-width: 375px;
+  max-width: 550px;
   padding: ${({ isDashboard }) => (isDashboard ? '15px 0 0' : '0')};
   margin: 0 auto;
   display: flex;
   flex-direction: column;
 
   @media ${({ theme }) => theme.media.desktop} {
+    padding: ${({ isDashboard }) => (isDashboard ? '40px 0 0' : '0')};
     min-width: 100%;
-    padding: 60px 0 100px;
   }
 `
 
@@ -123,8 +124,9 @@ const PhotoList = styled.ul`
   flex-flow: row wrap;
 
   @media ${({ theme }) => theme.media.desktop} {
-    min-width: 100%;
-    padding: 60px 0 100px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
   }
 `
 
@@ -132,12 +134,13 @@ const ImageWrapper = styled.li`
   display: block;
   margin: 0;
   line-height: 0;
-  width: 125px;
+  width: 33.3333%;
+  max-width: 200px;
   height: 125px;
   cursor: pointer;
 
   @media ${({ theme }) => theme.media.desktop} {
-    width: 400px;
+    max-width: 400px;
     height: 400px;
   }
 `

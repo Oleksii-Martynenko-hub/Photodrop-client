@@ -24,7 +24,7 @@ export default CurrentAlbum
 
 const MotionContainerStyled = styled(motion.div)`
   width: 100%;
-  max-width: 375px;
+  max-width: 550px;
   padding: 0;
   margin: 0 auto;
   display: flex;
@@ -32,6 +32,6 @@ const MotionContainerStyled = styled(motion.div)`
 
   @media ${({ theme }) => theme.media.desktop} {
     min-width: 100%;
-    padding: 60px 0 100px;
+    padding: 0;
   }
 `

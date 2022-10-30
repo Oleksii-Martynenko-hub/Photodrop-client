@@ -72,7 +72,7 @@ export default Albums
 
 const MotionContainerStyled = styled(motion.div)`
   width: 100%;
-  max-width: 375px;
+  max-width: 550px;
   padding: 15px 0 15px;
   margin: 0 auto;
   display: flex;
@@ -80,7 +80,7 @@ const MotionContainerStyled = styled(motion.div)`
 
   @media ${({ theme }) => theme.media.desktop} {
     min-width: 100%;
-    padding: 60px 0 100px;
+    padding: 40px 0 60px;
   }
 `
 
