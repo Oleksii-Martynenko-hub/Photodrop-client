@@ -72,16 +72,23 @@ const PhotoDialog = ({
   }
 
   const handleClickDownload = async () => {
-    if (thumbnail?.originalKey && originalPhoto) {
-      const imageBlob = await fetch(originalPhoto).then((res) => res.blob())
-      const imageURL = URL.createObjectURL(imageBlob)
+    try {
+      if (thumbnail?.originalKey && originalPhoto) {
+        const imageBlob = await fetch(originalPhoto, {
+          headers: { 'Content-Disposition': 'attachment' },
+        }).then((res) => res.blob())
+        const imageURL = URL.createObjectURL(imageBlob)
 
-      const link = document.createElement('a')
-      link.href = imageURL
-      link.download = `Photodrop-${thumbnail?.originalKey}`
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
+        const link = document.createElement('a')
+        link.href = imageURL
+        link.download = `Photodrop-${thumbnail?.originalKey}`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      }
+    } catch (error: any) {
+      console.log('🚀 ~ handleClickDownload ~ error', error)
+      toast.error(error.toString())
     }
   }
 
