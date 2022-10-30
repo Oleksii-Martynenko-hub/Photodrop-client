@@ -1,8 +1,9 @@
-import { Dispatch, HTMLAttributes, useEffect, useState } from 'react'
+import { Dispatch, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { CircularProgress, Dialog, useMediaQuery } from '@mui/material'
+import { CircularProgress, Dialog } from '@mui/material'
 import { toast } from 'react-toastify'
+import axios from 'axios'
 
 import { ThumbnailData } from 'api/ProtectedApi'
 
@@ -11,12 +12,10 @@ import { copyToClipboard } from 'utils/copy-to-clipboard'
 import { getOriginalPhotosAsync } from 'store/albums/actions'
 import { selectAlbumById } from 'store/albums/selectors'
 
-import Text from 'components/common/Text'
 import Image from 'components/common/Image'
 import Button from 'components/common/Button'
-import axios from 'axios'
 
-interface Props extends HTMLAttributes<HTMLDivElement> {
+interface Props {
   thumbnail: Partial<ThumbnailData> | null
   isArtistPrint?: boolean
   isDialogOpen: boolean
@@ -28,11 +27,8 @@ const PhotoDialog = ({
   isArtistPrint = false,
   isDialogOpen,
   setIsDialogOpen,
-  ...props
 }: Props) => {
   const dispatch = useDispatch()
-
-  const md = useMediaQuery('(min-width:1024px)')
 
   const album = useSelector(selectAlbumById(thumbnail?.albumId || ''))
 
@@ -121,52 +117,66 @@ const PhotoDialog = ({
   }
 
   return (
-    <Dialog fullScreen open={isDialogOpen} onClose={handleOnClickCross}>
+    <Dialog
+      fullScreen
+      open={isDialogOpen}
+      onClose={handleOnClickCross}
+      PaperProps={{ sx: { boxShadow: 'none', background: 'transparent' } }}
+      sx={{
+        '& .MuiBackdrop-root': {
+          backgroundColor: 'transparent',
+        },
+      }}
+    >
       <ContentWrapper>
-        <CloseButton btnTheme={Button.themes.text} onClick={handleOnClickCross}>
-          <CrossIcon src='/images/cross-icon.svg' alt='back arrow' />
-        </CloseButton>
+        <Wrapper>
+          <CloseButton btnTheme={Button.themes.text} onClick={handleOnClickCross}>
+            <CrossIcon src='/images/cross-icon.svg' alt='back arrow' />
+          </CloseButton>
 
-        <ImageWrapper>
-          <Image
-            src={originalPhoto || ''}
-            alt={originalPhoto || ''}
-            width='100%'
-            height='100%'
-            objectFit='contain'
-            onLoad={() => setIsPhotoLoading(false)}
-          />
+          <ImageWrapper>
+            <Image
+              src={originalPhoto || ''}
+              alt={originalPhoto || ''}
+              width='100%'
+              height='100%'
+              objectFit='contain'
+              onLoad={() => setIsPhotoLoading(false)}
+            />
 
-          {isPhotoLoading && (
-            <Spinner>
-              <CircularProgress size={60} color='inherit' />
-            </Spinner>
-          )}
-        </ImageWrapper>
+            {isPhotoLoading && (
+              <Spinner>
+                <CircularProgress size={60} color='inherit' />
+              </Spinner>
+            )}
+          </ImageWrapper>
 
-        <ButtonsWrapper>
-          {isArtistPrint || (thumbnail && thumbnail.isPaid) ? (
-            <>
-              <DownloadButton btnTheme={Button.themes.text} onClick={handleClickDownload}>
-                <DownloadIcon src='/images/download-icon.svg' alt='Download' />
-                Download
-              </DownloadButton>
+          <ButtonsWrapper isLock={!thumbnail?.isPaid}>
+            {isArtistPrint || (thumbnail && thumbnail.isPaid) ? (
+              <>
+                <DownloadButton btnTheme={Button.themes.text} onClick={handleClickDownload}>
+                  <DownloadIcon src='/images/download-icon.svg' alt='Download' />
+                  Download
+                </DownloadButton>
 
-              <ShareButton btnTheme={Button.themes.text} onClick={handleClickShare}>
-                <ShareIcon src='/images/share-icon.svg' alt='Share' />
-                Share
-              </ShareButton>
+                <ShareButton btnTheme={Button.themes.text} onClick={handleClickShare}>
+                  <ShareIcon src='/images/share-icon.svg' alt='Share' />
+                  Share
+                </ShareButton>
 
-              <SeeInFrameButton disabled fullWidth btnTheme={Button.themes.outlined}>
-                See in a frame
-              </SeeInFrameButton>
-            </>
-          ) : (
-            <UnlockButton disabled={!thumbnail?.isPaid} fullWidth btnTheme={Button.themes.white}>
-              Unlock photo
-            </UnlockButton>
-          )}
-        </ButtonsWrapper>
+                <SeeInFrameButton disabled fullWidth btnTheme={Button.themes.outlined}>
+                  See in a frame
+                </SeeInFrameButton>
+              </>
+            ) : (
+              <UnlockButton disabled={!thumbnail?.isPaid} fullWidth btnTheme={Button.themes.white}>
+                Unlock photo
+              </UnlockButton>
+            )}
+          </ButtonsWrapper>
+        </Wrapper>
+
+        <Gradient />
       </ContentWrapper>
     </Dialog>
   )
@@ -177,15 +187,26 @@ export default PhotoDialog
 const ContentWrapper = styled.div`
   width: 100%;
   height: 100%;
+  background: ${({ theme }) => theme.styledPalette.mainText};
+  position: relative;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    background: rgba(0, 0, 0, 0.95);
+  }
+`
+
+const Wrapper = styled.div`
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  background: ${({ theme }) => theme.styledPalette.mainText};
   padding: 16px 0 30px;
   position: relative;
 
   @media ${({ theme }) => theme.media.desktop} {
-    background: ${({ theme }) => theme.styledPalette.mainText + 'ee'};
-    padding: 23px 0 40px;
+    padding: 0;
+    max-width: 1440px;
+    margin: 0 auto;
   }
 `
 
@@ -193,6 +214,11 @@ const ImageWrapper = styled.div`
   width: 100%;
   height: calc(100% - 140px);
   margin: 56px 0 34px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    height: 100%;
+    margin: 0;
+  }
 `
 
 const CloseButton = styled(Button)`
@@ -200,9 +226,15 @@ const CloseButton = styled(Button)`
   height: 30px;
   line-height: 15px;
   position: absolute;
+  z-index: 1;
   top: 16px;
   left: 7px;
   padding: 7px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    top: 23px;
+    left: 33px;
+  }
 `
 
 const CrossIcon = styled.img`
@@ -218,17 +250,41 @@ const Spinner = styled.div`
   transform: translate(-50%, -50%);
 `
 
-const ButtonsWrapper = styled.div`
+const ButtonsWrapper = styled.div<{ isLock: boolean }>`
   display: flex;
   flex-flow: nowrap;
   padding: 0 15px;
+  z-index: 1;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    min-width: 200px;
+    position: absolute;
+    bottom: 30px;
+    right: ${({ isLock }) => (isLock ? '50%' : '40px')};
+    transform: ${({ isLock }) => (isLock ? 'translateX(50%)' : 'translateX(0)')};
+  }
+`
+
+const Gradient = styled.div`
+  display: none;
+  position: absolute;
+  width: 100%;
+  height: 100px;
+  left: 0;
+  bottom: 0;
+
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.75) 44.34%, rgba(0, 0, 0, 0) 100%);
+
+  @media ${({ theme }) => theme.media.desktop} {
+    display: block;
+  }
 `
 
 const UnlockButton = styled(Button)`
   text-align: center;
   line-height: 23px;
   padding: 12px 13px 13px;
-  margin: 0 10px 0 0;
+  margin: 0;
 `
 
 const DownloadButton = styled(Button)`
@@ -241,6 +297,10 @@ const DownloadButton = styled(Button)`
 
 const ShareButton = styled(DownloadButton)`
   margin: 0 30px 0 0;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    display: none;
+  }
 `
 
 const SeeInFrameButton = styled(Button)`
