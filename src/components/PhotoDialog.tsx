@@ -75,9 +75,10 @@ const PhotoDialog = ({
     try {
       if (thumbnail?.originalKey && originalPhoto) {
         const imageBlob = await fetch(originalPhoto, {
-          headers: { 'Content-Disposition': 'attachment' },
+          mode: 'no-cors',
         }).then((res) => res.blob())
         const imageURL = URL.createObjectURL(imageBlob)
+        console.log('🚀 ~ handleClickDownload ~ imageURL', imageURL)
 
         const link = document.createElement('a')
         link.href = imageURL
