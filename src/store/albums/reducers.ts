@@ -6,7 +6,7 @@ import { ThumbnailData } from 'api/ProtectedApi'
 
 import { pendingCase, rejectedCase } from 'store'
 import { errorToast } from 'store/user/reducers'
-import { getAlbumsAsync, getOriginalPhotos } from 'store/albums/actions'
+import { getAlbumsAsync, getOriginalPhotosAsync } from 'store/albums/actions'
 
 export type Album = {
   id: string
@@ -48,12 +48,12 @@ export const albumsSlice = createSlice({
       state.status = APIStatus.FULFILLED
     })
 
-    builder.addCase(getOriginalPhotos.pending, pendingCase())
+    builder.addCase(getOriginalPhotosAsync.pending, pendingCase())
     builder.addCase(
-      getOriginalPhotos.rejected,
+      getOriginalPhotosAsync.rejected,
       rejectedCase((_, { payload }) => errorToast(payload)),
     )
-    builder.addCase(getOriginalPhotos.fulfilled, (state) => {
+    builder.addCase(getOriginalPhotosAsync.fulfilled, (state) => {
       state.status = APIStatus.FULFILLED
     })
   },

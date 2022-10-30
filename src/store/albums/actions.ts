@@ -52,12 +52,12 @@ export const getAlbumsAsync = createAsyncThunk<void, string, ThunkExtra>(
   },
 )
 
-export const getOriginalPhotos = createAsyncThunk<
+export const getOriginalPhotosAsync = createAsyncThunk<
   string,
   { albumId: string; originalKey: string },
   ThunkExtra
 >(
-  'albums/getOriginalPhotos',
+  'albums/getOriginalPhotosAsync',
   async (
     { albumId, originalKey },
     { rejectWithValue, extra: { protectedApi }, getState, dispatch },

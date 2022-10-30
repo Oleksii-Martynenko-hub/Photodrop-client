@@ -7,12 +7,13 @@ import { useMediaQuery } from '@mui/material'
 import { APIStatus } from 'api/MainApi'
 import { ThumbnailData } from 'api/ProtectedApi'
 
-import { getOriginalPhotos } from 'store/albums/actions'
+import { getOriginalPhotosAsync } from 'store/albums/actions'
 import { selectAlbumsStatus } from 'store/albums/selectors'
 
 import Text from 'components/common/Text'
 import Image from 'components/common/Image'
 import LoadingButton from 'components/common/LoadingButton'
+import PhotoDialog from 'components/PhotoDialog'
 
 interface Props {
   thumbnails: ThumbnailData[]
@@ -27,6 +28,8 @@ const Photos: FC<Props> = ({ thumbnails, isDashboard = false }) => {
   const md = useMediaQuery('(min-width:1024px)')
 
   const [hasLockedPhotos, setHasLockedPhotos] = useState(false)
+  const [isPhotoDialogOpen, setPhotoDialogOpen] = useState(false)
+  const [openedPhoto, setOpenedPhoto] = useState<ThumbnailData | null>(null)
 
   useEffect(() => {
     setHasLockedPhotos(thumbnails.some(({ isPaid }) => !isPaid))
@@ -37,13 +40,18 @@ const Photos: FC<Props> = ({ thumbnails, isDashboard = false }) => {
       const { albumId, originalKey } = thumbnails[0]
 
       const { payload } = (await dispatch(
-        getOriginalPhotos({ albumId, originalKey }),
+        getOriginalPhotosAsync({ albumId, originalKey }),
       )) as unknown as {
         payload: string
       }
 
       window.location.replace(payload)
     }
+  }
+
+  const handleOnClickPhoto = (thumbnail: ThumbnailData) => () => {
+    setOpenedPhoto(thumbnail)
+    setPhotoDialogOpen(true)
   }
 
   return (
@@ -60,12 +68,21 @@ const Photos: FC<Props> = ({ thumbnails, isDashboard = false }) => {
       )}
 
       <PhotoList>
-        {thumbnails.map(({ originalKey, url, isPaid }) => (
-          <ImageWrapper key={originalKey}>
+        {thumbnails.map(({ originalKey, url, isPaid, albumId }) => (
+          <ImageWrapper
+            key={originalKey}
+            onClick={handleOnClickPhoto({ originalKey, url, isPaid, albumId })}
+          >
             <Image src={url} alt={url} width={md ? 400 : 125} height={md ? 400 : 125} />
           </ImageWrapper>
         ))}
       </PhotoList>
+
+      <PhotoDialog
+        thumbnail={openedPhoto}
+        isDialogOpen={isPhotoDialogOpen}
+        setIsDialogOpen={setPhotoDialogOpen}
+      />
 
       {hasLockedPhotos && (
         <UnlockButtonWrapper>

@@ -9,10 +9,19 @@ interface Props extends ImgHTMLAttributes<HTMLImageElement> {
   width?: number | string
   height?: number | string
   shape?: 'sharp' | 'rounded' | 'circle'
+  objectFit?: 'cover' | 'contain'
   onLoad?: () => void
 }
 
-const Image: FC<Props> = ({ src, width, height, shape = 'sharp', onLoad, ...props }: Props) => {
+const Image: FC<Props> = ({
+  src,
+  width,
+  height,
+  shape = 'sharp',
+  objectFit = 'cover',
+  onLoad,
+  ...props
+}: Props) => {
   const [initAnimation] = useState({ opacity: 0, scale: 0.95 })
 
   const [isOriginalLoaded, setIsOriginalLoaded] = useToggle(false)
@@ -27,8 +36,9 @@ const Image: FC<Props> = ({ src, width, height, shape = 'sharp', onLoad, ...prop
   }
 
   return (
-    <ImageWrapper>
+    <ImageWrapper width={width} height={height}>
       <motion.div
+        style={{ width: '100%', height: '100%' }}
         initial={initAnimation}
         animate={isOriginalLoaded ? 'loaded' : 'unload'}
         exit={initAnimation}
@@ -48,6 +58,7 @@ const Image: FC<Props> = ({ src, width, height, shape = 'sharp', onLoad, ...prop
           width={width}
           height={height}
           shape={shape}
+          objectFit={objectFit}
           {...props}
         />
       </motion.div>
@@ -61,6 +72,7 @@ const ImageStyled = styled.img<{
   width?: number | string
   height?: number | string
   shape?: 'sharp' | 'rounded' | 'circle'
+  objectFit?: 'cover' | 'contain'
 }>`
   user-drag: none;
   user-select: none;
@@ -77,7 +89,7 @@ const ImageStyled = styled.img<{
   }};
   border-radius: ${({ shape }) =>
     shape === 'rounded' ? '20px' : shape === 'circle' ? '50%' : '0'};
-  object-fit: cover;
+  object-fit: ${({ objectFit }) => objectFit};
 `
 
 const ImageWrapper = styled.div<{
