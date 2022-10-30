@@ -36,6 +36,21 @@ export const albumsSlice = createSlice({
       state.albums = payload
     },
 
+    setAlbumOriginalPhoto: (
+      state,
+      { payload }: PayloadAction<{ originalPhoto: string; originalKey: string; albumId: string }>,
+    ) => {
+      const album = state.albums.find(({ id }) => id === payload.albumId)
+
+      if (album && album.thumbnails.length) {
+        album.thumbnails = album.thumbnails.map((t) =>
+          t.originalKey === payload.originalKey
+            ? { ...t, originalPhoto: payload.originalPhoto }
+            : t,
+        )
+      }
+    },
+
     clearAlbumsState: () => initialState,
   },
   extraReducers: (builder) => {
@@ -59,6 +74,6 @@ export const albumsSlice = createSlice({
   },
 })
 
-export const { setAlbumsData, clearAlbumsState } = albumsSlice.actions
+export const { setAlbumsData, clearAlbumsState, setAlbumOriginalPhoto } = albumsSlice.actions
 
 export default albumsSlice.reducer

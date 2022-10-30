@@ -68,10 +68,10 @@ const Photos: FC<Props> = ({ thumbnails, isDashboard = false }) => {
       )}
 
       <PhotoList>
-        {thumbnails.map(({ originalKey, url, isPaid, albumId }) => (
+        {thumbnails.map(({ originalKey, url, isPaid, albumId, originalPhoto }) => (
           <ImageWrapper
             key={originalKey}
-            onClick={handleOnClickPhoto({ originalKey, url, isPaid, albumId })}
+            onClick={handleOnClickPhoto({ originalKey, url, isPaid, albumId, originalPhoto })}
           >
             <Image src={url} alt={url} width={'100%'} height={'100%'} />
             {/* <Image src={url} alt={url} width={md ? 400 : 125} height={md ? 400 : 125} /> */}

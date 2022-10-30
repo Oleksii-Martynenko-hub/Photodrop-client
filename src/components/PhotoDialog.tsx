@@ -32,16 +32,22 @@ const PhotoDialog = ({
 
   const album = useSelector(selectAlbumById(thumbnail?.albumId || ''))
 
-  const [originalPhoto, setOriginalPhoto] = useState<string | null>(null)
+  const [localOriginalPhoto, setLocalOriginalPhoto] = useState<string | null>(null)
 
   const [isPhotoLoading, setIsPhotoLoading] = useState(false)
 
   useEffect(() => {
+    console.log('🚀 ~ thumbnail', thumbnail)
     if (thumbnail) {
-      const { isPaid, originalKey, url, albumId } = thumbnail
+      const { isPaid, originalKey, url, albumId, originalPhoto } = thumbnail
 
       if (url && (isArtistPrint || (originalKey && !isPaid))) {
-        setOriginalPhoto(url)
+        setLocalOriginalPhoto(url)
+        return
+      }
+
+      if (originalPhoto) {
+        setLocalOriginalPhoto(originalPhoto)
         return
       }
 
@@ -53,32 +59,32 @@ const PhotoDialog = ({
 
   const handleOnClickCross = () => {
     setIsDialogOpen(false)
-    setOriginalPhoto(null)
+    setLocalOriginalPhoto(null)
   }
 
   const getOriginalPhoto = async (albumId: string, originalKey: string) => {
     setIsPhotoLoading(true)
 
     const { payload } = (await dispatch(
-      getOriginalPhotosAsync({ albumId, originalKey }),
+      getOriginalPhotosAsync({ albumId, originalKey, isGettingOriginal: true }),
     )) as unknown as {
       payload: string
     }
 
-    setOriginalPhoto(payload)
+    setLocalOriginalPhoto(payload)
   }
 
   const handleClickDownload = async () => {
     try {
-      if (thumbnail?.originalKey && originalPhoto) {
-        const origin =
-          'https://photodropbucket.s3.eu-west-1.amazonaws.com/bab77cc5-b18d-48f1-ad0c-5ac50bd5bf74.jpeg?AWSAccessKeyId=AKIARK5HIXATFKM745EN&Expires=1667151355&Signature=AiXw2V5sLE%2FzUYih%2ByvU0Gq0gCI%3D'
+      if (thumbnail?.originalKey && localOriginalPhoto) {
+        // const origin =
+        //   'https://photodropbucket.s3.eu-west-1.amazonaws.com/bab77cc5-b18d-48f1-ad0c-5ac50bd5bf74.jpeg?AWSAccessKeyId=AKIARK5HIXATFKM745EN&Expires=1667151355&Signature=AiXw2V5sLE%2FzUYih%2ByvU0Gq0gCI%3D'
 
-        toast(originalPhoto)
-        copyToClipboard(originalPhoto)
+        // toast(localOriginalPhoto)
+        // copyToClipboard(localOriginalPhoto)
 
         const res = await axios({
-          url: originalPhoto,
+          url: localOriginalPhoto,
           method: 'GET',
           responseType: 'blob',
         })
@@ -98,11 +104,11 @@ const PhotoDialog = ({
   }
 
   const handleClickShare = () => {
-    if (originalPhoto && album) {
+    if (localOriginalPhoto && album) {
       const data = {
         title: 'Photodrop',
         text: album.location + '\n' + album.date,
-        url: originalPhoto,
+        url: localOriginalPhoto,
       }
 
       if (navigator.canShare && navigator.canShare(data)) {
@@ -111,7 +117,7 @@ const PhotoDialog = ({
         return
       }
 
-      copyToClipboard(originalPhoto)
+      copyToClipboard(localOriginalPhoto)
       toast.info('Copied to clipboard')
     }
   }
@@ -136,8 +142,8 @@ const PhotoDialog = ({
 
           <ImageWrapper>
             <Image
-              src={originalPhoto || ''}
-              alt={originalPhoto || ''}
+              src={localOriginalPhoto || ''}
+              alt={localOriginalPhoto || ''}
               width='100%'
               height='100%'
               objectFit='contain'
@@ -293,6 +299,7 @@ const DownloadButton = styled(Button)`
   letter-spacing: 0.07px;
   margin: 0 29px 0 0;
   color: #fff;
+  border-radius: 0;
 `
 
 const ShareButton = styled(DownloadButton)`

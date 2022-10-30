@@ -4,7 +4,7 @@ import { getExceptionPayload } from 'api/ErrorHandler'
 
 import { ThunkExtra } from 'store'
 import { logoutIfTokenInvalid } from 'store/user/actions'
-import { setAlbumsData } from 'store/albums/reducers'
+import { setAlbumOriginalPhoto, setAlbumsData } from 'store/albums/reducers'
 
 export const getAlbumsAsync = createAsyncThunk<void, string, ThunkExtra>(
   'albums/getAlbumsAsync',
@@ -54,12 +54,12 @@ export const getAlbumsAsync = createAsyncThunk<void, string, ThunkExtra>(
 
 export const getOriginalPhotosAsync = createAsyncThunk<
   string,
-  { albumId: string; originalKey: string },
+  { albumId: string; originalKey: string; isGettingOriginal?: boolean },
   ThunkExtra
 >(
   'albums/getOriginalPhotosAsync',
   async (
-    { albumId, originalKey },
+    { albumId, originalKey, isGettingOriginal },
     { rejectWithValue, extra: { protectedApi }, getState, dispatch },
   ) => {
     try {
@@ -68,6 +68,9 @@ export const getOriginalPhotosAsync = createAsyncThunk<
       } = getState().userReducer
 
       const url = await protectedApi.getOriginalPhoto({ albumId, originalKey, userId })
+
+      if (isGettingOriginal)
+        dispatch(setAlbumOriginalPhoto({ originalKey, albumId, originalPhoto: url }))
 
       return url
     } catch (error) {

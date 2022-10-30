@@ -62,6 +62,7 @@ export type ThumbnailData = {
   isPaid: boolean
   url: string
   originalKey: string
+  originalPhoto?: string
   albumId: string
 }
 
