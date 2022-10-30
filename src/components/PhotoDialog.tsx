@@ -1,11 +1,15 @@
 import { Dispatch, HTMLAttributes, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { CircularProgress, Dialog, useMediaQuery } from '@mui/material'
+import { toast } from 'react-toastify'
 
 import { ThumbnailData } from 'api/ProtectedApi'
 
+import { copyToClipboard } from 'utils/copy-to-clipboard'
+
 import { getOriginalPhotosAsync } from 'store/albums/actions'
+import { selectAlbumById } from 'store/albums/selectors'
 
 import Text from 'components/common/Text'
 import Image from 'components/common/Image'
@@ -28,6 +32,8 @@ const PhotoDialog = ({
   const dispatch = useDispatch()
 
   const md = useMediaQuery('(min-width:1024px)')
+
+  const album = useSelector(selectAlbumById(thumbnail?.albumId || ''))
 
   const [originalPhoto, setOriginalPhoto] = useState<string | null>(null)
 
@@ -65,6 +71,39 @@ const PhotoDialog = ({
     setOriginalPhoto(payload)
   }
 
+  const handleClickDownload = async () => {
+    if (thumbnail?.originalKey && originalPhoto) {
+      const imageBlob = await fetch(originalPhoto).then((res) => res.blob())
+      const imageURL = URL.createObjectURL(imageBlob)
+
+      const link = document.createElement('a')
+      link.href = imageURL
+      link.download = `Photodrop-${thumbnail?.originalKey}`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }
+  }
+
+  const handleClickShare = () => {
+    if (originalPhoto && album) {
+      const data = {
+        title: 'Photodrop',
+        text: album.location + '\n' + album.date,
+        url: originalPhoto,
+      }
+
+      if (navigator.canShare && navigator.canShare(data)) {
+        toast.info('I can share')
+        navigator.share(data)
+        return
+      }
+
+      copyToClipboard(originalPhoto)
+      toast.info('Copied to clipboard')
+    }
+  }
+
   return (
     <Dialog fullScreen open={isDialogOpen} onClose={handleOnClickCross}>
       <ContentWrapper>
@@ -91,9 +130,19 @@ const PhotoDialog = ({
 
         <ButtonsWrapper>
           {isArtistPrint || (thumbnail && thumbnail.isPaid) ? (
-            <SeeInFrameButton disabled fullWidth btnTheme={Button.themes.outlined}>
-              See in a frame
-            </SeeInFrameButton>
+            <>
+              <DownloadButton btnTheme={Button.themes.text} onClick={handleClickDownload}>
+                Download
+              </DownloadButton>
+
+              <DownloadButton btnTheme={Button.themes.text} onClick={handleClickShare}>
+                Share
+              </DownloadButton>
+
+              <SeeInFrameButton disabled fullWidth btnTheme={Button.themes.outlined}>
+                See in a frame
+              </SeeInFrameButton>
+            </>
           ) : (
             <UnlockButton disabled={!thumbnail?.isPaid} fullWidth btnTheme={Button.themes.white}>
               Unlock photo
@@ -162,6 +211,14 @@ const UnlockButton = styled(Button)`
   line-height: 23px;
   padding: 12px 13px 13px;
   margin: 0 10px 0 0;
+`
+
+const DownloadButton = styled(Button)`
+  text-align: center;
+  line-height: 23px;
+  padding: 12px 13px 13px;
+  margin: 0 10px 0 0;
+  color: #fff;
 `
 
 const SeeInFrameButton = styled(Button)`
