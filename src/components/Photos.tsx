@@ -134,6 +134,7 @@ const ImageWrapper = styled.li`
   line-height: 0;
   width: 125px;
   height: 125px;
+  cursor: pointer;
 
   @media ${({ theme }) => theme.media.desktop} {
     width: 400px;
