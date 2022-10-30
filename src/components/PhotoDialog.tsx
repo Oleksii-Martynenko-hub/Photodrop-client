@@ -75,9 +75,14 @@ const PhotoDialog = ({
   const handleClickDownload = async () => {
     try {
       if (thumbnail?.originalKey && originalPhoto) {
+        const origin =
+          'https://photodropbucket.s3.eu-west-1.amazonaws.com/bab77cc5-b18d-48f1-ad0c-5ac50bd5bf74.jpeg?AWSAccessKeyId=AKIARK5HIXATFKM745EN&Expires=1667151355&Signature=AiXw2V5sLE%2FzUYih%2ByvU0Gq0gCI%3D'
+
+        toast(originalPhoto)
+        copyToClipboard(originalPhoto)
+
         const res = await axios({
-          // url: originalPhoto,
-          url: 'https://cdn.pixabay.com/photo/2022/10/25/04/55/cat-7544821_960_720.jpg',
+          url: originalPhoto,
           method: 'GET',
           responseType: 'blob',
         })
@@ -85,8 +90,7 @@ const PhotoDialog = ({
 
         const link = document.createElement('a')
         link.href = imageURL
-        // link.setAttribute('download', `Photodrop-${thumbnail?.originalKey}`)
-        link.setAttribute('download', 'filename.jpg')
+        link.setAttribute('download', `Photodrop-${thumbnail?.originalKey}`)
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
@@ -144,12 +148,14 @@ const PhotoDialog = ({
           {isArtistPrint || (thumbnail && thumbnail.isPaid) ? (
             <>
               <DownloadButton btnTheme={Button.themes.text} onClick={handleClickDownload}>
+                <DownloadIcon src='/images/download-icon.svg' alt='Download' />
                 Download
               </DownloadButton>
 
-              <DownloadButton btnTheme={Button.themes.text} onClick={handleClickShare}>
+              <ShareButton btnTheme={Button.themes.text} onClick={handleClickShare}>
+                <ShareIcon src='/images/share-icon.svg' alt='Share' />
                 Share
-              </DownloadButton>
+              </ShareButton>
 
               <SeeInFrameButton disabled fullWidth btnTheme={Button.themes.outlined}>
                 See in a frame
@@ -226,14 +232,26 @@ const UnlockButton = styled(Button)`
 `
 
 const DownloadButton = styled(Button)`
-  text-align: center;
-  line-height: 23px;
-  padding: 12px 13px 13px;
-  margin: 0 10px 0 0;
+  font-size: 14px;
+  line-height: 11px;
+  letter-spacing: 0.07px;
+  margin: 0 29px 0 0;
   color: #fff;
+`
+
+const ShareButton = styled(DownloadButton)`
+  margin: 0 30px 0 0;
 `
 
 const SeeInFrameButton = styled(Button)`
   line-height: 23px;
   padding: 13px 14px 14px;
 `
+
+const DownloadIcon = styled.img`
+  width: 24px;
+  height: 21px;
+  margin: 0 0 5px 0;
+`
+
+const ShareIcon = styled(DownloadIcon)``
