@@ -76,7 +76,8 @@ const PhotoDialog = ({
     try {
       if (thumbnail?.originalKey && originalPhoto) {
         const res = await axios({
-          url: originalPhoto,
+          // url: originalPhoto,
+          url: 'https://cdn.pixabay.com/photo/2022/10/25/04/55/cat-7544821_960_720.jpg',
           method: 'GET',
           responseType: 'blob',
         })
@@ -84,14 +85,15 @@ const PhotoDialog = ({
 
         const link = document.createElement('a')
         link.href = imageURL
-        link.setAttribute('download', `Photodrop-${thumbnail?.originalKey}`)
+        // link.setAttribute('download', `Photodrop-${thumbnail?.originalKey}`)
+        link.setAttribute('download', 'filename.jpg')
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
       }
     } catch (error: any) {
       console.log('🚀 ~ handleClickDownload ~ error', error)
-      toast.error(error.toString())
+      toast.error(error.message)
     }
   }
 
