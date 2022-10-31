@@ -162,9 +162,13 @@ const TitleStyled = styled(Text)`
 
 const UnlockButtonWrapper = styled.div`
   padding: 40px 15px 40px;
+  width: 100%;
+  max-width: 375px;
+  margin: 0 auto;
 
   @media ${({ theme }) => theme.media.desktop} {
     padding: 100px 40px 100px;
+    max-width: 380px;
   }
 `
 
