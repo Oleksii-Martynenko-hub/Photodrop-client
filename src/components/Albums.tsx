@@ -72,7 +72,6 @@ export default Albums
 
 const MotionContainerStyled = styled(motion.div)`
   width: 100%;
-  max-width: 550px;
   padding: 15px 0 15px;
   margin: 0 auto;
   display: flex;
