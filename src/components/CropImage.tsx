@@ -1,6 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import Cropper, { Area, MediaSize, Point } from 'react-easy-crop'
+import { motion } from 'framer-motion'
+import { CircularProgress } from '@mui/material'
 
 import { getCroppedImage } from 'utils/get-cropped-image'
 import { convertFileToDataURL } from 'utils/convert-file-to-data-url'
@@ -101,7 +103,7 @@ const CropImage = ({
 
       <DescriptionStyled>Drag and zoom image to crop</DescriptionStyled>
 
-      <CropperWrapper>
+      <CropperWrapper initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
         {imageSrc && (
           <Cropper
             image={imageSrc.toString()}
@@ -153,7 +155,8 @@ const CropImage = ({
         ></Button>
 
         <SaveButtonStyled fullWidth btnTheme={Button.themes.white} onClick={handleOnClickSave}>
-          {isSelfieUploading ? 'Uploading...' : 'Save'}
+          {isSelfieUploading && <Spinner size={18} color='inherit' />}
+          Save
         </SaveButtonStyled>
       </ButtonsWrapper>
     </CropContainerStyled>
@@ -178,7 +181,7 @@ const CropContainerStyled = styled.div`
   }
 `
 
-const CropperWrapper = styled.div`
+const CropperWrapper = styled(motion.div)`
   width: 100%;
   flex: 0 0 285px;
   position: relative;
@@ -228,6 +231,9 @@ const DescriptionStyled = styled(Text)`
 const ButtonsWrapper = styled.div`
   display: flex;
   flex-flow: nowrap;
+  width: 100%;
+  max-width: 550px;
+  margin: 0 auto;
 `
 
 const RetakeButtonStyled = styled(Button)`
@@ -240,4 +246,11 @@ const RetakeButtonStyled = styled(Button)`
 const SaveButtonStyled = styled(Button)`
   line-height: 23px;
   padding: 13px 14px 14px;
+  position: relative;
+`
+
+const Spinner = styled(CircularProgress)`
+  top: 16px;
+  left: 20px;
+  position: absolute;
 `
