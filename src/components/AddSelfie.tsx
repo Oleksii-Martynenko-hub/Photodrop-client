@@ -1,8 +1,8 @@
-import { HTMLAttributes, useEffect, useState } from 'react'
+import { HTMLAttributes, useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled, { css } from 'styled-components'
 import { Dialog, useMediaQuery } from '@mui/material'
-import Uppy from '@uppy/core'
+import Uppy, { UppyFile } from '@uppy/core'
 import AwsS3 from '@uppy/aws-s3'
 import { toast } from 'react-toastify'
 
@@ -37,39 +37,68 @@ const AddSelfie = ({ isUserPage = false, ...props }: Props) => {
     return new Uppy({
       id: 'addAvatar',
       autoProceed: true,
-    }).use(AwsS3, {
-      limit: 1,
-      getUploadParameters: async (file) => {
-        const api = ProtectedApi.getInstance()
-
-        const data = await api.postGetPresignedPostSelfie({
-          name: file.name,
-          userId: userId || '',
-        })
-
-        return Promise.resolve({
-          method: 'POST',
-          url: data.url,
-          fields: { ...data.fields },
-        })
-      },
     })
   })
 
-  addAvatar.on('complete', (result) => {
-    console.log('successful files:', result.successful)
-    if (imageSrc && !result.failed.length) {
-      dispatch(setAvatar(imageSrc.toString()))
-      setSelfieUploading(false)
-      setDialogOpen(false)
-      setOriginalImage(null)
-    }
-  })
+  useEffect(() => {
+    if (userId) {
+      addAvatar.use(AwsS3, {
+        limit: 1,
+        getUploadParameters: async (
+          file: UppyFile<Record<string, unknown>, Record<string, unknown>>,
+        ) => {
+          const api = ProtectedApi.getInstance()
 
-  addAvatar.on('error', (error) => {
-    setSelfieUploading(false)
-    toast.error(error.stack)
-  })
+          const data = await api.postGetPresignedPostSelfie({
+            name: file.name,
+            userId: userId || '',
+          })
+
+          return Promise.resolve({
+            method: 'POST',
+            url: data.url,
+            fields: { ...data.fields },
+          })
+        },
+      })
+    }
+  }, [userId])
+
+  const errorHandler = useCallback(
+    (error: Error) => {
+      setSelfieUploading(false)
+      toast.error(error.stack)
+    },
+    [setSelfieUploading],
+  )
+
+  const completeHandler = useCallback(
+    ({ successful, failed }: { successful: UppyFile[]; failed: UppyFile[] }) => {
+      if (imageSrc && !failed.length) {
+        dispatch(setAvatar(imageSrc.toString()))
+        setDialogOpen(false)
+        setOriginalImage(null)
+        setSelfieUploading(false)
+
+        addAvatar.removeFile(successful[0].id)
+      }
+    },
+    [addAvatar, imageSrc],
+  )
+
+  useEffect(() => {
+    addAvatar.on('complete', completeHandler)
+    return () => {
+      addAvatar.off('complete', completeHandler)
+    }
+  }, [completeHandler])
+
+  useEffect(() => {
+    addAvatar.on('error', errorHandler)
+    return () => {
+      addAvatar.off('error', errorHandler)
+    }
+  }, [errorHandler])
 
   useEffect(() => {
     if (isUserPage && avatar) {
