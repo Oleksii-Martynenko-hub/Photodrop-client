@@ -105,7 +105,6 @@ export default Photos
 
 const MotionContainerStyled = styled(motion.div)<{ isDashboard: boolean }>`
   width: 100%;
-  max-width: 550px;
   padding: ${({ isDashboard }) => (isDashboard ? '15px 0 0' : '0')};
   margin: 0 auto;
   display: flex;
@@ -113,7 +112,7 @@ const MotionContainerStyled = styled(motion.div)<{ isDashboard: boolean }>`
 
   @media ${({ theme }) => theme.media.desktop} {
     padding: ${({ isDashboard }) => (isDashboard ? '40px 0 0' : '0')};
-    min-width: 100%;
+    /* min-width: 100%; */
   }
 `
 
@@ -134,12 +133,11 @@ const ImageWrapper = styled.li`
   display: block;
   margin: 0;
   line-height: 0;
-  width: 33.3333%;
-  max-width: 200px;
-  height: 125px;
+  width: calc(100vw / 3);
+  height: calc(100vw / 3);
   cursor: pointer;
 
-  @media ${({ theme }) => theme.media.desktop} {
+  @media (min-width: 1200px) {
     max-width: 400px;
     height: 400px;
   }
