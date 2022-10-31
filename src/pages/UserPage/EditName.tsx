@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
@@ -22,7 +22,8 @@ const EditName: FC = () => {
 
   const status = useSelector(selectUserStatus)
   const userName = useSelector(selectUserName)
-  const onboarding = useSelector(selectUserIsOnboarding)
+  // const onboarding = useSelector(selectUserIsOnboarding)
+  const onboarding = useMemo(() => !userName, [userName])
 
   const [newUserName, setNewUserName] = useInput('')
   const [isEditNameLoading, setIsEditNameLoading] = useState(false)
