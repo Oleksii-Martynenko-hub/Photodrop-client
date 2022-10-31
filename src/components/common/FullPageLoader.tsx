@@ -5,7 +5,7 @@ const FullPageLoader = () => {
   return (
     <Dialog
       open
-      sx={{ backdropFilter: 'blur(4px)', backgroundColor: 'rgba(255, 255, 255, 0.3)' }}
+      sx={{ backgroundColor: 'rgba(255, 255, 255, 1)' }}
       PaperProps={{ sx: { background: 'transparent', boxShadow: 'none', overflowY: 'hidden' } }}
       hideBackdrop
     >
