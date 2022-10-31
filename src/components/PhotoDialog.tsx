@@ -160,10 +160,19 @@ const PhotoDialog = ({
           <ButtonsWrapper isLock={!thumbnail?.isPaid}>
             {isArtistPrint || (thumbnail && thumbnail.isPaid) ? (
               <>
-                <DownloadButton btnTheme={Button.themes.text} onClick={handleClickDownload}>
+                {/* <DownloadButton btnTheme={Button.themes.text} onClick={handleClickDownload}>
                   <DownloadIcon src='/images/download-icon.svg' alt='Download' />
                   Download
-                </DownloadButton>
+                </DownloadButton> */}
+                <DownloadButtonLink href={localOriginalPhoto || ''}>
+                  <DownloadButton
+                    btnTheme={Button.themes.text}
+                    // onClick={handleClickDownload}
+                  >
+                    <DownloadIcon src='/images/download-icon.svg' alt='Download' />
+                    Download
+                  </DownloadButton>
+                </DownloadButtonLink>
 
                 <ShareButton btnTheme={Button.themes.text} onClick={handleClickShare}>
                   <ShareIcon src='/images/share-icon.svg' alt='Share' />
@@ -291,6 +300,10 @@ const UnlockButton = styled(Button)`
   line-height: 23px;
   padding: 12px 13px 13px;
   margin: 0;
+`
+
+const DownloadButtonLink = styled.a`
+  display: contents;
 `
 
 const DownloadButton = styled(Button)`
