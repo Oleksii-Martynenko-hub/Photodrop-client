@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { CircularProgress, Dialog } from '@mui/material'
 import { toast } from 'react-toastify'
-import axios from 'axios'
 
 import { ThumbnailData } from 'api/ProtectedApi'
 
@@ -37,7 +36,6 @@ const PhotoDialog = ({
   const [isPhotoLoading, setIsPhotoLoading] = useState(false)
 
   useEffect(() => {
-    console.log('🚀 ~ thumbnail', thumbnail)
     if (thumbnail) {
       const { isPaid, originalKey, url, albumId, originalPhoto } = thumbnail
 
@@ -74,34 +72,28 @@ const PhotoDialog = ({
     setLocalOriginalPhoto(payload)
   }
 
-  const handleClickDownload = async () => {
-    try {
-      if (thumbnail?.originalKey && localOriginalPhoto) {
-        // const origin =
-        //   'https://photodropbucket.s3.eu-west-1.amazonaws.com/bab77cc5-b18d-48f1-ad0c-5ac50bd5bf74.jpeg?AWSAccessKeyId=AKIARK5HIXATFKM745EN&Expires=1667151355&Signature=AiXw2V5sLE%2FzUYih%2ByvU0Gq0gCI%3D'
+  // const handleClickDownload = async () => {
+  //   try {
+  //     if (thumbnail?.originalKey && localOriginalPhoto) {
+  //       const res = await axios({
+  //         url: localOriginalPhoto,
+  //         method: 'GET',
+  //         responseType: 'blob',
+  //       })
+  //       const imageURL = URL.createObjectURL(new Blob([res.data]))
 
-        // toast(localOriginalPhoto)
-        // copyToClipboard(localOriginalPhoto)
-
-        const res = await axios({
-          url: localOriginalPhoto,
-          method: 'GET',
-          responseType: 'blob',
-        })
-        const imageURL = URL.createObjectURL(new Blob([res.data]))
-
-        const link = document.createElement('a')
-        link.href = imageURL
-        link.setAttribute('download', `Photodrop-${thumbnail?.originalKey}`)
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-      }
-    } catch (error: any) {
-      console.log('🚀 ~ handleClickDownload ~ error', error)
-      toast.error(error.message)
-    }
-  }
+  //       const link = document.createElement('a')
+  //       link.href = imageURL
+  //       link.setAttribute('download', `Photodrop-${thumbnail?.originalKey}`)
+  //       document.body.appendChild(link)
+  //       link.click()
+  //       document.body.removeChild(link)
+  //     }
+  //   } catch (error: any) {
+  //     console.log('🚀 ~ handleClickDownload ~ error', error)
+  //     toast.error(error.message)
+  //   }
+  // }
 
   const handleClickShare = () => {
     if (localOriginalPhoto && album) {
@@ -112,7 +104,6 @@ const PhotoDialog = ({
       }
 
       if (navigator.canShare && navigator.canShare(data)) {
-        toast.info('I can share')
         navigator.share(data)
         return
       }
@@ -160,15 +151,8 @@ const PhotoDialog = ({
           <ButtonsWrapper isLock={!thumbnail?.isPaid}>
             {isArtistPrint || (thumbnail && thumbnail.isPaid) ? (
               <>
-                {/* <DownloadButton btnTheme={Button.themes.text} onClick={handleClickDownload}>
-                  <DownloadIcon src='/images/download-icon.svg' alt='Download' />
-                  Download
-                </DownloadButton> */}
                 <DownloadButtonLink href={localOriginalPhoto || ''}>
-                  <DownloadButton
-                    btnTheme={Button.themes.text}
-                    // onClick={handleClickDownload}
-                  >
+                  <DownloadButton btnTheme={Button.themes.text}>
                     <DownloadIcon src='/images/download-icon.svg' alt='Download' />
                     Download
                   </DownloadButton>

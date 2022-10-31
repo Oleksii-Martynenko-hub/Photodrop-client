@@ -137,10 +137,8 @@ class ProtectedApi extends HttpClientProtected {
     })
   }
 
-  public getThumbnailsForAlbums = (albumIds: string[]) => {
-    return this.instance.post<{ [k in string]: string }>('/get-albums-thumbnail-icons', {
-      albumIds,
-    })
+  public getThumbnailsForAlbums = (body: { albumIds: string[]; userId: string }) => {
+    return this.instance.post<{ [k in string]: string }>('/get-albums-thumbnail-icons', body)
   }
 
   public getThumbnailsForPhotos = (params: GetThumbnailsParams) => {

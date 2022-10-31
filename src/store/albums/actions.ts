@@ -17,7 +17,10 @@ export const getAlbumsAsync = createAsyncThunk<void, string, ThunkExtra>(
       const { albumsInfo } = await protectedApi.getAlbums(phone)
 
       const albumsPromises = albumsInfo.map(async ({ id, date, location }) => {
-        const { [id]: mainThumbnail } = await protectedApi.getThumbnailsForAlbums([id])
+        const { [id]: mainThumbnail } = await protectedApi.getThumbnailsForAlbums({
+          albumIds: [id],
+          userId,
+        })
 
         return {
           id,
