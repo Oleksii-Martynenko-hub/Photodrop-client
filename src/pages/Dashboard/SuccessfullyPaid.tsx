@@ -22,7 +22,7 @@ const SuccessfullyPaid: FC = () => {
   const album = useSelector(selectAlbumById(id))
 
   if (!album || !album?.thumbnails[0].isPaid) {
-    console.log('🚀 ~ album?.thumbnails ALBUM IS NOT PAID ---', album?.thumbnails)
+    // console.log('🚀 ~ album?.thumbnails ALBUM IS NOT PAID ---', album?.thumbnails)
     // navigate(ERoutes.DASHBOARD)
     return <div>ALBUM IS NOT PAID</div>
   }

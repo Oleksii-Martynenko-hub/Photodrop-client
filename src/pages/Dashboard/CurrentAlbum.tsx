@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { useParams } from 'react-router'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
@@ -12,6 +12,10 @@ const CurrentAlbum: FC = () => {
   const id = useParams<{ id: string }>().id || ''
 
   const album = useSelector(selectAlbumById(id))
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   return (
     <MotionContainerStyled initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>

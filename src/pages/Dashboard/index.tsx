@@ -22,33 +22,31 @@ const Dashboard: FC = () => {
 
   const [isShowOutlet, setIsShowOutlet] = useToggle(false)
 
+  // useEffect(() => {
+  //   setIsShowOutlet(location.pathname.split('/').filter((p) => !!p).length > 1)
+  // }, [location.pathname])
+
   useEffect(() => {
-    setIsShowOutlet(location.pathname.split('/').filter((p) => !!p).length > 1)
-  }, [location.pathname])
+    window.scrollTo(0, 0)
+  }, [])
 
   if (!avatar) return <Navigate to={ERoutes.ADD_SELFIE} replace />
 
-  return (
+  return albums.length ? (
     <>
-      {isShowOutlet ? (
-        <Outlet />
-      ) : albums.length ? (
-        <>
-          <Albums albums={albums} />
-          <Photos
-            thumbnails={albums.reduce(
-              (thumbnails: ThumbnailData[], album) => [...thumbnails, ...album.thumbnails],
-              [],
-            )}
-            isDashboard
-          />
-        </>
-      ) : (
-        <>
-          <EmptyDashboard />
-          <BrowseArtPrints />
-        </>
-      )}
+      <Albums albums={albums} />
+      <Photos
+        thumbnails={albums.reduce(
+          (thumbnails: ThumbnailData[], album) => [...thumbnails, ...album.thumbnails],
+          [],
+        )}
+        isDashboard
+      />
+    </>
+  ) : (
+    <>
+      <EmptyDashboard />
+      <BrowseArtPrints />
     </>
   )
 }

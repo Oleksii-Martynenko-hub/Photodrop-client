@@ -37,8 +37,12 @@ const UserPage: FC = () => {
   ])
 
   useEffect(() => {
-    setIsShowOutlet(location.pathname.split('/').filter((p) => !!p).length > 2)
+    setIsShowOutlet(location.pathname.split('/').filter((p) => !!p).length > 1)
   }, [location.pathname])
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   return (
     <>

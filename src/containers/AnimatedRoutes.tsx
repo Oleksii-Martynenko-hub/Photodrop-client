@@ -43,25 +43,25 @@ const AnimatedRoutes: FC = () => {
 
         <Route path={ERoutes.ADD_SELFIE} element={<ProtectedRoute element={AddSelfiePage} />} />
 
-        <Route path={ERoutes.DASHBOARD} element={<ProtectedRoute element={Dashboard} />}>
-          <Route path={ERoutes.ALBUMS_ID} element={<CurrentAlbum />} />
+        <Route path={ERoutes.DASHBOARD} element={<ProtectedRoute element={Dashboard} />} />
 
-          <Route path={ERoutes.SUCCESSFULLY_PAID} element={<SuccessfullyPaid />} />
+        <Route path={ERoutes.USER} element={<UserPage />}>
+          <Route path={ERoutes.USER_EDIT_NAME} element={<EditName />} />
 
-          <Route path={ERoutes.USER} element={<UserPage />}>
-            <Route path={ERoutes.USER_EDIT_NAME} element={<EditName />} />
-
-            <Route path={ERoutes.USER_SETTINGS} element={<Settings />}>
-              <Route path={ERoutes.USER_SETTINGS_PHONE} element={<EditPhone />}>
-                <Route path={ERoutes.USER_EDIT_PHONE_CONFIRM} element={<ConfirmPhone />} />
-              </Route>
-
-              <Route path={ERoutes.USER_SETTINGS_EMAIL} element={<EditEmail />} />
+          {/* <Route path={ERoutes.USER_SETTINGS} element={<Settings />}>
+            <Route path={ERoutes.USER_SETTINGS_PHONE} element={<EditPhone />}>
+              <Route path={ERoutes.USER_EDIT_PHONE_CONFIRM} element={<ConfirmPhone />} />
             </Route>
 
-            <Route path={ERoutes.USER_NOTIFICATIONS} element={<Notifications />} />
+            <Route path={ERoutes.USER_SETTINGS_EMAIL} element={<EditEmail />} />
           </Route>
+
+          <Route path={ERoutes.USER_NOTIFICATIONS} element={<Notifications />} /> */}
         </Route>
+
+        <Route path={ERoutes.ALBUMS_ID} element={<CurrentAlbum />} />
+
+        <Route path={ERoutes.SUCCESSFULLY_PAID} element={<SuccessfullyPaid />} />
 
         <Route path={ERoutes.NOT_EXIST} element={<Navigate to={ERoutes.ROOT} replace />} />
       </Routes>

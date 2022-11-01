@@ -48,12 +48,13 @@ const AppBar = () => {
   useEffect(() => {
     setIsShowBackButton(
       location.pathname.split('/').filter((p) => !!p).length > 1 ||
+        location.pathname === ERoutes.USER ||
         location.pathname === ERoutes.CONFIRM ||
         location.pathname === ERoutes.TERMS ||
         location.pathname === ERoutes.PRIVACY,
     )
 
-    if (location.pathname.includes(`${ERoutes.DASHBOARD}/${ERoutes.ALBUMS_ID.split(':')[0]}`)) {
+    if (location.pathname.includes(ERoutes.ALBUMS_ID.split(':')[0])) {
       setIsShowAlbumBar(true)
       dispatch(setIsFullPageLoading(true))
       return
@@ -105,8 +106,8 @@ const AppBar = () => {
     //   return
     // }
     if (
-      location.pathname.includes(`${ERoutes.DASHBOARD}/${ERoutes.ALBUMS_ID.split(':')[0]}`) ||
-      location.pathname.includes(`${ERoutes.DASHBOARD}/${ERoutes.SUCCESSFULLY_PAID.split(':')[0]}`)
+      location.pathname.includes(ERoutes.ALBUMS_ID.split(':')[0]) ||
+      location.pathname.includes(ERoutes.SUCCESSFULLY_PAID.split(':')[0])
     ) {
       navigate(ERoutes.DASHBOARD)
       return
@@ -171,7 +172,7 @@ const AppBar = () => {
             )}
 
             {location.pathname === ERoutes.DASHBOARD && (
-              <LinkStyled to={`${ERoutes.DASHBOARD}/${ERoutes.USER}`}>
+              <LinkStyled to={ERoutes.USER}>
                 <AvatarStyled
                   width={35}
                   height={35}

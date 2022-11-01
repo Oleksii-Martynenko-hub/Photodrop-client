@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import styled from 'styled-components'
 
@@ -6,32 +6,40 @@ import Text from 'components/common/Text'
 import Title from 'components/common/Title'
 
 const Terms: FC = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   return (
     <MotionContainerStyled initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <TitleStyled size={Title.size.small}>Privacy policy</TitleStyled>
 
       <TextWrapper>
-        <Paragraph>
+        <p className='photodrop-futura' style={{ marginTop: 0 }}>
           Your privacy is very important to us. Accordingly, we have developed this Privacy Policy
           in order for you to understand how we collect, use, and disclose information that we
           receive through our Service. The FOM Online, Inc. (“PhotoDrop,” “us,” “we,” or “our”)
-          website available at photodrop.me and the PhotoDrop photo finding service (together, the
-          “Service”) are owned and operated by PhotoDrop. This Privacy Policy does not apply to any
-          third party websites, services or applications, even if they are accessible through our
-          Service. Also, please note that, unless we define a term in this Privacy Policy, all
-          capitalized terms used in this Privacy Policy have the same meanings as in our Terms of
-          Service. So, please make sure that you have read and understand our Terms of Service.
-        </Paragraph>
+          website available at <span style={{ fontWeight: '700' }}>photodrop.me</span> and the
+          PhotoDrop photo finding service (together, the “Service”) are owned and operated by
+          PhotoDrop. This Privacy Policy does not apply to any third party websites, services or
+          applications, even if they are accessible through our Service. Also, please note that,
+          unless we define a term in this Privacy Policy, all capitalized terms used in this Privacy
+          Policy have the same meanings as in our Terms of Service. So, please make sure that you
+          have read and understand our Terms of Service.
+        </p>
 
-        <Paragraph>
-          <ParagraphTitle weight={Text.weight.bold}>User Consent</ParagraphTitle>
+        <div className='photodrop-futura'>
+          <span style={{ fontWeight: '700' }}>User Consent</span>
+        </div>
+
+        <p className='photodrop-futura'>
           By accessing or otherwise using the Service, you agree to the terms and conditions of this
           Privacy Policy and the associated Terms of Service (set forth on PhotoDrop) you expressly
           consent to the processing of your Personal Information (as defined below) and Anonymous
           Information (as defined below) according to this Privacy Policy.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
+        <p className='photodrop-futura'>
           Your Personal Information may be processed by us in the country where it was collected and
           transferred to, and maintained on, computers located outside of your state, province,
           country (including the United States), or other governmental jurisdiction where privacy
@@ -39,10 +47,13 @@ const Terms: FC = () => {
           your country. If you’re located outside the United States and choose to provide your
           Personal Information to us, we may transfer your Personal Information to the United States
           and process it there.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
-          <ParagraphTitle weight={Text.weight.bold}>Regarding Children</ParagraphTitle>
+        <div className='photodrop-futura'>
+          <span style={{ fontWeight: '700' }}>Regarding Children</span>
+        </div>
+
+        <p className='photodrop-futura'>
           Children under the age of 13 are not permitted to use the Service and we do not
           intentionally collect or maintain Personal Information from those who are under 13 years
           old. Protecting the privacy of children is very important to us. Thus, if we obtain actual
@@ -51,12 +62,13 @@ const Terms: FC = () => {
           obtain their parent’s permission before submitting information over the internet. By using
           the Service, you are representing that you are at least 18 years old, or that you are at
           least 13 years old and have your parents’ permission to use the Service.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
-          <ParagraphTitle weight={Text.weight.bold}>
-            Collection and Use of Information
-          </ParagraphTitle>
+        <div className='photodrop-futura'>
+          <span style={{ fontWeight: '700' }}>Collection and Use of Information</span>
+        </div>
+
+        <p className='photodrop-futura'>
           Our Service is designed to help you more easily identify photos of yourself, to share
           those photos with other users, and to connect and share photos with friends and other
           users. You are in control of what information you share with the Service and nothing you
@@ -64,25 +76,28 @@ const Terms: FC = () => {
           send photos to other users without your review. We provide you with settings to allow you
           to control your level of approval for your photos, and if you no longer want to be
           identified in a certain photo you can simply untag it.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
+        <p className='photodrop-futura'>
           Our primary goals in collecting information are to provide and improve our Service, to
           administer your use of the Service (including your Account, if you are an Account holder),
           and to enable you to enjoy and easily navigate our Service.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
-          <ParagraphTitle weight={Text.weight.bold}>Personal Information</ParagraphTitle>
+        <div className='photodrop-futura'>
+          <span style={{ fontWeight: '700' }}>Personal Information</span>
+        </div>
+
+        <p className='photodrop-futura'>
           In general, we collect information that can be used to identify you, such as your name,
           email address, and phone number (“Personal Information”) that you submit to us voluntarily
           through the Service, including Personal information that you submit in the process of
           creating or editing your Account and user profile on the Service. For example, our
           registration and login process requires you to provide us with your name, mobile phone
           number, valid email address and password of your choice.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
+        <p className='photodrop-futura'>
           When you personalize your profile and use the features of the Service, we will collect any
           Personal Information you voluntarily provide, and we may also request optional
           non-personal information to support your use of the Service, such as your year of birth,
@@ -91,9 +106,9 @@ const Terms: FC = () => {
           Personal Information. We collect information in the form of the User Content that you
           submit during your use of the Service, such as photos, comments, ratings and other
           information you choose to submit.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
+        <p className='photodrop-futura'>
           We also collect the information you provide when you use the Service. This can include
           information in or about the User Content you provide, such as the location of a photo or
           the date a file was created. If you connect to us from a social network, we also will be
@@ -102,9 +117,9 @@ const Terms: FC = () => {
           your user ID or profile information that you have permitted to be displayed through the
           Service in order to display you as a friend or in association with your profile and
           collections.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
+        <p className='photodrop-futura'>
           When you order our for fee products or services, you will need to submit Personal
           Information such as your credit card number, postal address, or other payment information
           so that our service providers can process your payment for those products and services. If
@@ -112,10 +127,13 @@ const Terms: FC = () => {
           interest to you, we will collect your email address and all related information.
           Additionally, we collect any information that you voluntarily enter, including Personal
           Information, into any postings, comments, or forums within the PhotoDrop community.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
-          <ParagraphTitle weight={Text.weight.bold}>Use of Facial Recognition Data</ParagraphTitle>
+        <div className='photodrop-futura'>
+          <span style={{ fontWeight: '700' }}>Use of Facial Recognition Data</span>
+        </div>
+
+        <p className='photodrop-futura'>
           We do not sell, trade, or rent any Personal Information derived from our use of facial
           recognition technology. As detailed below, we use a variety of reasonable,
           industry-standard security technologies and administrative, physical, and electronic
@@ -123,9 +141,9 @@ const Terms: FC = () => {
           our use of facial recognition technology, from unauthorized access, use, or disclosure. We
           may provide secure access to this information with third-party service providers who work
           on our behalf to administer and provide certain components or features of the Service.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
+        <p className='photodrop-futura'>
           We will retain and store Personal Information derived from the facial recognition
           technology for as long as you have an active Account on the Service. Personal Information
           derived from facial recognition technology will be deleted or destroyed through a secure
@@ -133,20 +151,26 @@ const Terms: FC = () => {
           collected any personal information from your child under the age of 13 through the
           Service, please contact us at hello@photodrop.me to request that information be deleted or
           destroyed.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
-          <ParagraphTitle weight={Text.weight.bold}>Device Information</ParagraphTitle>
+        <div className='photodrop-futura'>
+          <span style={{ fontWeight: '700' }}>Device Information</span>
+        </div>
+
+        <p className='photodrop-futura'>
           We collect information from and about the computers, phones, or other devices where you
           install or access the Service, depending on the permissions you have granted. We may
           associate the information we collect from your different devices to provide a better or
           more consistent experience. Information we may collect includes device identifiers, user
           settings, and the operating system of your device, as well as information about your use
           of our Service.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
-          <ParagraphTitle weight={Text.weight.bold}>Location Information</ParagraphTitle>
+        <div className='photodrop-futura'>
+          <span style={{ fontWeight: '700' }}>Location Information</span>
+        </div>
+
+        <p className='photodrop-futura'>
           When you use our App, we may collect and store information about your location by
           converting your IP address into a rough geo-location or by accessing your mobile device’s
           GPS coordinates or coarse location if you enable location services on your device. We may
@@ -155,20 +179,24 @@ const Terms: FC = () => {
           location information, you may disable that feature on your mobile device. However, if you
           disable the location services feature on your mobile device after using the App, we cannot
           remove any historic location data unless you delete your Account.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
-          <ParagraphTitle weight={Text.weight.bold}>
-            Personal Information from Other Sources
-          </ParagraphTitle>
+        <div className='photodrop-futura'>
+          <span style={{ fontWeight: '700' }}>Personal Information from Other Sources</span>
+        </div>
+
+        <p className='photodrop-futura'>
           We may receive Personal Information about you from other sources with which you have
           registered, companies with whom we have partnered with or other third parties. We may
           associate this information with the other Personal Information we have collected about
           you.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
-          <ParagraphTitle weight={Text.weight.bold}>E-mail and Email Addresses</ParagraphTitle>
+        <div className='photodrop-futura'>
+          <span style={{ fontWeight: '700' }}>E-mail and Email Addresses</span>
+        </div>
+
+        <p className='photodrop-futura'>
           If you send an e-mail to us, or fill out our “Feedback” form through the Service, we will
           collect your e-mail address and the full content of your e-mail, including attached files,
           and other information you provide. We may use and display your full name and email address
@@ -180,12 +208,13 @@ const Terms: FC = () => {
           may use this e-mail address to contact you, for things such as notifications of limited
           edition shop sales and other related information. You may indicate your preference to stop
           receiving further promotional communications as further detailed below.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
-          <ParagraphTitle weight={Text.weight.bold}>
-            Information Collected Automatically
-          </ParagraphTitle>
+        <div className='photodrop-futura'>
+          <span style={{ fontWeight: '700' }}>Information Collected Automatically</span>
+        </div>
+
+        <p className='photodrop-futura'>
           As you use the Service, certain information about how a person uses our Service may also
           be passively collected and stored on our or our service providers’ server logs, including
           your Internet protocol address, browser type, and operating system. We also use
@@ -196,18 +225,18 @@ const Terms: FC = () => {
           you, to tailor your experience with the Service to meet your special interests and needs,
           and to analyze (and have third parties analyze) the information to improve, customize and
           enhance our Service.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
+        <p className='photodrop-futura'>
           An “Internet protocol address” or “IP Address” is a number that is automatically assigned
           to your computer when you use the Internet. In some cases your IP Address stays the same
           from browser session to browser session; but if you use a consumer internet access
           provider, your IP Address probably varies from session to session. For example, we, or our
           service providers, may track your IP Address when you access the Service to assist with ad
           targeting.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
+        <p className='photodrop-futura'>
           “Cookies” are small pieces of information that a website sends to your computer’s hard
           drive while you are viewing a website. We may use both session Cookies (which expire once
           you close your web browser) and persistent Cookies (which stay on your computer until you
@@ -218,9 +247,9 @@ const Terms: FC = () => {
           Service, your web browser must accept Cookies. If you choose to disable Cookies, some
           aspects or features of the Service may not work properly, and you will not be able to
           receive our Service.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
+        <p className='photodrop-futura'>
           We may also enable advertisers and ad servers to promote third-party products and/or
           services by placing advertisements on the Service. These advertisers and ad servers may
           use Cookies and/or “Web Beacons” (which are usually small, transparent graphic images).
@@ -230,18 +259,19 @@ const Terms: FC = () => {
           advertisements will direct you to the website of a third-party and the advertiser. This
           Privacy Policy covers only our use of Cookies and Web Beacons and does not cover the use
           of Cookies, Web Beacons, and other privacy practices of any advertisers or ad servers.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
-          <ParagraphTitle weight={Text.weight.bold}>
-            Use and Disclosure of Information
-          </ParagraphTitle>
+        <div className='photodrop-futura'>
+          <span style={{ fontWeight: '700' }}>Use and Disclosure of Information</span>
+        </div>
+
+        <p className='photodrop-futura'>
           Except as otherwise stated in this Privacy Policy, we do not generally sell, trade, rent,
           or share your Personal Information with third parties, unless you ask or authorize us to
           do so.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
+        <p className='photodrop-futura'>
           In general, Personal Information you submit to us is used by us to provide you access to
           the Service, to improve the Service, to better tailor the features, performance, and
           support of the Service and to offer you additional information, opportunities, promotions
@@ -249,9 +279,9 @@ const Terms: FC = () => {
           we do share your content preferences and other information with the social network from
           which you have connected to the Service, along with those companies and persons you have
           asked us to share your information with.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
+        <p className='photodrop-futura'>
           We may provide your Personal Information to third-party service providers who work on
           behalf of or with us to administer and provide some of the services and features of the
           Service and to help us communicate with you. Examples of such services include sending
@@ -263,9 +293,9 @@ const Terms: FC = () => {
           relevant services to us and not to disclose or use your Personal Information for any other
           purpose. We may also share aggregated information and Anonymous Information with third
           parties for research and analysis, demographic profiling and other similar purposes.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
+        <p className='photodrop-futura'>
           We may share some or all of your Personal Information with our third-party partners, those
           with whom we have a co-branding or promotional relationship, or other third-parties about
           whom you are otherwise notified and do not request to opt out of such sharing. This
@@ -276,24 +306,24 @@ const Terms: FC = () => {
           have disclosed such information to those third parties. If you do not want us to use or
           disclose Personal Information collected about you in the manners identified in this
           Privacy Policy, you may not use the Service.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
+        <p className='photodrop-futura'>
           Although we currently do not have a parent company, any subsidiaries, joint ventures, or
           other companies under a common control, we may in the future, and we may share some or all
           of your Personal Information with these companies, in which case we will require them to
           honor this Privacy Policy.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
+        <p className='photodrop-futura'>
           Information that we collect from our users, including Personal Information, is considered
           a business asset. In the event we go through a business transition such as a merger,
           acquisition by another company, or sale of all or a portion of our assets, your Personal
           Information may be among the assets transferred. You acknowledge that such transfers may
           occur and are permitted by this Privacy Policy.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
+        <p className='photodrop-futura'>
           We cooperate with government and law enforcement officials or private parties to enforce
           and comply with the law. We may disclose your Personal Information to government or law
           enforcement officials or private parties if we believe in good faith that such disclosure
@@ -302,12 +332,13 @@ const Terms: FC = () => {
           subpoenas or warrants served on us; or (c) to protect and defend our rights, property, and
           safety and the rights, property, and safety or you or third parties. You hereby consent to
           us sharing your Personal Information under the circumstances described herein.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
-          <ParagraphTitle weight={Text.weight.bold}>
-            The Ability of others to View your Information
-          </ParagraphTitle>
+        <div className='photodrop-futura'>
+          <span style={{ fontWeight: '700' }}>The Ability of others to View your Information</span>
+        </div>
+
+        <p className='photodrop-futura'>
           Helping you to protect your information is a vital part of our mission. It is up to you to
           make sure you are comfortable with the information you choose to provide us and the
           information you choose to publish. You understand that when you use the Service, certain
@@ -322,20 +353,22 @@ const Terms: FC = () => {
           and recommend that you use caution when giving out Personal Information to others in
           public forums online or otherwise. We also share the information you publish with other
           third parties as set forth in this Privacy Policy.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
-          <ParagraphTitle weight={Text.weight.bold}>
-            Responding to Do Not Track Signals
-          </ParagraphTitle>
+        <div className='photodrop-futura'>
+          <span style={{ fontWeight: '700' }}>Responding to Do Not Track Signals</span>
+        </div>
+
+        <p className='photodrop-futura'>
           Our website does not have the capability to respond to “Do Not Track” signals received
           from various web browsers.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
-          <ParagraphTitle weight={Text.weight.bold}>
-            Third Party Sites and Advertising
-          </ParagraphTitle>
+        <div className='photodrop-futura'>
+          <span style={{ fontWeight: '700' }}>Third Party Sites and Advertising</span>
+        </div>
+
+        <p className='photodrop-futura'>
           The Service may contain links to other websites. Please be aware that we are not
           responsible for the privacy practices or the content of such other websites. Any
           information that you provide on or to a third party website or that is collected by a
@@ -347,36 +380,39 @@ const Terms: FC = () => {
           access information of third-parties from the Service, or links to other websites or
           locations, is for your convenience and does not signify our endorsement of such
           third-parties, their products, their services, other websites, locations or their content.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
-          <ParagraphTitle weight={Text.weight.bold}>
+        <div className='photodrop-futura'>
+          <span style={{ fontWeight: '700' }}>
             Your Choices Regarding Your Personal Information
-          </ParagraphTitle>
+          </span>
+        </div>
+
+        <p className='photodrop-futura'>
           We offer you choices regarding the collection, use, and sharing of your Personal
           Information. Please note that if you decide not to provide us with the Personal
           Information that we request, you may not be able to access all of the features of the
           Service.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
+        <p className='photodrop-futura'>
           We may periodically send you free newsletters and e-mails that directly promote our
           Service. When you receive promotional communications from us, you may indicate a
           preference to stop receiving further promotional communications from us and you will have
           the opportunity to “opt-out” by following the unsubscribe instructions provided in the
           promotional e-mail you receive or by contacting us directly (please see contact
           information below).
-        </Paragraph>
+        </p>
 
-        <Paragraph>
+        <p className='photodrop-futura'>
           Despite your indicated email preferences, we may send you administrative emails regarding
           the Service, including, for example, administrative confirmations, notices of updates to
           our Privacy Policy or Terms of Service, and information about billing if we choose to
           provide such notices to you in this manner. You will not be able to opt out of those
           communications.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
+        <p className='photodrop-futura'>
           You may change any of your profile information, including any Personal Information
           associated with your Account, by editing it in the profile settings page. You may request
           deletion of your Personal Information and Account by contacting us at hello@photodrop.me,
@@ -387,10 +423,13 @@ const Terms: FC = () => {
           as information derived from facial recognition technology from the reference image that
           you added. When we delete Personal Information, it will be deleted from the active
           database.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
-          <ParagraphTitle weight={Text.weight.bold}>Security</ParagraphTitle>
+        <div className='photodrop-futura'>
+          <span style={{ fontWeight: '700' }}>Security</span>
+        </div>
+
+        <p className='photodrop-futura'>
           We are committed to protecting the security of your Personal Information. We use a variety
           of reasonable, industry-standard security technologies and administrative, physical, and
           electronic procedures to help protect your Personal Information from unauthorized access,
@@ -399,10 +438,13 @@ const Terms: FC = () => {
           protect your Personal Information, no company, including us, can fully eliminate security
           risks associated with Personal Information. Accordingly, we cannot guarantee the absolute
           security of any information.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
-          <ParagraphTitle weight={Text.weight.bold}>Contact and Revisions</ParagraphTitle>
+        <div className='photodrop-futura'>
+          <span style={{ fontWeight: '700' }}>Contact and Revisions</span>
+        </div>
+
+        <p className='photodrop-futura'>
           Any information that is collected via our Service is covered by the Privacy Policy in
           effect at the time such information is collected. This Privacy Policy is subject to
           occasional revision at our discretion, and if we make any substantial changes in the way
@@ -412,12 +454,16 @@ const Terms: FC = () => {
           use of the Service following notice of any such changes shall indicate your
           acknowledgement of such changes and agreement to be bound by the terms and conditions of
           such changes.
-        </Paragraph>
+        </p>
 
-        <Paragraph>
+        <p className='photodrop-futura'>
           If you have any questions about these Terms or the Service or Privacy Policy, please
-          contact PhotoDrop at hello@photodrop.me.
-        </Paragraph>
+          contact PhotoDrop at{' '}
+          <a href='mailto:hello@photodrop.me' style={{ color: '#3300CC' }}>
+            hello@photodrop.me
+          </a>
+          .
+        </p>
       </TextWrapper>
     </MotionContainerStyled>
   )
