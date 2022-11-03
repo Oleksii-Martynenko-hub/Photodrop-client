@@ -63,6 +63,8 @@ const AnimatedRoutes: FC = () => {
 
         <Route path={ERoutes.SUCCESSFULLY_PAID} element={<SuccessfullyPaid />} />
 
+        <Route path={ERoutes.CANCEL} element={<Navigate to={ERoutes.DASHBOARD} replace />} />
+
         <Route path={ERoutes.NOT_EXIST} element={<Navigate to={ERoutes.ROOT} replace />} />
       </Routes>
     </AnimatePresence>

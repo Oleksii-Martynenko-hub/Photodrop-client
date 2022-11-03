@@ -32,7 +32,7 @@ export enum ERoutes {
   DASHBOARD = '/dashboard',
   ALBUMS_ID = '/albums/:id',
   SUCCESSFULLY_PAID = '/albums/success/:id',
-  CANCEL = 'cancel/:id',
+  CANCEL = 'cancel',
   TERMS = '/terms',
   PRIVACY = '/privacy',
 }

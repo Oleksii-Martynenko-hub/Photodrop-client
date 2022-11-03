@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
@@ -16,15 +16,14 @@ import Button from 'components/common/Button'
 
 const SuccessfullyPaid: FC = () => {
   const id = useParams<{ id: string }>().id || ''
+  const navigate = useNavigate()
 
   const md = useMediaQueryMin(1024)
 
   const album = useSelector(selectAlbumById(id))
 
-  if (!album || !album?.thumbnails[0].isPaid) {
-    // console.log('🚀 ~ album?.thumbnails ALBUM IS NOT PAID ---', album?.thumbnails)
-    // navigate(ERoutes.DASHBOARD)
-    return <div>ALBUM IS NOT PAID</div>
+  if (album && !album.thumbnails[0].isPaid) {
+    navigate(ERoutes.DASHBOARD)
   }
 
   return (
@@ -39,7 +38,7 @@ const SuccessfullyPaid: FC = () => {
         You can now download, share, post, and print your hi-res, watermark-free, glorious memories.
       </DescriptionStyled>
 
-      <AlbumThumbnail src={album.mainThumbnail} shape='rounded' />
+      <AlbumThumbnail src={album?.mainThumbnail || ''} shape='rounded' />
 
       <LinkStyled to={`${ERoutes.DASHBOARD}/${ERoutes.ALBUMS_ID.split(':')[0]}${id}`}>
         <SeePhotosBtn fullWidth>See photos</SeePhotosBtn>
