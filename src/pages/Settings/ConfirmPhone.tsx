@@ -1,5 +1,4 @@
-import { FC, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router'
+import { FC, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import styled from 'styled-components'
@@ -8,7 +7,7 @@ import { motion } from 'framer-motion'
 import { APIStatus } from 'api/MainApi'
 
 import { generateOtpAsync } from 'store/sign-up/actions'
-import { selectGeneratedOTP, selectSignUpStatus } from 'store/sign-up/selectors'
+import { selectSignUpStatus } from 'store/sign-up/selectors'
 import { editPhoneAsync } from 'store/user/actions'
 import { selectPhoneNumber, selectUserCountryCode, selectUserStatus } from 'store/user/selectors'
 
@@ -20,25 +19,17 @@ import InputVerificationCode from 'components/common/InputVerificationCode'
 
 const ConfirmPhone: FC = () => {
   const dispatch = useDispatch()
-  const navigate = useNavigate()
 
   const statusSignUp = useSelector(selectSignUpStatus)
   const statusUser = useSelector(selectUserStatus)
-  const generatedOTP = useSelector(selectGeneratedOTP)
   const phoneNumber = useSelector(selectPhoneNumber)
   const countryCode = useSelector(selectUserCountryCode)
 
   const [otpCode, setOtpCode] = useState('')
   const [hasCodeResent, setHasCodeResent] = useState(false)
 
-  useEffect(() => {
-    if (!generatedOTP || generatedOTP.length !== 6 || !phoneNumber) {
-      navigate(-2)
-    }
-  }, [generatedOTP])
-
   const handleOnClickSave = (data?: string) => {
-    if ((otpCode === generatedOTP || data === generatedOTP) && phoneNumber?.value) {
+    if (otpCode.length === 6 && phoneNumber?.value) {
       dispatch(editPhoneAsync({ phone: phoneNumber.value, countryCode }))
       return
     }

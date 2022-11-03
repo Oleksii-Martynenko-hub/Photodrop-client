@@ -17,11 +17,6 @@ export const selectIsFullPageLoading: Selector<RootState, boolean> = createSelec
   ({ isFullPageLoading }) => isFullPageLoading,
 )
 
-export const selectGeneratedOTP: Selector<RootState, string | null> = createSelector(
-  selectSignUpReducer,
-  ({ generatedOTP }) => generatedOTP,
-)
-
 export const selectSignUpStatus: Selector<RootState, APIStatus> = createSelector(
   selectSignUpReducer,
   ({ status }) => status,

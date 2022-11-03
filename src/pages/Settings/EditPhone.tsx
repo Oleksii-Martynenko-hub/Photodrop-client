@@ -13,7 +13,7 @@ import { APIStatus } from 'api/MainApi'
 
 import { generateOtpAsync } from 'store/sign-up/actions'
 import { setPhoneNumber as setPhoneNumberToStore } from 'store/user/reducers'
-import { selectGeneratedOTP, selectSignUpStatus } from 'store/sign-up/selectors'
+import { selectSignUpStatus } from 'store/sign-up/selectors'
 import { selectPhoneNumber, selectUserCountryCode, selectUserPhone } from 'store/user/selectors'
 
 import { ERoutes } from 'pages/App'
@@ -34,7 +34,6 @@ const EditPhone: FC = () => {
   const phone = useSelector(selectUserPhone)
   const countryCode = useSelector(selectUserCountryCode)
   const phoneNumber = useSelector(selectPhoneNumber)
-  const generatedOTP = useSelector(selectGeneratedOTP)
 
   const phoneInputRef = useRef<HTMLInputElement>(null)
 
@@ -67,7 +66,7 @@ const EditPhone: FC = () => {
   useEffect(() => {
     if (isEditPhoneLoading) {
       if (status === APIStatus.FULFILLED) {
-        if (newPhoneNumber && generatedOTP && generatedOTP.length === 6) {
+        if (newPhoneNumber) {
           dispatch(
             setPhoneNumberToStore({
               value: getCountryCallingCode(newCountryCode) + newPhoneNumber.value,
@@ -83,7 +82,7 @@ const EditPhone: FC = () => {
 
       if (status !== APIStatus.PENDING) setIsEditPhoneLoading(false)
     }
-  }, [status, generatedOTP, isEditPhoneLoading])
+  }, [status, isEditPhoneLoading])
 
   useDidMountEffect(() => {
     if (newCountryCode && !isCountryDialogOpen) {

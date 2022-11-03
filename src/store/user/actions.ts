@@ -6,7 +6,6 @@ import { ErrorObject, getExceptionPayload } from 'api/ErrorHandler'
 import Tokens from 'utils/local-storage/tokens'
 
 import { ThunkExtra } from 'store'
-import { clearOTP } from 'store/sign-up/reducers'
 import { setAvatar, setUserData, UserNotifications } from 'store/user/reducers'
 import { logoutAsync } from 'store/sign-up/actions'
 
@@ -116,8 +115,6 @@ export const editPhoneAsync = createAsyncThunk<
       const tokens = Tokens.getInstance()
 
       tokens.setToken(token)
-
-      dispatch(clearOTP())
     } catch (error) {
       dispatch(logoutIfTokenInvalid(error))
       return rejectWithValue(getExceptionPayload(error))
