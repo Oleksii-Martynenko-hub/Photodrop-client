@@ -92,28 +92,24 @@ const PhotoDialog = ({
     setLocalOriginalPhoto(payload)
   }
 
-  // const handleClickDownload = async () => {
-  //   try {
-  //     if (thumbnail?.originalKey && localOriginalPhoto) {
-  //       const res = await axios({
-  //         url: localOriginalPhoto,
-  //         method: 'GET',
-  //         responseType: 'blob',
-  //       })
-  //       const imageURL = URL.createObjectURL(new Blob([res.data]))
+  const handleClickDownload = async () => {
+    try {
+      if (isArtistPrint && localOriginalPhoto) {
+        const res = await fetch(localOriginalPhoto).then((res) => res.blob())
+        const imageURL = URL.createObjectURL(res)
 
-  //       const link = document.createElement('a')
-  //       link.href = imageURL
-  //       link.setAttribute('download', `Photodrop-${thumbnail?.originalKey}`)
-  //       document.body.appendChild(link)
-  //       link.click()
-  //       document.body.removeChild(link)
-  //     }
-  //   } catch (error: any) {
-  //     console.log('🚀 ~ handleClickDownload ~ error', error)
-  //     toast.error(error.message)
-  //   }
-  // }
+        const link = document.createElement('a')
+        link.href = imageURL
+        link.setAttribute('download', localOriginalPhoto)
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      }
+    } catch (error: any) {
+      console.log('🚀 ~ handleClickDownload ~ error', error)
+      toast.error(error.message)
+    }
+  }
 
   const handleClickShare = () => {
     if (localOriginalPhoto && album) {
@@ -171,8 +167,8 @@ const PhotoDialog = ({
           <ButtonsWrapper isLock={!isPaid}>
             {isArtistPrint || isPaid ? (
               <>
-                <DownloadButtonLink href={localOriginalPhoto || ''}>
-                  <DownloadButton btnTheme={Button.themes.text}>
+                <DownloadButtonLink href={isArtistPrint ? undefined : localOriginalPhoto || ''}>
+                  <DownloadButton btnTheme={Button.themes.text} onClick={handleClickDownload}>
                     <DownloadIcon src='/images/download-icon.svg' alt='Download' />
                     Download
                   </DownloadButton>
