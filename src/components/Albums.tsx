@@ -40,6 +40,7 @@ const Albums: FC<Props> = ({ albums }) => {
           <WrapperLink
             key={id}
             to={dragging ? '' : `${ERoutes.ALBUMS_ID.split(':')[0]}${id}`}
+            dragging={dragging}
             isThumbnailLoaded={isThumbnailLoaded}
             draggable={false}
           >
@@ -117,7 +118,7 @@ const AlbumTitleStyled = styled(Text)`
   }
 `
 
-const WrapperLink = styled(Link)<{ isThumbnailLoaded: boolean }>`
+const WrapperLink = styled(Link)<{ isThumbnailLoaded: boolean; dragging: boolean }>`
   display: block;
   position: relative;
   margin: 0;
@@ -126,6 +127,7 @@ const WrapperLink = styled(Link)<{ isThumbnailLoaded: boolean }>`
   height: 140px;
   border-radius: 20px;
   overflow: hidden;
+  cursor: ${({ dragging }) => (dragging ? 'grabbing' : 'pointer')};
 
   ${Gradient} {
     opacity: ${({ isThumbnailLoaded }) => (isThumbnailLoaded ? '1' : '0')};

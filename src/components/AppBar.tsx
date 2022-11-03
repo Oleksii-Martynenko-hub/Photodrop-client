@@ -54,9 +54,11 @@ const AppBar = () => {
         location.pathname === ERoutes.PRIVACY,
     )
 
-    if (location.pathname.includes(ERoutes.ALBUMS_ID.split(':')[0])) {
+    if (
+      location.pathname.includes(ERoutes.ALBUMS_ID.split(':')[0]) &&
+      !location.pathname.includes(ERoutes.SUCCESSFULLY_PAID.split(':')[0])
+    ) {
       setIsShowAlbumBar(true)
-      dispatch(setIsFullPageLoading(true))
       return
     }
 
@@ -72,17 +74,6 @@ const AppBar = () => {
       }
     }
   }, [album, isShowAlbumBar])
-
-  useEffect(() => {
-    if (
-      isShowAlbumBar &&
-      formattedDate !== null &&
-      albumLocation !== null &&
-      photosCount !== null
-    ) {
-      dispatch(setIsFullPageLoading(false))
-    }
-  }, [isShowAlbumBar, formattedDate, albumLocation, photosCount])
 
   const handleOnClickBack = () => {
     // if (location.pathname === `${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_EDIT_NAME}`) {

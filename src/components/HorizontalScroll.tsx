@@ -63,5 +63,5 @@ const HorizontalScrollWrapper = styled.div<{
     }
   }
 
-  cursor: ${({ dragging }) => (dragging ? 'auto' : 'pointer')};
+  cursor: ${({ dragging }) => (dragging ? 'grabbing' : 'auto')};
 `

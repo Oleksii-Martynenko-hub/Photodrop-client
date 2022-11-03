@@ -1,10 +1,10 @@
 import { FC, useEffect, useState } from 'react'
-import { Link, Outlet, useLocation } from 'react-router-dom'
+import { Link, Navigate, Outlet, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 
-import { selectUserName } from 'store/user/selectors'
+import { selectUserAvatar, selectUserName } from 'store/user/selectors'
 
 import { ERoutes } from 'pages/App'
 import { useToggle } from 'components/hooks/useToggle'
@@ -15,6 +15,7 @@ import AddSelfie from 'components/AddSelfie'
 const UserPage: FC = () => {
   const location = useLocation()
   const name = useSelector(selectUserName)
+  const avatar = useSelector(selectUserAvatar)
 
   const [isShowOutlet, setIsShowOutlet] = useToggle(false)
 
@@ -43,6 +44,8 @@ const UserPage: FC = () => {
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
+
+  if (!avatar) return <Navigate to={ERoutes.ADD_SELFIE} replace />
 
   return (
     <>
