@@ -40,7 +40,7 @@ const SuccessfullyPaid: FC = () => {
 
       <AlbumThumbnail src={album?.mainThumbnail || ''} shape='rounded' />
 
-      <LinkStyled to={`${ERoutes.DASHBOARD}/${ERoutes.ALBUMS_ID.split(':')[0]}${id}`}>
+      <LinkStyled to={`${ERoutes.ALBUMS_ID.split(':')[0]}${id}`}>
         <SeePhotosBtn fullWidth>See photos</SeePhotosBtn>
       </LinkStyled>
 

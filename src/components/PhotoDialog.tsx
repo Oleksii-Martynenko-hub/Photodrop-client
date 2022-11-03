@@ -46,14 +46,14 @@ const PhotoDialog = ({
         return
       }
 
-      if (originalPhoto) {
-        setLocalOriginalPhoto(originalPhoto)
+      if (!originalPhoto && originalKey && albumId) {
+        const { width, height } = document.body.getBoundingClientRect()
+        getOriginalPhoto(albumId, originalKey, { width, height })
         return
       }
 
-      if (originalKey && albumId) {
-        const { width, height } = document.body.getBoundingClientRect()
-        getOriginalPhoto(albumId, originalKey, { width, height })
+      if (originalPhoto) {
+        setLocalOriginalPhoto(originalPhoto)
       }
     }
   }, [thumbnail])

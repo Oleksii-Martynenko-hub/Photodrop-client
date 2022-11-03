@@ -56,7 +56,7 @@ export const getAlbumsAsync = createAsyncThunk<void, string, ThunkExtra>(
 )
 
 export const getOriginalPhotosAsync = createAsyncThunk<
-  void,
+  string,
   { albumId: string; originalKey: string },
   ThunkExtra
 >(
@@ -73,6 +73,8 @@ export const getOriginalPhotosAsync = createAsyncThunk<
       const url = await protectedApi.getOriginalPhoto({ albumId, originalKey, userId })
 
       dispatch(setAlbumOriginalPhoto({ originalKey, albumId, originalPhoto: url }))
+
+      return url
     } catch (error) {
       dispatch(logoutIfTokenInvalid(error))
       return rejectWithValue(getExceptionPayload(error))

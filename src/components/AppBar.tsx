@@ -8,9 +8,8 @@ import moment from 'moment'
 import { APIStatus } from 'api/MainApi'
 
 import { logoutAsync } from 'store/sign-up/actions'
-import { setIsFullPageLoading } from 'store/sign-up/reducers'
 import { selectUserAvatar, selectUserIsOnboarding, selectUserName } from 'store/user/selectors'
-import { getOriginalPhotosAsync } from 'store/albums/actions'
+import { getGeneratePaymentAsync } from 'store/albums/actions'
 import { selectAlbumById, selectAlbumsStatus } from 'store/albums/selectors'
 
 import { ERoutes } from 'pages/App'
@@ -109,11 +108,9 @@ const AppBar = () => {
   const onClickUnlockBtnHandler = async () => {
     if (album) {
       const { thumbnails } = album
-      const { albumId, originalKey } = thumbnails[0]
+      const { albumId } = thumbnails[0]
 
-      const { payload } = (await dispatch(
-        getOriginalPhotosAsync({ albumId, originalKey }),
-      )) as unknown as {
+      const { payload } = (await dispatch(getGeneratePaymentAsync({ albumId }))) as unknown as {
         payload: string
       }
 
@@ -265,7 +262,7 @@ const AlbumBar = styled.div`
 `
 const Spinner = styled.div`
   line-height: 0;
-  margin: 0 0 0 auto;
+  margin: -2px 0 -2px auto;
   display: none;
 
   @media ${({ theme }) => theme.media.desktop} {
