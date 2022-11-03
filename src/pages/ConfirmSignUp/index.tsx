@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react'
-import { Navigate } from 'react-router'
+import { Navigate, useNavigate } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import styled from 'styled-components'
@@ -21,6 +21,7 @@ import InputVerificationCode from 'components/common/InputVerificationCode'
 
 const ConfirmSignUp: FC = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const status = useSelector(selectSignUpStatus)
   const isLoggedIn = useSelector(selectIsLoggedIn)
@@ -28,6 +29,12 @@ const ConfirmSignUp: FC = () => {
 
   const [otpCode, setOtpCode] = useState('')
   const [hasCodeResent, setHasCodeResent] = useState(false)
+
+  useEffect(() => {
+    if (!phoneNumber) {
+      navigate(ERoutes.SIGN_UP)
+    }
+  }, [phoneNumber])
 
   useEffect(() => {
     const timer = setTimeout(() => {
