@@ -39,10 +39,6 @@ const SignUp: FC = () => {
   const [isCountryDialogOpen, setCountryDialogOpen] = useState(false)
   const [isSignUpLoading, setIsSignUpLoading] = useState(false)
 
-  /* masks for :
-      YT XK TA SJ PR PM MF JE IM GP GG GB EH CX CC BQ BL AX
-  */
-
   useEffect(() => {
     if (isSignUpLoading) {
       if (status === APIStatus.FULFILLED) {
