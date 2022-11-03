@@ -31,9 +31,7 @@ const ConfirmSignUp: FC = () => {
   const [hasCodeResent, setHasCodeResent] = useState(false)
 
   useEffect(() => {
-    if (!phoneNumber) {
-      navigate(ERoutes.SIGN_UP)
-    }
+    if (!phoneNumber) navigate(ERoutes.SIGN_UP)
   }, [phoneNumber])
 
   useEffect(() => {
