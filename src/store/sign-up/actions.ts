@@ -9,7 +9,6 @@ import Tokens from 'utils/local-storage/tokens'
 
 import { ThunkExtra } from 'store'
 import {
-  clearOTP,
   clearSignUpState,
   clearToken,
   setIsFullPageLoading,
@@ -53,12 +52,14 @@ export const restoreAuthAsync = createAsyncThunk<void, void, ThunkExtra>(
 
 export const signUpAsync = createAsyncThunk<
   void,
-  { phone: string; countryCode: Country },
+  { phone: string; countryCode: Country; otp: string },
   ThunkExtra
 >(
   'sign-up/signUpAsync',
-  async ({ phone, countryCode }, { rejectWithValue, extra: { mainApi }, dispatch }) => {
+  async ({ phone, countryCode, otp }, { rejectWithValue, extra: { mainApi }, dispatch }) => {
     try {
+      await mainApi.postCheckOTP(phone, otp)
+
       const { token } = await mainApi.postSignUp({ phone, countryCode })
 
       const tokens = Tokens.getInstance()
@@ -66,21 +67,17 @@ export const signUpAsync = createAsyncThunk<
       tokens.setToken(token)
 
       await dispatch(restoreAuthAsync())
-
-      await dispatch(clearOTP())
     } catch (error) {
       return rejectWithValue(getExceptionPayload(error))
     }
   },
 )
 
-export const generateOtpAsync = createAsyncThunk<{ OTP: string }, string, ThunkExtra>(
+export const generateOtpAsync = createAsyncThunk<void, string, ThunkExtra>(
   'sign-up/generateOtpAsync',
   async (phone, { rejectWithValue, extra: { mainApi } }) => {
     try {
-      const response = await mainApi.postGeneratedOTP(phone)
-
-      return response
+      await mainApi.postGeneratedOTP(phone)
     } catch (error) {
       return rejectWithValue(getExceptionPayload(error))
     }

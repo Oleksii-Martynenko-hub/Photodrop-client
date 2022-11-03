@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react'
-import { Navigate, useNavigate } from 'react-router'
+import { Navigate } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import styled from 'styled-components'
@@ -7,9 +7,8 @@ import { motion } from 'framer-motion'
 
 import { APIStatus } from 'api/MainApi'
 
-import { clearOTP } from 'store/sign-up/reducers'
 import { generateOtpAsync, signUpAsync } from 'store/sign-up/actions'
-import { selectGeneratedOTP, selectIsLoggedIn, selectSignUpStatus } from 'store/sign-up/selectors'
+import { selectIsLoggedIn, selectSignUpStatus } from 'store/sign-up/selectors'
 import { selectPhoneNumber } from 'store/user/selectors'
 
 import { ERoutes } from 'pages/App'
@@ -22,44 +21,35 @@ import InputVerificationCode from 'components/common/InputVerificationCode'
 
 const ConfirmSignUp: FC = () => {
   const dispatch = useDispatch()
-  const navigate = useNavigate()
 
   const status = useSelector(selectSignUpStatus)
   const isLoggedIn = useSelector(selectIsLoggedIn)
   const phoneNumber = useSelector(selectPhoneNumber)
-  const generatedOTP = useSelector(selectGeneratedOTP)
 
   const [otpCode, setOtpCode] = useState('')
   const [hasCodeResent, setHasCodeResent] = useState(false)
 
   useEffect(() => {
-    let timer: string | number | NodeJS.Timeout | undefined
-
-    if (generatedOTP) {
-      timer = setTimeout(() => {
-        dispatch(clearOTP())
-        toast.error('Verification code has expired.', { autoClose: false })
-      }, 1000 * 60 * 3)
-    }
+    const timer = setTimeout(() => {
+      toast.error('Verification code has expired.', { autoClose: false })
+    }, 1000 * 60 * 3)
 
     return () => {
       clearTimeout(timer)
-      dispatch(clearOTP())
     }
   }, [])
 
-  useEffect(() => {
-    if (!generatedOTP || generatedOTP.length !== 6 || !phoneNumber) {
-      navigate(ERoutes.SIGN_UP)
-    }
-  }, [generatedOTP])
-
   const handleOnClickLogin = (data?: string) => {
-    if ((otpCode === generatedOTP || data === generatedOTP) && phoneNumber?.value) {
-      dispatch(signUpAsync({ phone: phoneNumber.value, countryCode: phoneNumber.newCountryCode }))
+    if (otpCode.length === 6 && phoneNumber?.value) {
+      dispatch(
+        signUpAsync({
+          phone: phoneNumber.value,
+          countryCode: phoneNumber.newCountryCode,
+          otp: otpCode,
+        }),
+      )
       return
     }
-    toast.error('Incorrect verification code, please check again.')
   }
 
   const handleOnChangeOTP = (value: string) => {

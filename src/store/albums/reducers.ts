@@ -6,7 +6,11 @@ import { ThumbnailData } from 'api/ProtectedApi'
 
 import { pendingCase, rejectedCase } from 'store'
 import { errorToast } from 'store/user/reducers'
-import { getAlbumsAsync, getOriginalPhotosAsync } from 'store/albums/actions'
+import {
+  getAlbumsAsync,
+  getGeneratePaymentAsync,
+  getOriginalPhotosAsync,
+} from 'store/albums/actions'
 
 export type Album = {
   id: string
@@ -69,6 +73,15 @@ export const albumsSlice = createSlice({
       rejectedCase((_, { payload }) => errorToast(payload)),
     )
     builder.addCase(getOriginalPhotosAsync.fulfilled, (state) => {
+      state.status = APIStatus.FULFILLED
+    })
+
+    builder.addCase(getGeneratePaymentAsync.pending, pendingCase())
+    builder.addCase(
+      getGeneratePaymentAsync.rejected,
+      rejectedCase((_, { payload }) => errorToast(payload)),
+    )
+    builder.addCase(getGeneratePaymentAsync.fulfilled, (state) => {
       state.status = APIStatus.FULFILLED
     })
   },

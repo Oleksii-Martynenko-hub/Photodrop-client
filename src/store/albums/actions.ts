@@ -56,13 +56,13 @@ export const getAlbumsAsync = createAsyncThunk<void, string, ThunkExtra>(
 )
 
 export const getOriginalPhotosAsync = createAsyncThunk<
-  string,
-  { albumId: string; originalKey: string; isGettingOriginal?: boolean },
+  void,
+  { albumId: string; originalKey: string },
   ThunkExtra
 >(
   'albums/getOriginalPhotosAsync',
   async (
-    { albumId, originalKey, isGettingOriginal },
+    { albumId, originalKey },
     { rejectWithValue, extra: { protectedApi }, getState, dispatch },
   ) => {
     try {
@@ -72,8 +72,23 @@ export const getOriginalPhotosAsync = createAsyncThunk<
 
       const url = await protectedApi.getOriginalPhoto({ albumId, originalKey, userId })
 
-      if (isGettingOriginal)
-        dispatch(setAlbumOriginalPhoto({ originalKey, albumId, originalPhoto: url }))
+      dispatch(setAlbumOriginalPhoto({ originalKey, albumId, originalPhoto: url }))
+    } catch (error) {
+      dispatch(logoutIfTokenInvalid(error))
+      return rejectWithValue(getExceptionPayload(error))
+    }
+  },
+)
+
+export const getGeneratePaymentAsync = createAsyncThunk<string, { albumId: string }, ThunkExtra>(
+  'albums/getGeneratePaymentAsync',
+  async ({ albumId }, { rejectWithValue, extra: { protectedApi }, getState, dispatch }) => {
+    try {
+      const {
+        user: { id: userId },
+      } = getState().userReducer
+
+      const url = await protectedApi.getGeneratePayment({ albumId, userId })
 
       return url
     } catch (error) {

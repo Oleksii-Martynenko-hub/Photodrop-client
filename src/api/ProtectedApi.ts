@@ -151,6 +151,10 @@ class ProtectedApi extends HttpClientProtected {
   public getOriginalPhoto = (params: GetOriginalPhotoParams) => {
     return this.instance.get<string>('/get-original-photo', { params })
   }
+
+  public getGeneratePayment = (params: Omit<GetOriginalPhotoParams, 'originalKey'>) => {
+    return this.instance.get<string>('/generate-payment', { params })
+  }
 }
 
 export default ProtectedApi

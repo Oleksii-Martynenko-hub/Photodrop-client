@@ -1,4 +1,4 @@
-import { Dispatch, useEffect, useState } from 'react'
+import { Dispatch, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { CircularProgress, Dialog } from '@mui/material'
@@ -35,11 +35,13 @@ const PhotoDialog = ({
 
   const [isPhotoLoading, setIsPhotoLoading] = useState(false)
 
+  const isPaid = useMemo(() => thumbnail?.isPaid, [thumbnail])
+
   useEffect(() => {
     if (thumbnail) {
-      const { isPaid, originalKey, url, albumId, originalPhoto } = thumbnail
+      const { originalKey, url, albumId, originalPhoto } = thumbnail
 
-      if (url && (isArtistPrint || (originalKey && !isPaid))) {
+      if (url && isArtistPrint) {
         setLocalOriginalPhoto(url)
         return
       }
@@ -49,8 +51,9 @@ const PhotoDialog = ({
         return
       }
 
-      if (originalKey && isPaid && albumId) {
-        getOriginalPhoto(albumId, originalKey)
+      if (originalKey && albumId) {
+        const { width, height } = document.body.getBoundingClientRect()
+        getOriginalPhoto(albumId, originalKey, { width, height })
       }
     }
   }, [thumbnail])
@@ -60,11 +63,28 @@ const PhotoDialog = ({
     setLocalOriginalPhoto(null)
   }
 
-  const getOriginalPhoto = async (albumId: string, originalKey: string) => {
+  const getOriginalPhoto = async (
+    albumId: string,
+    originalKey: string,
+    screenSize: { width: number; height: number },
+  ) => {
     setIsPhotoLoading(true)
 
+    console.log('🚀 ~ getOriginalPhoto ~ screenSize', screenSize)
+
+    /**
+     * 1. get place size for the photo:
+     *    if (width < 1024) place height - 186
+     *    else place = screenSize
+     *
+     * 2. get side that will filled by photo: horizontal or vertical
+     *    ???
+     *
+     * 3. get relative size of this side for watermark 252/825 = 30.5%
+     */
+
     const { payload } = (await dispatch(
-      getOriginalPhotosAsync({ albumId, originalKey, isGettingOriginal: true }),
+      getOriginalPhotosAsync({ albumId, originalKey }),
     )) as unknown as {
       payload: string
     }
@@ -148,8 +168,8 @@ const PhotoDialog = ({
             )}
           </ImageWrapper>
 
-          <ButtonsWrapper isLock={!thumbnail?.isPaid}>
-            {isArtistPrint || (thumbnail && thumbnail.isPaid) ? (
+          <ButtonsWrapper isLock={!isPaid}>
+            {isArtistPrint || isPaid ? (
               <>
                 <DownloadButtonLink href={localOriginalPhoto || ''}>
                   <DownloadButton btnTheme={Button.themes.text}>
@@ -168,7 +188,7 @@ const PhotoDialog = ({
                 </SeeInFrameButton>
               </>
             ) : (
-              <UnlockButton disabled={!thumbnail?.isPaid} fullWidth btnTheme={Button.themes.white}>
+              <UnlockButton disabled fullWidth btnTheme={Button.themes.white}>
                 Unlock photo
               </UnlockButton>
             )}

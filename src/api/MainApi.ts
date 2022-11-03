@@ -35,10 +35,10 @@ class MainApi extends HttpClient {
     return this.classInstance
   }
 
-  public postGeneratedOTP = (phone: string) =>
-    this.instance.post<{ OTP: string }>('/send-otp', { phone })
+  public postGeneratedOTP = (phone: string) => this.instance.post('/send-otp', { phone })
 
-  public getOrigin = () => this.instance.get<any>('/get-origin') // TODO: remove
+  public postCheckOTP = (phone: string, otp: string) =>
+    this.instance.get('/check-otp', { params: { phone, otp } })
 
   public postSignUp = (body: SignUpBody) => this.instance.post<TokensData>('/create-app-user', body)
 }

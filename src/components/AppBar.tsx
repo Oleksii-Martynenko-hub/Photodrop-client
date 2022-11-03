@@ -8,7 +8,7 @@ import moment from 'moment'
 import { APIStatus } from 'api/MainApi'
 
 import { logoutAsync } from 'store/sign-up/actions'
-import { clearOTP, setIsFullPageLoading } from 'store/sign-up/reducers'
+import { setIsFullPageLoading } from 'store/sign-up/reducers'
 import { selectUserAvatar, selectUserIsOnboarding, selectUserName } from 'store/user/selectors'
 import { getOriginalPhotosAsync } from 'store/albums/actions'
 import { selectAlbumById, selectAlbumsStatus } from 'store/albums/selectors'
@@ -144,7 +144,7 @@ const AppBar = () => {
                   <>
                     {status === APIStatus.PENDING && (
                       <Spinner>
-                        <CircularProgress size={20} />
+                        <CircularProgress size={18} />
                       </Spinner>
                     )}
 

@@ -14,7 +14,7 @@ import { APIStatus } from 'api/MainApi'
 
 import { generateOtpAsync } from 'store/sign-up/actions'
 import { setPhoneNumber as setPhoneNumberToStore } from 'store/user/reducers'
-import { selectGeneratedOTP, selectIsLoggedIn, selectSignUpStatus } from 'store/sign-up/selectors'
+import { selectIsLoggedIn, selectSignUpStatus } from 'store/sign-up/selectors'
 
 import { ERoutes } from 'pages/App'
 import { useDidMountEffect } from 'components/hooks/useDidMountEffect'
@@ -30,7 +30,6 @@ const SignUp: FC = () => {
 
   const status = useSelector(selectSignUpStatus)
   const isLoggedIn = useSelector(selectIsLoggedIn)
-  const generatedOTP = useSelector(selectGeneratedOTP)
 
   const phoneInputRef = useRef<HTMLInputElement>(null)
 
@@ -42,7 +41,7 @@ const SignUp: FC = () => {
   useEffect(() => {
     if (isSignUpLoading) {
       if (status === APIStatus.FULFILLED) {
-        if (phoneNumber && generatedOTP && generatedOTP.length === 6) {
+        if (phoneNumber) {
           dispatch(
             setPhoneNumberToStore({
               value: getCountryCallingCode(countryCode) + phoneNumber.value,
@@ -58,7 +57,7 @@ const SignUp: FC = () => {
 
       if (status !== APIStatus.PENDING) setIsSignUpLoading(false)
     }
-  }, [status, generatedOTP, isSignUpLoading])
+  }, [status, isSignUpLoading])
 
   useDidMountEffect(() => {
     if (countryCode && !isCountryDialogOpen) {

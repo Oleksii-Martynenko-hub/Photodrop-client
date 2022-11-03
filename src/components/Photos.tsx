@@ -2,12 +2,11 @@ import { FC, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
-import { useMediaQuery } from '@mui/material'
 
 import { APIStatus } from 'api/MainApi'
 import { ThumbnailData } from 'api/ProtectedApi'
 
-import { getOriginalPhotosAsync } from 'store/albums/actions'
+import { getGeneratePaymentAsync } from 'store/albums/actions'
 import { selectAlbumsStatus } from 'store/albums/selectors'
 
 import Text from 'components/common/Text'
@@ -25,8 +24,6 @@ const Photos: FC<Props> = ({ thumbnails, isDashboard = false }) => {
 
   const status = useSelector(selectAlbumsStatus)
 
-  const md = useMediaQuery('(min-width:1024px)')
-
   const [hasLockedPhotos, setHasLockedPhotos] = useState(false)
   const [isPhotoDialogOpen, setPhotoDialogOpen] = useState(false)
   const [openedPhoto, setOpenedPhoto] = useState<ThumbnailData | null>(null)
@@ -37,11 +34,9 @@ const Photos: FC<Props> = ({ thumbnails, isDashboard = false }) => {
 
   const onClickUnlockBtnHandler = async () => {
     if (thumbnails.length) {
-      const { albumId, originalKey } = thumbnails[0]
+      const { albumId } = thumbnails[0]
 
-      const { payload } = (await dispatch(
-        getOriginalPhotosAsync({ albumId, originalKey }),
-      )) as unknown as {
+      const { payload } = (await dispatch(getGeneratePaymentAsync({ albumId }))) as unknown as {
         payload: string
       }
 
@@ -74,7 +69,6 @@ const Photos: FC<Props> = ({ thumbnails, isDashboard = false }) => {
             onClick={handleOnClickPhoto({ originalKey, url, isPaid, albumId, originalPhoto })}
           >
             <Image src={url} alt={url} width={'100%'} height={'100%'} />
-            {/* <Image src={url} alt={url} width={md ? 400 : 125} height={md ? 400 : 125} /> */}
           </ImageWrapper>
         ))}
       </PhotoList>
@@ -112,7 +106,6 @@ const MotionContainerStyled = styled(motion.div)<{ isDashboard: boolean }>`
 
   @media ${({ theme }) => theme.media.desktop} {
     padding: ${({ isDashboard }) => (isDashboard ? '40px 0 0' : '0')};
-    /* min-width: 100%; */
   }
 `
 

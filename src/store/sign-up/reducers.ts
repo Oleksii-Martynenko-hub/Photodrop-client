@@ -12,7 +12,6 @@ import { errorToast } from 'store/user/reducers'
 
 export interface SignUpState {
   isLoggedIn: boolean
-  generatedOTP: string | null
   isFullPageLoading: boolean
   status: APIStatus
   errors: ErrorObject[]
@@ -20,7 +19,6 @@ export interface SignUpState {
 
 const initialState: SignUpState = {
   isLoggedIn: false,
-  generatedOTP: null,
   isFullPageLoading: false,
   status: APIStatus.IDLE,
   errors: [],
@@ -33,9 +31,6 @@ export const signUpSlice = createSlice({
     clearToken: () => {
       const tokens = Tokens.getInstance()
       tokens.clearTokens()
-    },
-    clearOTP: (state) => {
-      state.generatedOTP = null
     },
     clearSignUpState: () => initialState,
     setSignUpStatus: (state, action: { payload: APIStatus }) => {
@@ -54,8 +49,7 @@ export const signUpSlice = createSlice({
       generateOtpAsync.rejected,
       rejectedCase((_, { payload }) => errorToast(payload)),
     )
-    builder.addCase(generateOtpAsync.fulfilled, (state, { payload }) => {
-      state.generatedOTP = payload.OTP
+    builder.addCase(generateOtpAsync.fulfilled, (state) => {
       state.status = APIStatus.FULFILLED
     })
 
@@ -79,13 +73,7 @@ export const signUpSlice = createSlice({
   },
 })
 
-export const {
-  clearToken,
-  clearSignUpState,
-  clearOTP,
-  setSignUpStatus,
-  setIsLoggedIn,
-  setIsFullPageLoading,
-} = signUpSlice.actions
+export const { clearToken, clearSignUpState, setSignUpStatus, setIsLoggedIn, setIsFullPageLoading } =
+  signUpSlice.actions
 
 export default signUpSlice.reducer
