@@ -13,6 +13,7 @@ import Text from 'components/common/Text'
 import Image from 'components/common/Image'
 import LoadingButton from 'components/common/LoadingButton'
 import PhotoDialog from 'components/PhotoDialog'
+import { toast } from 'react-toastify'
 
 interface Props {
   thumbnails: ThumbnailData[]
@@ -39,9 +40,8 @@ const Photos: FC<Props> = ({ thumbnails, isDashboard = false }) => {
       const { payload } = (await dispatch(getGeneratePaymentAsync({ albumId }))) as unknown as {
         payload: string
       }
-      console.log('🚀 ~ const{payload}= ~ payload', payload)
 
-      // window.location.replace(payload)
+      window.location.replace(payload)
     }
   }
 
