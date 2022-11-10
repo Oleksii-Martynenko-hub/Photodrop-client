@@ -39,8 +39,9 @@ const Photos: FC<Props> = ({ thumbnails, isDashboard = false }) => {
       const { payload } = (await dispatch(getGeneratePaymentAsync({ albumId }))) as unknown as {
         payload: string
       }
+      console.log('🚀 ~ const{payload}= ~ payload', payload)
 
-      window.location.replace(payload)
+      // window.location.replace(payload)
     }
   }
 
