@@ -74,7 +74,15 @@ export type AlbumData = {
   id: string
   location: string
   date: string
+  icon: string
+  thumbnails: ThumbnailData[]
 }
+
+// export type ThumbnailData = {
+//   url: string
+//   originalUrl: string
+//   originalKey: string
+// }
 
 export interface PresignedPhotosPostResponse {
   url: string
@@ -137,16 +145,16 @@ class ProtectedApi extends HttpClientProtected {
     })
   }
 
-  public getThumbnailsForAlbums = (body: { albumIds: string[]; userId: string }) => {
-    return this.instance.post<{ [k in string]: string }>('/get-albums-thumbnail-icons', body)
-  }
+  // public getThumbnailsForAlbums = (body: { albumIds: string[]; userId: string }) => {
+  //   return this.instance.post<{ [k in string]: string }>('/get-albums-thumbnail-icons', body)
+  // }
 
-  public getThumbnailsForPhotos = (params: GetThumbnailsParams) => {
-    return this.instance.get<{ totalPhotos: number; thumbnails: ThumbnailData[] }>(
-      '/get-thumbnails-with-person',
-      { params },
-    )
-  }
+  // public getThumbnailsForPhotos = (params: GetThumbnailsParams) => {
+  //   return this.instance.get<{ totalPhotos: number; thumbnails: ThumbnailData[] }>(
+  //     '/get-thumbnails-with-person',
+  //     { params },
+  //   )
+  // }
 
   public getOriginalPhoto = (params: GetOriginalPhotoParams) => {
     return this.instance.get<string>('/get-original-photo', { params })

@@ -4,16 +4,17 @@ import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import { useMediaQuery } from '@mui/material'
 
-import { Album } from 'store/albums/reducers'
+// import { Album } from 'store/albums/reducers'
 
 import { ERoutes } from 'pages/App'
 import { useDrag } from 'components/hooks/useDrag'
 import Text from 'components/common/Text'
 import Image from 'components/common/Image'
 import HorizontalScroll from 'components/HorizontalScroll'
+import { AlbumData } from 'api/ProtectedApi'
 
 interface Props {
-  albums: Omit<Album, 'thumbnails'>[]
+  albums: AlbumData[]
 }
 
 const Albums: FC<Props> = ({ albums }) => {
@@ -36,7 +37,7 @@ const Albums: FC<Props> = ({ albums }) => {
         paddingX={md ? 40 : 15}
         spacing={5}
       >
-        {localAlbums.map(({ id, location, mainThumbnail, isThumbnailLoaded }) => (
+        {localAlbums.map(({ id, location, icon, isThumbnailLoaded }) => (
           <WrapperLink
             key={id}
             to={dragging ? '' : `${ERoutes.ALBUMS_ID.split(':')[0]}${id}`}
@@ -45,7 +46,7 @@ const Albums: FC<Props> = ({ albums }) => {
             draggable={false}
           >
             <Image
-              src={mainThumbnail}
+              src={icon}
               alt={location}
               width={md ? 200 : 110}
               height={md ? 255 : 140}

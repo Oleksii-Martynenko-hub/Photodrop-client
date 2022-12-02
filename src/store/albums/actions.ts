@@ -10,44 +10,50 @@ export const getAlbumsAsync = createAsyncThunk<void, string, ThunkExtra>(
   'albums/getAlbumsAsync',
   async (phone, { rejectWithValue, extra: { protectedApi }, getState, dispatch }) => {
     try {
-      const {
-        user: { id: userId },
-      } = getState().userReducer
+      // const {
+      //   user: { id: userId },
+      // } = getState().userReducer
 
       const { albumsInfo } = await protectedApi.getAlbums(phone)
 
-      const albumsPromises = albumsInfo.map(async ({ id, date, location }) => {
-        const { [id]: mainThumbnail } = await protectedApi.getThumbnailsForAlbums({
-          albumIds: [id],
-          userId,
-        })
+      // const albumsPromises = albumsInfo.map(async ({ id, date, location }) => {
+      //   const { [id]: mainThumbnail } = await protectedApi.getThumbnailsForAlbums({
+      //     albumIds: [id],
+      //     userId,
+      //   })
 
-        return {
-          id,
-          date,
-          location,
-          mainThumbnail,
-        }
+      //   return {
+      //     id,
+      //     date,
+      //     location,
+      //     mainThumbnail,
+      //   }
+      // })
+
+      // const albums = await Promise.all(albumsPromises)
+
+      // if (albumsI.length) {
+      // const id = albums[0].id
+
+      // const { thumbnails: thumb } = await protectedApi.getThumbnailsForPhotos({
+      //   albumId: id,
+      //   userId,
+      // })
+
+      const formattedAlbums = albumsInfo.map(({ thumbnails, ...album }) => {
+        // const thumbnails = thumb.filter((t) => t.albumId === album.id)
+        const formattedThumbnails = thumbnails.map((t) => ({
+          ...t,
+          isPaid: t.url.includes('watermark'),
+          albumId: album.id,
+          originalPhoto: undefined,
+        }))
+
+        return { ...album, thumbnails: formattedThumbnails }
       })
 
-      const albums = await Promise.all(albumsPromises)
-
-      if (albums.length) {
-        const id = albums[0].id
-
-        const { thumbnails: thumb } = await protectedApi.getThumbnailsForPhotos({
-          albumId: id,
-          userId,
-        })
-
-        const albumWithThumbnail = albums.map((album) => {
-          const thumbnails = thumb.filter((t) => t.albumId === album.id)
-
-          return { ...album, thumbnails }
-        })
-
-        dispatch(setAlbumsData(albumWithThumbnail))
-      }
+      dispatch(setAlbumsData(formattedAlbums))
+      // }
     } catch (error) {
       dispatch(logoutIfTokenInvalid(error))
       return rejectWithValue(getExceptionPayload(error))

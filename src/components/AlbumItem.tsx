@@ -7,14 +7,15 @@ import styled from 'styled-components'
 
 import { useMediaQueryMin } from 'components/hooks/useMediaQuery'
 import Image from 'components/common/Image'
-import { Album } from 'store/albums/reducers'
+import { AlbumData } from 'api/ProtectedApi'
+// import { Album } from 'store/albums/reducers'
 
 interface Props {
-  album: Album
+  album: AlbumData
 }
 
 const AlbumItem: FC<Props> = ({ album }) => {
-  const { id, location: albumLocation, date, mainThumbnail } = album
+  const { id, location: albumLocation, date, icon } = album
 
   const isMediumScreenSize = useMediaQueryMin(900)
 
@@ -24,7 +25,7 @@ const AlbumItem: FC<Props> = ({ album }) => {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <LinkStyled to={`${id}`}>
         <Grid container spacing={1} wrap='nowrap'>
-          <Image width={80} height={60} src={mainThumbnail || ''} />
+          <Image width={80} height={60} src={icon || ''} />
 
           <Location noWrap variant='body1'>
             {albumLocation}

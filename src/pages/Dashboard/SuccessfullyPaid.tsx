@@ -38,7 +38,7 @@ const SuccessfullyPaid: FC = () => {
         You can now download, share, post, and print your hi-res, watermark-free, glorious memories.
       </DescriptionStyled>
 
-      <AlbumThumbnail src={album?.mainThumbnail || ''} shape='rounded' />
+      <AlbumThumbnail src={album?.icon || ''} shape='rounded' />
 
       <LinkStyled to={`${ERoutes.ALBUMS_ID.split(':')[0]}${id}`}>
         <SeePhotosBtn fullWidth>See photos</SeePhotosBtn>

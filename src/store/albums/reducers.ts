@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { ErrorObject } from 'api/ErrorHandler'
 import { APIStatus } from 'api/MainApi'
-import { ThumbnailData } from 'api/ProtectedApi'
+import { AlbumData, ThumbnailData } from 'api/ProtectedApi'
 
 import { pendingCase, rejectedCase } from 'store'
 import { errorToast } from 'store/user/reducers'
@@ -12,16 +12,16 @@ import {
   getOriginalPhotosAsync,
 } from 'store/albums/actions'
 
-export type Album = {
-  id: string
-  location: string
-  date: string
-  mainThumbnail: string
-  thumbnails: ThumbnailData[]
-}
+// export type Album = {
+//   id: string
+//   location: string
+//   date: string
+//   mainThumbnail: string
+//   thumbnails: ThumbnailData[]
+// }
 
 export interface AlbumsState {
-  albums: Album[]
+  albums: AlbumData[]
   status: APIStatus
   errors: ErrorObject[]
 }
@@ -36,7 +36,7 @@ export const albumsSlice = createSlice({
   name: 'albums',
   initialState,
   reducers: {
-    setAlbumsData: (state, { payload }: PayloadAction<Album[]>) => {
+    setAlbumsData: (state, { payload }: PayloadAction<AlbumData[]>) => {
       state.albums = payload
     },
 
