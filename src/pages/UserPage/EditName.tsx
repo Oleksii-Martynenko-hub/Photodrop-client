@@ -1,189 +1,135 @@
-import { FC, useEffect, useState } from 'react'
-import { Navigate } from 'react-router'
+import { FC, useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  CircularProgress,
-  FormControl,
-  FormHelperText,
-  Grid,
-  IconButton,
-  InputAdornment,
-  OutlinedInput,
-  TextField,
-  Typography,
-} from '@mui/material'
-import { LoadingButton } from '@mui/lab'
-import { Visibility, VisibilityOff } from '@mui/icons-material'
+import styled from 'styled-components'
 import { motion } from 'framer-motion'
+import { toast } from 'react-toastify'
 
 import { APIStatus } from 'api/MainApi'
 
-import useToggle from 'components/hooks/useToggle'
-import { useInput } from 'components/hooks/useInput'
-import { useDidMountEffect } from 'components/hooks/useDidMountEffect'
-
-import { checkToken } from 'store/sign-up/reducers'
-import { selectErrors, selectIsLoggedIn, selectStatus } from 'store/sign-up/selectors'
+import { editNameAsync } from 'store/user/actions'
+import { selectUserStatus, selectUserName, selectUserIsOnboarding } from 'store/user/selectors'
 
 import { ERoutes } from 'pages/App'
+import { useInput } from 'components/hooks/useInput'
+import Title from 'components/common/Title'
+import TextField from 'components/common/TextField'
+import LoadingButton from 'components/common/LoadingButton'
 
 const EditName: FC = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-  const status = useSelector(selectStatus)
-  const isLoggedIn = useSelector(selectIsLoggedIn)
-  const errors = useSelector(selectErrors)
+  const status = useSelector(selectUserStatus)
+  const userName = useSelector(selectUserName)
+  // const onboarding = useSelector(selectUserIsOnboarding)
+  const onboarding = useMemo(() => !userName, [userName])
 
-  const [login, setLogin] = useInput('')
-  const [password, setPassword] = useInput('')
-
-  const [loginValidation, setLoginValidation] = useState({ isValid: true, message: '' })
-  const [passwordValidation, setPasswordValidation] = useState({ isValid: true, message: '' })
-
-  const [isShowPassword, setShowPassword] = useToggle(false)
+  const [newUserName, setNewUserName] = useInput('')
+  const [isEditNameLoading, setIsEditNameLoading] = useState(false)
 
   useEffect(() => {
-    dispatch(checkToken())
-  }, [])
+    if (userName) {
+      // if (onboarding)
+      //   navigate(
+      //     `${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_SETTINGS}/${ERoutes.USER_SETTINGS_EMAIL}`,
+      //   )
+      if (!onboarding) setNewUserName.setState(userName)
+    }
+  }, [userName])
 
   useEffect(() => {
-    if (status === APIStatus.REJECTED) {
-      if (errors.length) {
-        errors.forEach((error) => {
-          if (error.msg === 'User not found') {
-            setLoginValidation({
-              isValid: false,
-              message: 'User with this login not exist.',
-            })
-          }
-
-          if (error.msg === 'Wrong password') {
-            setPasswordValidation({ isValid: false, message: 'Password is not correct.' })
-          }
-        })
-
-        return
+    if (isEditNameLoading) {
+      if (status === APIStatus.FULFILLED) {
+        // if (onboarding)
+        //   navigate(
+        //     `${ERoutes.MAIN}/${ERoutes.USER}/${ERoutes.USER_SETTINGS}/${ERoutes.USER_SETTINGS_EMAIL}`,
+        //   )
+        // if (!onboarding)
+        navigate(-1)
       }
 
-      setLoginValidation({ isValid: false, message: '' })
-      setPasswordValidation({
-        isValid: false,
-        message: 'Something went wrong.',
-      })
+      if (status !== APIStatus.PENDING) setIsEditNameLoading(false)
     }
-  }, [status, errors])
+  }, [status, isEditNameLoading])
 
-  useDidMountEffect(() => {
-    handleValidation('login')
-  }, [login])
-
-  useDidMountEffect(() => {
-    handleValidation('password')
-  }, [password])
-
-  const handleOnClickLogin = () => {
-    if (!handleValidation()) return
-
-    clearValidation()
-  }
-
-  // to services
-  const clearValidation = () => {
-    setLoginValidation({ isValid: true, message: '' })
-    setPasswordValidation({ isValid: true, message: '' })
-  }
-
-  // to services
-  const handleValidation = (input?: 'login' | 'password') => {
-    const loginMsg = 'Please enter a valid login.'
-    const passMsg = 'Please enter a valid password.'
-
-    if (input === 'login') {
-      if (!login) setLoginValidation({ isValid: false, message: loginMsg })
-      if (login) setLoginValidation({ isValid: true, message: '' })
+  const handleOnClickSaveBtn = () => {
+    if (!newUserName.length) {
+      toast.error('Please enter your name.')
       return
     }
 
-    if (input === 'password') {
-      if (!password) setPasswordValidation({ isValid: false, message: passMsg })
-      if (password) setPasswordValidation({ isValid: true, message: '' })
+    if (newUserName === userName) {
+      toast.error('You don`t need to update, if name hasn`t changed.')
       return
     }
 
-    if (!login || !password) {
-      if (!login) {
-        setLoginValidation({ isValid: false, message: loginMsg })
-      }
-
-      if (!password) {
-        setPasswordValidation({ isValid: false, message: passMsg })
-      }
-      return false
-    }
-    return true
+    setIsEditNameLoading(true)
+    dispatch(editNameAsync(newUserName))
   }
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      <Grid container justifyContent='center' sx={{ paddingTop: { xs: 6, md: 9 } }}>
-        <Grid
-          container
-          spacing={{ xs: 2, md: 3 }}
-          justifyContent='center'
-          sx={{ flex: { xs: '0 1 400px', md: '0 0 600px' } }}
-        >
-          <Grid item xs={12} md={12}>
-            <Typography variant='h2' align='center' gutterBottom>
-              EditName
-            </Typography>
-          </Grid>
+    <MotionContainerStyled
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onboarding={onboarding}
+    >
+      <TitleStyled size={onboarding ? Title.size.normal : Title.size.small}>
+        {onboarding ? 'Let’s get to know you' : 'Your name'}
+      </TitleStyled>
 
-          <Grid item xs={12} md={12}>
-            <Typography variant='h6' align='center'>
-              Enter your name and password
-            </Typography>
-          </Grid>
+      <TextFieldStyled
+        placeholder={onboarding ? 'What’s your name?' : 'Enter your new name'}
+        fullWidth
+        value={newUserName}
+        onChange={setNewUserName.onChange}
+      />
 
-          <Grid item xs={12} md={6}>
-            <TextField
-              placeholder='Login'
-              required
-              error={!loginValidation.isValid}
-              fullWidth
-              value={login}
-              onChange={setLogin.onChange}
-              InputProps={{
-                sx: {
-                  backgroundColor: '#F4F4F4',
-                  borderRadius: '10px',
-                  height: '40px',
-                },
-              }}
-            />
-          </Grid>
-
-          <Grid item xs={10} md={8}>
-            <LoadingButton
-              loading={status === APIStatus.PENDING}
-              loadingIndicator={
-                <CircularProgress
-                  size={18}
-                  sx={{ color: 'inherit', position: 'absolute', top: '-9px', left: '2px' }}
-                />
-              }
-              loadingPosition='end'
-              variant='contained'
-              fullWidth
-              sx={{ borderRadius: '50px', height: '50px', marginBottom: '10px' }}
-              onClick={handleOnClickLogin}
-            >
-              EditName
-            </LoadingButton>
-          </Grid>
-        </Grid>
-      </Grid>
-    </motion.div>
+      <LoadingButton
+        loading={isEditNameLoading}
+        disabled={!newUserName.length}
+        fullWidth
+        onClick={handleOnClickSaveBtn}
+      >
+        {onboarding ? 'Next' : 'Save'}
+      </LoadingButton>
+    </MotionContainerStyled>
   )
 }
 
 export default EditName
+
+const TitleStyled = styled(Title)``
+
+const TextFieldStyled = styled(TextField)``
+
+const MotionContainerStyled = styled(motion.div)<{ onboarding: boolean }>`
+  width: 100%;
+  max-width: 450px;
+  padding: ${({ onboarding }) => (onboarding ? '165px' : '167px')} 15px 15px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    max-width: 500px;
+    padding: ${({ onboarding }) => (onboarding ? '252px' : '254px')} 40px 40px;
+  }
+
+  ${TextFieldStyled} {
+    margin: ${({ onboarding }) => (onboarding ? '21px 0' : '20px 0 21px')};
+
+    @media ${({ theme }) => theme.media.desktop} {
+      margin: 30px 0 20px;
+    }
+  }
+
+  ${TitleStyled} {
+    line-height: ${({ onboarding }) => (onboarding ? '14px' : '13px')};
+
+    @media ${({ theme }) => theme.media.desktop} {
+      line-height: ${({ onboarding }) => (onboarding ? '22px' : '18px')};
+    }
+  }
+`

@@ -1,36 +1,96 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import HttpClientProtected from 'api/HttpClientProtected'
+import { Country } from 'react-phone-number-input'
+import { UserNotifications } from 'store/user/reducers'
 
 export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api'
 
-export type AlbumData = {
-  id: number
+export type UserData = {
+  id: string
+  selfieKey: string | null
+  name: string | null
+  phone: string
+  countryCode: Country
+  email: string | null
+  textMessagesNotification: boolean | null
+  emailNotification: boolean | null
+  unsubscribe: boolean | null
+}
+
+export type GetSelfieBody = {
+  selfieKey: string
+}
+
+export type PresignedSelfieBody = {
   name: string
+  userId: string
+}
+
+export type UserEditNameBody = {
+  id: string
+  name: string
+}
+
+export type UserEditEmailBody = {
+  id: string
+  email: string
+}
+
+export type UserEditPhoneBody = {
+  id: string
+  phone: string
+  countryCode: Country
+}
+
+export type UserEditPhoneResponse = {
+  user: UserData
+  token: string
+}
+
+export type GetThumbnailsParams = {
+  userId: string
+  albumId: string
+}
+
+export type GetOriginalPhotoParams = {
+  userId: string
+  albumId: string
+  originalKey: string
+}
+
+export type ThumbnailData = {
+  isPaid: boolean
+  url: string
+  originalKey: string
+  originalPhoto?: string
+  albumId: string
+}
+
+export interface UserEditNotificationBody extends UserNotifications {
+  id: string
+}
+
+export type AlbumData = {
+  id: string
   location: string
   date: string
-  photographerId: number
-  icon: string | null
+  icon: string
+  thumbnails: ThumbnailData[]
 }
 
-export interface CreateAlbumData extends Omit<AlbumData, 'id' | 'icon'> {}
-
-export type PhotosArray = [
-  { photographerId: number },
-  { albumId: number },
-  { photoName: string },
-  { 'Content-Type': string },
-]
-export interface PresignedPhotosPostBody {
-  photosArray: PhotosArray[]
-  people: string[]
-}
+// export type ThumbnailData = {
+//   url: string
+//   originalUrl: string
+//   originalKey: string
+// }
 
 export interface PresignedPhotosPostResponse {
   url: string
   fields: {
     key: string
     'Content-Type': string
-    'x-amz-meta-people': string
+    'x-amz-meta-userId': string
+    originalSelfieKey: string
     bucket: string
     'X-Amz-Algorithm': string
     'X-Amz-Credential': string
@@ -38,33 +98,6 @@ export interface PresignedPhotosPostResponse {
     Policy: string
     'X-Amz-Signature': string
   }
-}
-
-export interface GetPhotosResponse {
-  count: number
-  rows: PhotosData[]
-}
-
-export interface GetPhotosBody {
-  photographerId: number
-  albumId: number
-  page?: number
-  limit?: number
-}
-
-export interface People {
-  id: number
-  name: string | null
-  phone: string
-  email: string | null
-  textMessagesNotification: boolean
-  emailNotification: boolean
-  unsubscribe: boolean
-}
-
-export interface PhotosData extends Omit<AlbumData, 'date' | 'location'> {
-  photoUrl: string
-  albumId: number
 }
 
 class ProtectedApi extends HttpClientProtected {
@@ -82,30 +115,54 @@ class ProtectedApi extends HttpClientProtected {
     return this.classInstance
   }
 
-  public postCreateAlbum = (newAlbum: CreateAlbumData) =>
-    this.instance.post<AlbumData>('/create-album', newAlbum)
-
-  public getAlbums = (photographerId: number) => {
-    return this.instance.get<AlbumData[]>('/get-albums-from-db', { params: { photographerId } })
+  public getMe = (params: { userId: string }) => {
+    return this.instance.get<{ userObject: UserData }>('/get-me', { params })
   }
 
-  public getAlbumIcons = (albumIds: number[]) => {
-    return this.instance.post<{ [k: string]: string | null }>('/get-albums-thumbnail-icons', {
-      albumIds,
+  public postGetPresignedPostSelfie = (body: PresignedSelfieBody) => {
+    return this.instance.post<PresignedPhotosPostResponse>('/presigned-post', body)
+  }
+
+  public postGetSelfie = (body: GetSelfieBody) => {
+    return this.instance.post<string>('/get-signed-selfie', body)
+  }
+
+  public putEditName = (userBody: UserEditNameBody) =>
+    this.instance.put<{ user: UserData }>('/edit-name', userBody)
+
+  public putEditEmail = (userBody: UserEditEmailBody) =>
+    this.instance.put<{ user: UserData }>('/edit-email', userBody)
+
+  public putEditPhone = (userBody: UserEditPhoneBody) =>
+    this.instance.put<UserEditPhoneResponse>('/edit-phone', userBody)
+
+  public putEditNotification = (userBody: UserEditNotificationBody) =>
+    this.instance.put<{ user: UserData }>('/edit-notification-settings', userBody)
+
+  public getAlbums = (phone: string) => {
+    return this.instance.get<{ albumsInfo: AlbumData[] }>('/get-albums-with-person', {
+      params: { phone },
     })
   }
 
-  public getPhotos = (params: GetPhotosBody) => {
-    return this.instance.get<GetPhotosResponse>('/get-photos-from-db', { params })
+  // public getThumbnailsForAlbums = (body: { albumIds: string[]; userId: string }) => {
+  //   return this.instance.post<{ [k in string]: string }>('/get-albums-thumbnail-icons', body)
+  // }
+
+  // public getThumbnailsForPhotos = (params: GetThumbnailsParams) => {
+  //   return this.instance.get<{ totalPhotos: number; thumbnails: ThumbnailData[] }>(
+  //     '/get-thumbnails-with-person',
+  //     { params },
+  //   )
+  // }
+
+  public getOriginalPhoto = (params: GetOriginalPhotoParams) => {
+    return this.instance.get<string>('/get-original-photo', { params })
   }
 
-  public postPresignedPostPhotos = (photosToUpload: PresignedPhotosPostBody) =>
-    this.instance.post<PresignedPhotosPostResponse[]>('/s3-upload', photosToUpload)
-
-  public postPresignedGetPhotos = (photoKeys: { photoKey: string }[]) =>
-    this.instance.post<string[]>('/get-signed-photos', photoKeys)
-
-  public getAllPeople = () => this.instance.get<{ people: People[] }>('/get-all-people')
+  public getGeneratePayment = (params: Omit<GetOriginalPhotoParams, 'originalKey'>) => {
+    return this.instance.get<string>('/generate-payment', { params })
+  }
 }
 
 export default ProtectedApi

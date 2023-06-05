@@ -1,60 +1,60 @@
 import { FC, useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
-import { FormHelperText, Grid } from '@mui/material'
+import { toast } from 'react-toastify'
+import styled from 'styled-components'
 import { motion } from 'framer-motion'
 
 import { APIStatus } from 'api/MainApi'
 
-import { selectGeneratedOTP, selectIsLoggedIn, selectStatus } from 'store/sign-up/selectors'
+import { generateOtpAsync, signUpAsync } from 'store/sign-up/actions'
+import { selectIsLoggedIn, selectSignUpStatus } from 'store/sign-up/selectors'
+import { selectPhoneNumber } from 'store/user/selectors'
 
 import { ERoutes } from 'pages/App'
-import { generateOtpAsync, signUpAsync } from 'store/sign-up/actions'
-import { selectPhoneNumber } from 'store/user/selectors'
-import { InputVerificationCode } from 'components/InputVerificationCode'
-import { useDidMountEffect } from 'components/hooks/useDidMountEffect'
-import Title from 'components/Title'
-import Subtitle from 'components/Subtitle'
-import LoadingButton from 'components/LoadingButton'
-import Button from 'components/Button'
-import styled from 'styled-components'
+
+import Text from 'components/common/Text'
+import Title from 'components/common/Title'
+import Button from 'components/common/Button'
+import LoadingButton from 'components/common/LoadingButton'
+import InputVerificationCode from 'components/common/InputVerificationCode'
 
 const ConfirmSignUp: FC = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const status = useSelector(selectStatus)
+  const status = useSelector(selectSignUpStatus)
   const isLoggedIn = useSelector(selectIsLoggedIn)
-  const generatedOTP = useSelector(selectGeneratedOTP)
   const phoneNumber = useSelector(selectPhoneNumber)
 
   const [otpCode, setOtpCode] = useState('')
-  const [codeValidation, setCodeValidation] = useState({ isValid: true, message: '' })
-
   const [hasCodeResent, setHasCodeResent] = useState(false)
 
   useEffect(() => {
-    if (!generatedOTP || generatedOTP.length !== 6 || !phoneNumber) {
-      navigate(ERoutes.SIGN_UP)
-    }
-  }, [generatedOTP])
+    if (!phoneNumber) navigate(ERoutes.SIGN_UP)
+  }, [phoneNumber])
 
-  useDidMountEffect(() => {
-    if (otpCode) {
-      setCodeValidation({ isValid: true, message: '' })
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      toast.error('Verification code has expired.', { autoClose: false })
+    }, 1000 * 60 * 3)
+
+    return () => {
+      clearTimeout(timer)
     }
-  }, [otpCode])
+  }, [])
 
   const handleOnClickLogin = (data?: string) => {
-    if ((otpCode === generatedOTP || data === generatedOTP) && phoneNumber?.value) {
-      dispatch(signUpAsync(phoneNumber.value))
+    if (otpCode.length === 6 && phoneNumber?.value) {
+      dispatch(
+        signUpAsync({
+          phone: phoneNumber.value,
+          countryCode: phoneNumber.newCountryCode,
+          otp: otpCode,
+        }),
+      )
       return
     }
-
-    setCodeValidation({
-      isValid: false,
-      message: 'Incorrect verification code, please check again.',
-    })
   }
 
   const handleOnChangeOTP = (value: string) => {
@@ -65,77 +65,57 @@ const ConfirmSignUp: FC = () => {
     if (phoneNumber?.value) {
       dispatch(generateOtpAsync(phoneNumber.value))
       setHasCodeResent(true)
+      setOtpCode('')
     }
   }
 
   return (
     <>
       {isLoggedIn ? (
-        <Navigate to={ERoutes.MAIN} replace />
+        <Navigate to={ERoutes.DASHBOARD} replace />
       ) : (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-          <Grid container justifyContent='center' sx={{ paddingTop: { xs: 6, md: 9 } }}>
-            <Grid container justifyContent='center' sx={{ flex: { xs: '0 0 345px' } }}>
-              <Grid item xs={12}>
-                <Title marginBottom={5}>What’s the code?</Title>
-              </Grid>
+        <MotionContainerStyled
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <TitleStyled>What’s the code?</TitleStyled>
 
-              <Grid item xs={12}>
-                <Subtitle marginBottom={16}>
-                  Enter the code sent to
-                  <PhoneNumberStyled>
-                    {phoneNumber?.formattedValue.replace('(', ' (').replace(')', ') ')}
-                  </PhoneNumberStyled>
-                </Subtitle>
-              </Grid>
+          <SubtitleStyled>
+            Enter the code sent to
+            <PhoneNumberStyled forwardedAs='span' weight={Text.weight.medium}>
+              {phoneNumber?.formattedValue.replace('(', ' (').replace(')', ') ')}
+            </PhoneNumberStyled>
+          </SubtitleStyled>
 
-              <Grid item xs={12} sx={{ mb: '7px' }}>
-                <InputVerificationCode
-                  autoFocus
-                  length={6}
-                  placeholder=''
-                  value={otpCode}
-                  onChange={handleOnChangeOTP}
-                  onCompleted={handleOnClickLogin}
-                  isValid={codeValidation.isValid}
-                />
-              </Grid>
+          <InputCodeWrapper>
+            <InputVerificationCode
+              autoFocus
+              length={6}
+              placeholder=''
+              value={otpCode}
+              onChange={handleOnChangeOTP}
+              onCompleted={handleOnClickLogin}
+            />
+          </InputCodeWrapper>
 
-              <Grid item xs={12} sx={{ mb: '10px' }}>
-                <Button
-                  disabled={hasCodeResent}
-                  size='small'
-                  variant='text'
-                  fontSize={16}
-                  height={38}
-                  onClick={handleOnClickResendOTP}
-                >
-                  Resend code
-                </Button>
-              </Grid>
+          <ResendButtonStyled
+            btnTheme={Button.themes.text}
+            disabled={hasCodeResent}
+            onClick={handleOnClickResendOTP}
+          >
+            Resend code
+          </ResendButtonStyled>
 
-              <Grid item xs={12} sx={{ mb: '20px' }}>
-                <LoadingButton
-                  loading={status === APIStatus.PENDING}
-                  disabled={otpCode.length !== 6}
-                  fullWidth
-                  onClick={() => handleOnClickLogin()}
-                >
-                  Next
-                </LoadingButton>
-
-                {!codeValidation.isValid && codeValidation.message && (
-                  <FormHelperText
-                    error={!codeValidation.isValid}
-                    sx={{ textAlign: 'center', marginTop: '12px' }}
-                  >
-                    {codeValidation.message}
-                  </FormHelperText>
-                )}
-              </Grid>
-            </Grid>
-          </Grid>
-        </motion.div>
+          <LoadingButton
+            loading={status === APIStatus.PENDING}
+            disabled={otpCode.length !== 6}
+            fullWidth
+            onClick={() => handleOnClickLogin()}
+          >
+            Next
+          </LoadingButton>
+        </MotionContainerStyled>
       )}
     </>
   )
@@ -143,8 +123,54 @@ const ConfirmSignUp: FC = () => {
 
 export default ConfirmSignUp
 
-const PhoneNumberStyled = styled.span`
+const MotionContainerStyled = styled(motion.div)`
+  width: 100%;
+  max-width: 450px;
+  padding: 106px 15px 15px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    padding: 177px 40px 40px;
+    max-width: 500px;
+  }
+`
+
+const InputCodeWrapper = styled.div``
+
+const TitleStyled = styled(Title)`
+  line-height: 17px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    line-height: 22px;
+  }
+`
+
+const SubtitleStyled = styled(Text)`
+  margin: 14px 0 19px 0;
+  line-height: 13px;
+  letter-spacing: 0;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    margin: 29px 0 18px 0;
+    font-size: 18px;
+    line-height: 16px;
+  }
+`
+
+const PhoneNumberStyled = styled(SubtitleStyled)`
   display: inline-block;
-  font-weight: bold;
-  margin-left: 5px;
+  margin: 0 0 0 5px;
+`
+
+const ResendButtonStyled = styled(Button)`
+  margin: 20px 0 19px;
+  line-height: 13px;
+  letter-spacing: 0px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    margin: 20px 0;
+    font-size: 18px;
+  }
 `

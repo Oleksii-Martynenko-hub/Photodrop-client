@@ -1,5 +1,6 @@
 /* eslint-disable no-prototype-builtins */
 import HttpClient from 'api/HttpClient'
+import { Country } from 'react-phone-number-input'
 
 export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api'
 
@@ -14,9 +15,9 @@ export interface TokensData {
   token: string
 }
 
-export interface LoginData {
-  login: string
-  password: string
+export type SignUpBody = {
+  phone: string
+  countryCode: Country
 }
 
 class MainApi extends HttpClient {
@@ -34,11 +35,12 @@ class MainApi extends HttpClient {
     return this.classInstance
   }
 
-  public postGeneratedOTP = (phone: string) =>
-    this.instance.post<{ OTP: string }>('/send-otp', { phone })
+  public postGeneratedOTP = (phone: string) => this.instance.post('/send-otp', { phone })
 
-  public postSignUp = (phone: string) =>
-    this.instance.post<TokensData>('/create-app-user', { phone })
+  public postCheckOTP = (phone: string, otp: string) =>
+    this.instance.get('/check-otp', { params: { phone, otp } })
+
+  public postSignUp = (body: SignUpBody) => this.instance.post<TokensData>('/create-app-user', body)
 }
 
 export default MainApi

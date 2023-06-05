@@ -1,94 +1,70 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router'
+import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  AppBar,
-  Autocomplete,
-  Box,
-  Dialog,
-  Divider,
-  FormHelperText,
-  Grid,
-  IconButton,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  TextField,
-  Toolbar,
-  Typography,
-} from '@mui/material'
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
-import CloseIcon from '@mui/icons-material/Close'
+import { toast } from 'react-toastify'
+import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import { NumberFormatValues, OnValueChange, PatternFormat } from 'react-number-format'
-import {
-  getCountries,
-  getCountryCallingCode,
-  isValidPhoneNumber,
-  Country,
-} from 'react-phone-number-input/input'
-import countryNames from 'react-phone-number-input/locale/en.json'
+import { getCountryCallingCode, isValidPhoneNumber, Country } from 'react-phone-number-input/input'
 import masks from 'pages/../../country-phone-masks.json'
 import 'react-phone-number-input/style.css'
 
 import { APIStatus } from 'api/MainApi'
 
-import useToggle from 'components/hooks/useToggle'
-
 import { generateOtpAsync } from 'store/sign-up/actions'
-import { checkToken } from 'store/sign-up/reducers'
 import { setPhoneNumber as setPhoneNumberToStore } from 'store/user/reducers'
-import { selectGeneratedOTP, selectIsLoggedIn, selectStatus } from 'store/sign-up/selectors'
+import { selectIsLoggedIn, selectSignUpStatus } from 'store/sign-up/selectors'
 
 import { ERoutes } from 'pages/App'
-import { Link } from 'react-router-dom'
-import Title from 'components/Title'
-import Subtitle from 'components/Subtitle'
-import LoadingButton from 'components/LoadingButton'
+import { useDidMountEffect } from 'components/hooks/useDidMountEffect'
+import Text from 'components/common/Text'
+import Title from 'components/common/Title'
+import TextField from 'components/common/TextField'
+import LoadingButton from 'components/common/LoadingButton'
+import CountryCodeSelect from 'components/common/CountryCodeSelect'
 
 const SignUp: FC = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const status = useSelector(selectStatus)
+  const status = useSelector(selectSignUpStatus)
   const isLoggedIn = useSelector(selectIsLoggedIn)
-  const generatedOTP = useSelector(selectGeneratedOTP)
+
+  const phoneInputRef = useRef<HTMLInputElement>(null)
 
   const [phoneNumber, setPhoneNumber] = useState<NumberFormatValues | null>(null)
   const [countryCode, setCountryCode] = useState<Country>('US')
-
-  const [phoneValidation, setPhoneValidation] = useState({ isValid: true, message: '' })
-
-  const [isCountryDialogOpen, setCountryDialogOpen] = useToggle(false)
+  const [isCountryDialogOpen, setCountryDialogOpen] = useState(false)
+  const [isSignUpLoading, setIsSignUpLoading] = useState(false)
 
   useEffect(() => {
-    dispatch(checkToken())
-  }, [])
-  /* masks for :
-      YT XK TA SJ PR PM MF JE IM GP GG GB EH CX CC BQ BL AX
-  */
+    if (isSignUpLoading) {
+      if (status === APIStatus.FULFILLED) {
+        if (phoneNumber) {
+          dispatch(
+            setPhoneNumberToStore({
+              value: getCountryCallingCode(countryCode) + phoneNumber.value,
+              formattedValue: phoneNumber.formattedValue,
+              newCountryCode: countryCode,
+            }),
+          )
 
-  useEffect(() => {
-    if (phoneNumber && !phoneValidation.isValid) {
-      if (isValidPhoneNumber(phoneNumber.value, countryCode))
-        setPhoneValidation({ isValid: true, message: '' })
+          setPhoneNumber(null)
+          navigate(ERoutes.CONFIRM)
+        }
+      }
+
+      if (status !== APIStatus.PENDING) setIsSignUpLoading(false)
     }
-  }, [phoneNumber])
+  }, [status, isSignUpLoading])
 
-  useEffect(() => {
-    if (phoneNumber && generatedOTP && generatedOTP.length === 6) {
-      dispatch(
-        setPhoneNumberToStore({
-          value: getCountryCallingCode(countryCode) + phoneNumber.value,
-          formattedValue: phoneNumber.formattedValue,
-        }),
-      )
-
-      setPhoneNumber(null)
-      navigate(ERoutes.CONFIRM)
+  useDidMountEffect(() => {
+    if (countryCode && !isCountryDialogOpen) {
+      resetInputNumberValue()
+      if (phoneInputRef?.current) phoneInputRef.current.focus()
     }
-  }, [generatedOTP])
+  }, [isCountryDialogOpen])
 
   const onChangePhoneNumberHandler: OnValueChange = (values) => {
     setPhoneNumber({
@@ -97,175 +73,173 @@ const SignUp: FC = () => {
     })
   }
 
-  const handleOnClickCountryItem = (country: typeof countryCode) => () => {
-    setCountryCode(country)
-    setCountryDialogOpen(false)
-  }
+  const handleOnClickSignUp = async () => {
+    if (!phoneNumber || !phoneNumber.value) {
+      toast.error('Please enter your phone number.')
+      return
+    }
 
-  const handleOnClickSignUp = () => {
     if (phoneNumber) {
       if (!isValidPhoneNumber(phoneNumber.value, countryCode)) {
-        setPhoneValidation({ isValid: false, message: 'Invalid phone number.' })
+        toast.error('Invalid phone number.')
         return
       }
 
+      setIsSignUpLoading(true)
       dispatch(generateOtpAsync(getCountryCallingCode(countryCode) + phoneNumber.value))
     }
+  }
+
+  const resetInputNumberValue = () => {
+    setPhoneNumber({
+      value: '',
+      formattedValue: `${masks[countryCode]}`.replace(/#/g, '_'),
+      floatValue: undefined,
+    })
+  }
+
+  const handleOnFocusInputNumber = () => {
+    if (!phoneNumber?.value) resetInputNumberValue()
+  }
+
+  const handleOnBlurInputNumber = () => {
+    if (!phoneNumber?.value) setPhoneNumber(null)
   }
 
   return (
     <>
       {isLoggedIn ? (
-        <Navigate to={ERoutes.MAIN} replace />
+        <Navigate to={ERoutes.DASHBOARD} replace />
       ) : (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-          <Grid container justifyContent='center' sx={{ paddingTop: { xs: 6, md: 9 } }}>
-            <Grid container justifyContent='center' sx={{ flex: { xs: '0 1 345px' } }}>
-              <Grid item xs={12} md={12}>
-                <Title marginBottom={5}>Let’s get started</Title>
-              </Grid>
+        <MotionContainerStyled
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <TitleStyled>Let’s get started</TitleStyled>
 
-              <Grid item xs={12} md={12}>
-                <Subtitle isBold marginBottom={16}>
-                  Enter your phone number
-                </Subtitle>
-              </Grid>
+          <SubtitleStyled size={Text.size.lg} weight={Text.weight.medium}>
+            Enter your phone number
+          </SubtitleStyled>
 
-              <Grid item xs={12} container spacing={2} sx={{ mb: '20px' }}>
-                <Dialog
-                  fullScreen
-                  open={isCountryDialogOpen}
-                  onClose={() => setCountryDialogOpen(false)}
-                >
-                  <AppBar sx={{ position: 'relative' }}>
-                    <Toolbar>
-                      <IconButton
-                        edge='start'
-                        color='inherit'
-                        onClick={() => setCountryDialogOpen(false)}
-                        aria-label='close'
-                      >
-                        <CloseIcon />
-                      </IconButton>
-                    </Toolbar>
-                  </AppBar>
+          <InputNumberWrapperStyled>
+            <CountryCodeSelect
+              countryCode={countryCode}
+              setCountryCode={setCountryCode}
+              isCountryDialogOpen={isCountryDialogOpen}
+              setCountryDialogOpen={setCountryDialogOpen}
+            />
 
-                  <List>
-                    {getCountries().map((country) => (
-                      <>
-                        <ListItem key={country} button onClick={handleOnClickCountryItem(country)}>
-                          <ListItemAvatar>
-                            <img
-                              width={28}
-                              height={22}
-                              src={`https://purecatamphetamine.github.io/country-flag-icons/3x2/${country}.svg`}
-                              alt={countryNames[country]}
-                            />
-                          </ListItemAvatar>
-                          <ListItemText
-                            primary={countryNames[country]}
-                            secondary={'+ ' + getCountryCallingCode(country)}
-                          />
-                        </ListItem>
+            <PatternFormat
+              inputRef={phoneInputRef}
+              customInput={TextField}
+              margin='normal'
+              size='small'
+              fullWidth
+              placeholder={`${masks[countryCode]}`.replace(/#/g, '5')}
+              format={`${masks[countryCode]}`}
+              mask='_'
+              value={phoneNumber ? phoneNumber.formattedValue : ''}
+              onValueChange={onChangePhoneNumberHandler}
+              onFocus={handleOnFocusInputNumber}
+              onBlur={handleOnBlurInputNumber}
+              sx={{ margin: 0 }}
+              InputProps={{
+                sx: {
+                  backgroundColor: '#F4F4F4',
+                  borderRadius: '10px',
+                  height: '40px',
+                },
+              }}
+            />
+          </InputNumberWrapperStyled>
 
-                        <Divider />
-                      </>
-                    ))}
-                  </List>
-                </Dialog>
+          <LoadingButton loading={isSignUpLoading} fullWidth onClick={handleOnClickSignUp}>
+            Create account
+          </LoadingButton>
 
-                <Grid item alignItems='center'>
-                  <Box
-                    onClick={() => setCountryDialogOpen(true)}
-                    sx={{
-                      width: '70px',
-                      height: '40px',
-                      borderRadius: '10px',
-                      border: '1px solid rgba(0, 0, 0, 0.27)',
-                      background: '#F4F4F4',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      '&:hover': {
-                        border: '1px solid rgba(0, 0, 0, 0.87)',
-                      },
-                    }}
-                  >
-                    <img
-                      width={28}
-                      height={22}
-                      src={`https://purecatamphetamine.github.io/country-flag-icons/3x2/${countryCode}.svg`}
-                      alt={countryNames[countryCode]}
-                    />
+          <DescriptionStyled size={Text.size.sm} color={Text.color.black}>
+            By proceeding, you consent to get WhatsApp or SMS messages, from PhotoDrop and its
+            affiliates to the number provided. Text “STOP” to 89203 to opt out.
+          </DescriptionStyled>
 
-                    <ArrowDropDownIcon />
-                  </Box>
-                </Grid>
-
-                <Grid item xs>
-                  <PatternFormat
-                    customInput={TextField}
-                    margin='normal'
-                    size='small'
-                    error={!phoneValidation.isValid}
-                    allowEmptyFormatting={true}
-                    fullWidth
-                    format={`${masks[countryCode]}`}
-                    mask='_'
-                    value={phoneNumber ? phoneNumber.formattedValue : ''}
-                    onValueChange={onChangePhoneNumberHandler}
-                    sx={{ margin: 0 }}
-                    InputProps={{
-                      sx: {
-                        backgroundColor: '#F4F4F4',
-                        borderRadius: '10px',
-                        height: '40px',
-                      },
-                    }}
-                  />
-                </Grid>
-              </Grid>
-
-              <Grid item xs={12} sx={{ mb: '20px' }}>
-                <LoadingButton
-                  loading={status === APIStatus.PENDING}
-                  fullWidth
-                  onClick={handleOnClickSignUp}
-                >
-                  Create account
-                </LoadingButton>
-
-                {!phoneValidation.isValid && phoneValidation.message && (
-                  <FormHelperText
-                    error={!phoneValidation.isValid}
-                    sx={{ textAlign: 'center', marginTop: '12px' }}
-                  >
-                    {phoneValidation.message}
-                  </FormHelperText>
-                )}
-              </Grid>
-
-              <Grid item xs={12} md={12} sx={{ mb: '34px' }}>
-                <Typography variant='body2' sx={{ fontSize: '13px' }}>
-                  By proceeding, you consent to get WhatsApp or SMS messages, from PhotoDrop and its
-                  affiliates to the number provided. Text “STOP” to 89203 to opt out.
-                </Typography>
-              </Grid>
-              <Grid item xs={12} md={12}>
-                <Typography variant='body2' sx={{ fontSize: '13px' }}>
-                  By continuing, you indicate that you have read and agree to our{' '}
-                  <Link to={ERoutes.TERMS}>Terms of Use</Link>
-                  {' & '}
-                  <Link to={ERoutes.PRIVACY}>Privacy Policy</Link>
-                </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-        </motion.div>
+          <TermsPrivacyWrapperStyled size={Text.size.sm} color={Text.color.black}>
+            By continuing, you indicate that you have read and agree to our{' '}
+            <TermsPrivacyLinkStyled to={ERoutes.TERMS}>Terms of Use</TermsPrivacyLinkStyled>
+            {' & '}
+            <TermsPrivacyLinkStyled to={ERoutes.PRIVACY}>Privacy Policy</TermsPrivacyLinkStyled>
+          </TermsPrivacyWrapperStyled>
+        </MotionContainerStyled>
       )}
     </>
   )
 }
 
 export default SignUp
+
+const MotionContainerStyled = styled(motion.div)`
+  width: 100%;
+  max-width: 450px;
+  padding: 136px 15px 15px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    padding: 177px 40px 40px;
+    max-width: 500px;
+  }
+`
+
+const InputNumberWrapperStyled = styled.div`
+  display: flex;
+  margin: 0 0 20px 0;
+`
+
+const TitleStyled = styled(Title)`
+  line-height: 17px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    line-height: 22px;
+  }
+`
+
+const SubtitleStyled = styled(Text)`
+  margin: 14px 0 19px 0;
+  line-height: 15px;
+  letter-spacing: 0.6px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    margin: 29px 0 18px 0;
+    line-height: 16px;
+  }
+`
+
+const DescriptionStyled = styled(Text)`
+  margin: 20px 0 38px 0;
+  letter-spacing: -0.05px;
+  line-height: 18px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    margin: 20px 0 0 0;
+    font-size: 16px;
+    line-height: 21px;
+  }
+`
+
+const TermsPrivacyWrapperStyled = styled(Text)`
+  letter-spacing: -0.32px;
+  line-height: 18px;
+
+  @media ${({ theme }) => theme.media.desktop} {
+    display: none;
+  }
+`
+
+const TermsPrivacyLinkStyled = styled(Link)`
+  display: inline-block;
+  color: inherit;
+  line-height: 12px;
+  border-bottom: 1px solid ${({ theme }) => theme.styledPalette.primary};
+  text-decoration: none;
+`

@@ -35,32 +35,6 @@ abstract class HttpClientProtected extends HttpClient {
   }
 
   private handleResponseError = async (e: any): Promise<any> => {
-    const status = e.response ? e.response.status : null
-    const msg = e?.response?.data?.errors?.[0].msg
-
-    const tokens = Tokens.getInstance()
-
-    const currentToken = tokens.getToken()
-
-    if (
-      (msg === 'Forbidden' || msg === 'Not authorized' || msg === 'Token was expired') &&
-      currentToken
-    ) {
-      try {
-        const config = {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${currentToken}`,
-          },
-        }
-        await axios.get<any>(`${process.env.API}/get-albums-from-db`, config)
-      } catch (_) {
-        tokens.clearTokens()
-
-        return Promise.reject(e)
-      }
-    }
-
     return Promise.reject(e)
   }
 }
